@@ -11,4 +11,7 @@ typedef struct node {
 	struct node* prev;
 } Node;
 
+void test() {}
+
+void test1() {}
 
