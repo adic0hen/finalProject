@@ -11,6 +11,4 @@ typedef struct node {
 	struct node* prev;
 } Node;
 
-CCC
-
 
