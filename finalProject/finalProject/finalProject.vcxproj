@@ -139,12 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Game.c" />
+    <ClCompile Include="..\..\GameDataStructs.c" />
     <ClCompile Include="..\..\Main.c" />
     <ClCompile Include="..\..\Parser.c" />
+    <ClCompile Include="InGameCommands.c">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Game.h" />
+    <ClInclude Include="..\..\GameDataStructs.h" />
     <ClInclude Include="..\..\Parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

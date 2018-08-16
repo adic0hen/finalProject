@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include "GameDataStructs.h"
+
 
 typedef struct cell {
 	int solVal; /* the number that solve the current board, will change after every Backtracking */
@@ -11,7 +14,5 @@ typedef struct node {
 	struct node* prev;
 } Node;
 
-void test() {}
-
-void test1() {}
+int** mainGameBoard;
 

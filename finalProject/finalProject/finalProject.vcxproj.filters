@@ -15,21 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InGameCommands.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameDataStructs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Game.h">
+    <ClInclude Include="..\..\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Parser.h">
+    <ClInclude Include="..\..\GameDataStructs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
