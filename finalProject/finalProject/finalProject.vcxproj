@@ -140,11 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\GameDataStructs.c" />
+    <ClCompile Include="..\..\InGameCommands.c" />
+    <ClCompile Include="..\..\InitAndTerminateModule.c" />
     <ClCompile Include="..\..\Main.c" />
     <ClCompile Include="..\..\Parser.c" />
-    <ClCompile Include="InGameCommands.c">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\GameDataStructs.h" />

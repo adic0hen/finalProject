@@ -21,10 +21,13 @@
     <ClCompile Include="..\..\Parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InGameCommands.c">
+    <ClCompile Include="..\..\GameDataStructs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\GameDataStructs.c">
+    <ClCompile Include="..\..\InGameCommands.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\InitAndTerminateModule.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
