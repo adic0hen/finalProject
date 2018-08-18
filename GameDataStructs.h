@@ -7,6 +7,7 @@
 typedef struct Cell {
 	int currentCellvalue; /* the number the user has entered. -1 if empty. val==solVal if isFixed */
 	int isFixed; /* 1 if the cell is fixed, 0 else */
+	int isErroneus;
 } Cell; /*Cell structure is reffered to as -cell- */
 
 typedef struct node {
@@ -27,6 +28,8 @@ extern struct Block** mainBlockBoard;
 extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;
+
+#define MAXNUM = boardSize;
 
 
 

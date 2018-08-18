@@ -83,6 +83,7 @@ void initialaizeMainBoard() {
 		for (j = 0; j < boardSize; j++) {
 			mainGameBoard[i][j].currentCellvalue = -1;
 			mainGameBoard[i][j].isFixed = 0;
+			mainGameBoard[i][j].isErroneus = 0;
 		}
 	}
 
@@ -108,3 +109,5 @@ void initializeMainBlockBoard() {
 		}
 	}
 }
+
+

@@ -6,7 +6,7 @@
 
 
 
-void printBoard() {
+void printBoard(int markErrors) {
 	int i;
 	int j;
 	int rowCounter;
@@ -48,6 +48,9 @@ void printBoard() {
 					if (mainGameBoard[rowCounter][j].isFixed) {
 						printf(".");
 					}
+					else if (mainGameBoard[rowCounter][j].isErroneus) {
+						printf("*");
+					}
 					else {
 						printf(" ");
 					}
@@ -60,6 +63,91 @@ void printBoard() {
 		}
 	}
 }
+
+
+int checkValidityOfNum(int number, int row, int coloumn) {
+	int i;
+	int j;
+	int blockRow;
+	int blockCol;
+
+	blockRow = row / (boardSize / blockHeight);
+	blockCol = coloumn / (boardSize / blockWidth);
+
+	if (mainBlockBoard[blockRow][blockCol].numbersList[number - 1] == number) {
+		return 0;
+	}
+
+	for (i = 0; i < boardSize; i++) {
+		if (mainGameBoard[row][i].currentCellvalue == number) {
+			return 0;
+		}
+	}
+
+	for (i = 0; i < boardSize; i++) {
+		if (mainGameBoard[i][coloumn].currentCellvalue == number) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+
+void deleteCell(int row, int coloumn, int number) {
+	int blockRow;
+	int blockCol;
+
+	blockRow = row / (boardSize / blockHeight);
+	blockCol = coloumn / (boardSize / blockWidth);
+
+	mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = 0;
+	mainGameBoard[row][coloumn].currentCellvalue = -1;
+
+}
+
+
+int set(int row, int coloumn, int number) {
+	int blockRow;
+	int blockCol;
+	int isValidNumber;
+
+	blockRow = row / (boardSize / blockHeight);
+	blockCol = coloumn / (boardSize / blockWidth);
+
+	if (number > boardSize || number < 0) {
+		return 0; //Error of Invalid Number//
+	}
+	if (row >= boardSize || coloumn >= boardSize) {
+		return 0;
+	}
+
+	if (number == 0) {
+		if (mainGameBoard[row][coloumn].isFixed) {
+			return 2; //Error of clearing a fixed cell//
+		}
+		else {
+			deleteCell(row, coloumn, number);
+			return 1;
+		}
+	}
+
+	isValidNumber = checkValidityOfNum(number, row, coloumn);
+
+	if (isValidNumber == 0) {
+		mainGameBoard[row][coloumn].currentCellvalue = number;
+		mainGameBoard[row][coloumn].isErroneus = 1;
+		mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = number;
+		return 1;
+	}
+	else {
+		mainGameBoard[row][coloumn].currentCellvalue = number;
+		mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = number;
+	}
+}
+
+
+
 
 		
 
