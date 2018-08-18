@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\GameDataStructs.c" />
+    <ClCompile Include="..\..\GamePlay.c" />
     <ClCompile Include="..\..\InGameCommands.c" />
     <ClCompile Include="..\..\InitAndTerminateModule.c" />
     <ClCompile Include="..\..\Main.c" />

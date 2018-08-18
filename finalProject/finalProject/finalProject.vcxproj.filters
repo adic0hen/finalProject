@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\InitAndTerminateModule.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\GamePlay.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Parser.h">
