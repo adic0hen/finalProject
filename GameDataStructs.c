@@ -9,5 +9,7 @@ struct Cell** mainGameBoard;
 int boardSize;
 int blockHeight;
 int blockWidth;
+int numOfBlockBoardRows;
+int numOfBlockBoardColoums;
 
 

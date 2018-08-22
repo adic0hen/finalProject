@@ -99,6 +99,8 @@ void initializeMainBlockBoard() {
 
 	numOfRows = boardSize / blockHeight;
 	numOfCols = boardSize / blockWidth;
+	numOfBlockBoardRows = numOfRows;
+	numOfBlockBoardColoums = numOfCols;
 
 	for (i = 0; i < numOfRows; i++) {
 		for (j = 0; j < numOfCols; j++) {
@@ -106,6 +108,7 @@ void initializeMainBlockBoard() {
 			for (k = 0; k < boardSize; k++) {
 				currBlock.numbersList[k] = 0;
 			}
+			currBlock.isAlmostFull = 0;
 		}
 	}
 }

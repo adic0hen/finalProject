@@ -10,15 +10,47 @@ typedef struct Cell {
 	int isErroneus;
 } Cell; /*Cell structure is reffered to as -cell- */
 
-typedef struct node {
-	Cell* data;
-	struct node* next;
-	struct node* prev;
-} Node;
 
 typedef struct Block {
 	int* numbersList;
+	int isAlmostFull;
 } Block;
+
+
+/* Undo - Redo Nodes*/ 
+
+typedef struct URNodeGuard {
+	struct URNode* next;
+	struct URNode* currentMove;
+} URNodeGuard;
+
+typedef struct URNode {
+	int type; 
+	/* 0 - Generate, 1- set, 2- autfill) */
+	int row;
+	int col;
+	struct cellNode* move;
+	struct URNode* next;
+	struct URNode* prev;
+} URNode;
+
+
+typedef struct cellNodeGuard {
+	cellNode* first;
+} cellNodeGuard;
+
+typedef struct cellNode {
+	Cell* data;
+	struct cellNode* next;
+	struct cellNode* prev;
+} cellNode;
+
+
+struct URNodeGuard UndoRedoList;
+struct cellNodeGuard** LIFOCells;
+
+
+
 
 
 extern struct Cell** mainGameBoard;
@@ -28,6 +60,8 @@ extern struct Block** mainBlockBoard;
 extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;
+extern int numOfBlockBoardRows;
+extern int numOfBlockBoardColoums;
 
 #define MAXNUM = boardSize;
 
