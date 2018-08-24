@@ -17,6 +17,28 @@ void autofillFILLCELLS(int** boardToFill);
 /* ------------------ Code Part -----------------------------*/
 
 
+int checkBlockForNumber(int row, int coloumn, int number) {
+	int i;
+	int j;
+	int rowBlockStart;
+	int coloumnBlockStart;
+
+	rowBlockStart = row / blockHeight;
+	coloumnBlockStart = coloumn / blockWidth;
+
+	for (i = rowBlockStart; i < rowBlockStart + blockHeight; i++) {
+		for (j = coloumnBlockStart; j < coloumnBlockStart + blockWidth; j++) {
+			if (mainGameBoard[i][j].currentCellvalue == number) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+
+}
+
+
 void printBoard(int markErrors) {
 	int i;
 	int j;
@@ -79,13 +101,9 @@ void printBoard(int markErrors) {
 int checkValidityOfNum(int number, int row, int coloumn) {
 	int i;
 	int j;
-	int blockRow;
-	int blockCol;
 
-	blockRow = row / (boardSize / blockHeight);
-	blockCol = coloumn / (boardSize / blockWidth);
 
-	if (mainBlockBoard[blockRow][blockCol].numbersList[number - 1] == number) {
+	if (checkBlockForNumber(row,coloumn,number)) {
 		return 0;
 	}
 
@@ -106,35 +124,20 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 
 
 void deleteCell(int row, int coloumn, int number) {
-	int blockRow;
-	int blockCol;
-
-	blockRow = row / (boardSize / blockHeight);
-	blockCol = coloumn / (boardSize / blockWidth);
-
-	mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = 0;
 	mainGameBoard[row][coloumn].currentCellvalue = -1;
 
 }
 
 
 void set(int row, int coloumn, int number, int isErroneus) {
-	int blockRow;
-	int blockCol;
-	
-	blockRow = row / (boardSize / blockHeight);
-	blockCol = coloumn / (boardSize / blockWidth);
 
-	
 	if (isErroneus) {
 		mainGameBoard[row][coloumn].currentCellvalue = number;
 		mainGameBoard[row][coloumn].isErroneus = 1;
-		mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = number;
 		return 1;
 	}
 	else {
 		mainGameBoard[row][coloumn].currentCellvalue = number;
-		mainBlockBoard[blockRow][blockCol].numbersList[number - 1] = number;
 	}
 }
 
@@ -298,60 +301,51 @@ void autofillCOLOUMS(int** boardToFill,int expectedSum){
 void autofillBLOCKS(int** boardToFill, int expectetSum) {
 	int i;
 	int j;
-	int k;
-	int l;
-	int m;
 	int counter;
 	int number;
-	int rowStart;
-	int colStart;
 	int rowIndex;
 	int colIndex;
 	int flag;
+	int rowBlockStart;
+	int coloumnBlockStart;
+	int sum;
 
 
-	for (i = 0; i < numOfBlockBoardRows; i++) {
+	for (rowBlockStart=0 ; rowBlockStart < boardSize; rowBlockStart+=blockHeight) {
 
-		for (j = 0; j < numOfBlockBoardColoums; j++) {
+		for (coloumnBlockStart; coloumnBlockStart < boardSize; coloumnBlockStart+=blockWidth) {
+
 			flag = 1;
 			counter = 0;
 			rowIndex = 0;
-			rowStart = 0;
 			colIndex = 0;
-			colStart = 0;
 
-			/* checking if block has N-1 numbers*/
-			for (k = 0; k < boardSize; k++) {
-				if (mainBlockBoard[i][j].numbersList[k] != 0) {
-					counter += 1;
+			/* checking each block*/ 
+			for (i = rowBlockStart; i < rowBlockStart + blockHeight; i++) {
+				for (j = coloumnBlockStart; j < coloumnBlockStart + blockWidth; j++) {
+
+					if (mainGameBoard[i][j].currentCellvalue != -1) {
+						counter += 1;
+						sum += mainGameBoard[i][j].currentCellvalue;
+					}
 				}
 			}
 
-			/* if block has N-1 number then do*/
+			/* if block has N-1 numbers */ 
 			if (counter == boardSize - 1) {
-				/*checking which number*/
-				for (k = 0; k < boardSize; k++) {
-					if (mainBlockBoard[i][j].numbersList[k] == 0) {
-						number = k + 1;
-						break;
-					}
-				}
 
-				/*updating the row start and coloumn start of the block*/
-				rowStart = i / numOfBlockBoardRows;
-				colStart = j / numOfBlockBoardColoums;
+				for (i = rowBlockStart; (i < rowBlockStart + blockHeight) && flag; i++) {
+					for (j = coloumnBlockStart; (j < coloumnBlockStart + blockWidth) && flag; j++) {
 
-
-				/* find the index of the row and coloumn */
-				for (l = rowStart; l < (rowStart + blockHeight) && flag; l++) {
-					for (m = colStart; m < (colStart + blockWidth) && flag; m++) {
-						if (mainGameBoard[l][m].currentCellvalue == -1) {
-							rowIndex = l;
-							colIndex = m;
+						if (mainGameBoard[i][j].currentCellvalue == -1) {
+							rowIndex = i;
+							colIndex = j;
 							flag = 0;
 						}
 					}
 				}
+
+				number = expectetSum - sum;
 
 				if (checkValidityOfNum(rowIndex, colIndex, number)) {
 					boardToFill[rowIndex][colIndex] = number;
@@ -389,39 +383,44 @@ void autofillFILLCELLS(int** boardToFill) {
 //set,  autofill(as one),  generate 
 
 
+
+void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
+	cellNode* next;
+	cellNode* prev;
+
+	next = nodeToDelete->next;
+	prev = nodeToDelete->prev;
+
+	if (prev == NULL && next == NULL) {
+		LIFOCells[row][coloumn].first = NULL;
+	}
+	else if (prev == NULL) {
+		LIFOCells[row][coloumn].first = next;
+	}
+	else if (next == NULL) {
+		prev->next = NULL;
+	}
+	else {
+		prev->next = next;
+		next->prev = prev;
+	}
+
+	free(nodeToDelete->data);
+	free(nodeToDelete);
+}
+
 void clearSingleURNode(URNode* nodeToDelete) {
 	URNode* prev;
 	URNode* next;
-	cellNode* prevC;
-	cellNode* nextC;
 	cellNode* current;
 	int row;
 	int coloumn;
 
 
 	current = nodeToDelete->move;
-	prevC = current->prev;
-	nextC = current->next;
-	if (prevC == NULL && nextC == NULL) {
-		row = nodeToDelete->row;
-		coloumn = nodeToDelete->col;
-		LIFOCells[row][coloumn].first = NULL;
-	}
-	else if (prevC == NULL) {
-		row = nodeToDelete->row;
-		coloumn = nodeToDelete->col;
-		LIFOCells[row][coloumn].first = nextC;
-	}
-	else if (nextC == NULL) {
-		prevC->next = NULL;
-	}
-	else {
-		prevC->next = nextC;
-		nextC->prev = prev;
-	}
-
-	free(current->data);
-	free(current);
+	row = nodeToDelete->row;
+	coloumn = nodeToDelete->col;
+	clearSingleLIFOCell(row, coloumn, current);
 
 
 	prev = nodeToDelete->prev;
@@ -450,19 +449,33 @@ void clearSingleURNode(URNode* nodeToDelete) {
 
 
 
-
+/* clear all the list from current position (not including the startNode, to clear all list, use clearList() */
 void clearURListFromCurrentPosition(URNode* startNode) {
-	int i;
+	URNode* current;
 	URNode* next;
+
+	current = startNode;
+	while ((next = current->next) != NULL) {
+		current = next;
+		clearSingleURNode(current);
+	}
+
+	startNode->next = NULL;
+	
 }
-void updateURListAfterRegSET(int row, int coloumn, Cell* cell) {
+
+
+/* mode: 0- generate, 1-Regular set, 2 - autofill */
+void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirst) {
 	URNode* next;
 	void* tempPTR;
 	URNode* currPos;
 	cellNode* cellNodeToEnter;
 	cellNode* temp;
 
-	currPos = UndoRedoList.currentMove;
+	if (!isFirst) {
+		currPos = UndoRedoList.currentMove;
+	}
 
 	tempPTR = malloc(sizeof(URNode));
 	if (tempPTR == NULL) {
@@ -490,12 +503,66 @@ void updateURListAfterRegSET(int row, int coloumn, Cell* cell) {
 	next->row = row;
 	next->col = coloumn;
 	next->move = cellNodeToEnter;
-	next->prev = currPos;
+	next->type = mode;
 	next->next = NULL;
-	next->type = 1;
-	currPos->next = next;
+	if (isFirst) {
+		next->prev = NULL;
+		UndoRedoList.next = next;
+		UndoRedoList.isEmpty = 0;
+	}
+	else {
+		next->prev = currPos;
+		currPos->next = next;
+	}
+
+	UndoRedoList.currentMove = currPos;
+
+	
 
 }
+
+
+void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
+	int isFirst;
+
+
+	if (UndoRedoList.isEmpty) {
+		isFirst = 1;
+	}
+	else {
+		isFirst = 0;
+	}
+
+	if (!UndoRedoList.isEmpty) {
+		clearURListFromCurrentPosition(UndoRedoList.currentMove);
+	}
+
+	insertURListAfterSET(row, coloumn, cell, mode, isFirst);
+}
+
+
+void updateMainBoardAfterUndo(int row, int coloumn, int number) {
+	Cell* cellToEnter;
+
+
+	cellToEnter = LIFOCells[row][coloumn].first->data;
+
+	if (cellToEnter == NULL) {
+		mainGameBoard[row][coloumn].currentCellvalue = -1;
+		mainGameBoard[row][coloumn].isErroneus = 0;
+		mainGameBoard[row][coloumn].isFixed = 0;
+	}
+	else {
+		mainGameBoard[row][coloumn] = *cellToEnter;
+	}
+
+}
+
+
+void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {}
+
+
+
 
 
 

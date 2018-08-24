@@ -22,6 +22,7 @@ typedef struct Block {
 typedef struct URNodeGuard {
 	struct URNode* next;
 	struct URNode* currentMove;
+	int isEmpty;
 } URNodeGuard;
 
 typedef struct URNode {
