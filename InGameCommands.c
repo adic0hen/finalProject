@@ -541,7 +541,7 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 }
 
 
-void updateMainBoardAfterUndo(int row, int coloumn, int number) {
+void updateMainBoardAfterUndo(int row, int coloumn) {
 	Cell* cellToEnter;
 
 
@@ -559,7 +559,78 @@ void updateMainBoardAfterUndo(int row, int coloumn, int number) {
 }
 
 
-void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {}
+void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
+	cellNode* next;
+	cellNode* prev;
+
+	next = cell->next;
+	prev = cell->prev;
+
+	if ((next == NULL) && (prev == NULL)) {
+		LIFOCells[row][coloumn].first = NULL;
+	}
+	else if (next == NULL) {
+		prev->next = NULL;
+	}
+	else if (prev == NULL) {
+		LIFOCells[row][coloumn].first = next;
+	}
+	else {
+		prev->next = next;
+		next->prev = prev;
+	}
+
+}
+
+
+void undo() {
+	URNode* currentMove;
+	int prevNumber;
+	int newNumber;
+
+
+	currentMove = UndoRedoList.currentMove;
+	prevNumber = currentMove->move->data->currentCellvalue;
+
+	disconnectNodeFromLIFOCell(currentMove->row, currentMove->col, currentMove->move);
+
+	updateMainBoardAfterUndo(currentMove->row, currentMove->col);
+
+	UndoRedoList.currentMove = currentMove->prev;
+	
+	newNumber = UndoRedoList.currentMove->move->data->currentCellvalue;
+
+	if (newNumber != -1) {
+		printf("Undo %d,%d: from %d to %d\n", currentMove->row, currentMove->col, prevNumber, newNumber);
+	}
+	else {
+		printf("Undo %d,%d: from %d to _\n", currentMove->row, currentMove->col, prevNumber);
+	}
+}
+
+
+void undoMAIN() {
+	URNode* currentMove;
+
+	currentMove = UndoRedoList.currentMove;
+	if (UndoRedoList.isEmpty) {
+		printf("Error: no moves to undo\n");
+	}
+	if (currentMove->prev == NULL) {
+		UndoRedoList.currentMove = NULL;
+	}
+
+	if (currentMove->type == 1) {
+		undo();
+	}
+	else if (currentMove->type == 2) {
+		while (currentMove->type == 2) {
+			currentMove = currentMove->prev;
+			undo();
+		}
+	}
+
+}
 
 
 
