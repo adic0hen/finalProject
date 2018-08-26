@@ -35,16 +35,15 @@ typedef struct URNode {
 	struct URNode* prev;
 } URNode;
 
-
-typedef struct cellNodeGuard {
-	cellNode* first;
-} cellNodeGuard;
-
 typedef struct cellNode {
 	Cell* data;
 	struct cellNode* next;
 	struct cellNode* prev;
 } cellNode;
+
+typedef struct cellNodeGuard {
+	cellNode* first;
+} cellNodeGuard;
 
 
 struct URNodeGuard UndoRedoList;
