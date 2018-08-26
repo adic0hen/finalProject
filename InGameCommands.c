@@ -9,6 +9,7 @@ void autofillROWS(int** boardToFill, int expectedSum);
 void autofillCOLOUMS(int** boardToFill,int expectedSum);
 void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
+void updateMainBoardAfterUndoRedo(int row, int coloumn);
 
 
 
@@ -655,7 +656,7 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 
 
 
-void redo() {
+void redo() {}
 
 
 
