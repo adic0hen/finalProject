@@ -541,7 +541,7 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 }
 
 
-void updateMainBoardAfterUndo(int row, int coloumn) {
+void updateMainBoardAfterUndoRedo(int row, int coloumn) {
 	Cell* cellToEnter;
 
 
@@ -579,6 +579,9 @@ void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
 		prev->next = next;
 		next->prev = prev;
 	}
+
+	cell->next = NULL;
+	cell->prev = NULL;
 
 }
 
@@ -631,6 +634,32 @@ void undoMAIN() {
 	}
 
 }
+
+
+
+void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
+	cellNode* next;
+	cellNode* prev;
+
+	if (LIFOCells[row][coloumn].first == NULL) {
+		LIFOCells[row][coloumn].first = cell;
+	}
+	else {
+		next = LIFOCells[row][coloumn].first;
+		LIFOCells[row][coloumn].first = cell;
+		cell->next = next;
+		(cell->next)->prev = cell;
+		cell->prev = NULL;
+	}
+}
+
+
+
+void redo() {
+
+
+
+
 
 
 

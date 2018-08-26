@@ -11,11 +11,6 @@ typedef struct Cell {
 } Cell; /*Cell structure is reffered to as -cell- */
 
 
-typedef struct Block {
-	int* numbersList;
-	int isAlmostFull;
-} Block;
-
 
 /* Undo - Redo Nodes*/ 
 
@@ -49,19 +44,14 @@ typedef struct cellNodeGuard {
 struct URNodeGuard UndoRedoList;
 struct cellNodeGuard** LIFOCells;
 
-
-
-
-
 extern struct Cell** mainGameBoard;
-extern struct Block** mainBlockBoard;
+
 
 
 extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;
-extern int numOfBlockBoardRows;
-extern int numOfBlockBoardColoums;
+
 
 #define MAXNUM = boardSize;
 
