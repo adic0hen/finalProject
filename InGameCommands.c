@@ -598,7 +598,7 @@ void undo() {
 
 	disconnectNodeFromLIFOCell(currentMove->row, currentMove->col, currentMove->move);
 
-	updateMainBoardAfterUndo(currentMove->row, currentMove->col);
+	updateMainBoardAfterUndoRedo(currentMove->row, currentMove->col);
 
 	UndoRedoList.currentMove = currentMove->prev;
 	
