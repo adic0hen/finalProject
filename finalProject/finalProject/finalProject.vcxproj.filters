@@ -44,5 +44,8 @@
     <ClInclude Include="..\..\GamePlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\InGameCommands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
