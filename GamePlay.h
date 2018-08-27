@@ -4,6 +4,8 @@
 int game();
 
 extern int mode;
+extern int markerrors;
+
 /* mode values:
 1 = init
 2 = solve

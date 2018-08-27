@@ -6,6 +6,7 @@
 
 int main() {
 	mode = 1;
+	markerrors = 1; /*default value is 1 - "True"*/
 	game();
 }
 
