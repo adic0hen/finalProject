@@ -2,6 +2,7 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include "GamePlay.h"
+	#include "InGameCommands.h"
 
 int parse(char* buffer) {
 	char* cmd;
