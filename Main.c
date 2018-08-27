@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include "Parser.h"
 #include "GamePlay.h"
+#include "GameDataStructs.h"
 
 int main() {
 	mode = 1;
+	game();
 }
 
-int game(){
-char* buffer;
-buffer = malloc(1024);
-}
+

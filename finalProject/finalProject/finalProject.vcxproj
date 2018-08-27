@@ -148,8 +148,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\GameDataStructs.h" />
+    <ClInclude Include="..\..\GamePlay.h" />
     <ClInclude Include="..\..\Parser.h" />
-    <ClInclude Include="GamePlay.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

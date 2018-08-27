@@ -20,6 +20,17 @@ int parse(char* buffer) {
 
 				break;
 			}
+			if (strcmp(cmd, "set") == 0) {
+				sRow = strtok(NULL, " \t\r\n");
+				sCol = strtok(NULL, " \t\r\n");
+				sVal = strtok(NULL, " \t\r\n");
+				if (sCol != NULL && sRow != NULL && sVal != NULL) { /*making sure we have all the values*/
+					col = atoi(sCol) - 1;
+					row = atoi(sRow) - 1;
+					val = atoi(sVal);
+					setMain(row, col, val);
+				break;
+			}
 		}
 	}
 
