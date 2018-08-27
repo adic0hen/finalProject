@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Parser.h"
+#include "GamePlay.h"
 
-int main() {}
+int main() {
+	mode = 1;
+}
 
 int game(){
 char* buffer;
