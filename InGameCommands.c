@@ -10,7 +10,7 @@ void autofillCOLOUMS(int** boardToFill,int expectedSum);
 void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 void updateMainBoardAfterUndoRedo(int row, int coloumn);
-int isErroneous(Cell** mainGameBoard);
+int isErroneous();
 
 
 
@@ -659,13 +659,14 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 
 void redo() {}
 
-int isErroneous(Cell** mainGameBoard) {
-	int i = 0;
-	int j = 0;
+int isErroneous() {
+	int i;
+	int j;
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-		if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
-			return 1;
+			if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
+				return 1;
+			}
 		}
 		return 0;
 	}
