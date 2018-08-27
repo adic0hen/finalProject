@@ -5,10 +5,11 @@
 
 
 
-struct Cell** mainGameBoard;
+typedef struct Cell** mainGameBoard{
 int boardSize;
 int blockHeight;
 int blockWidth;
+} MainBoard;
 
 
 

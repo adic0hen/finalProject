@@ -30,7 +30,7 @@ int allocateMemForMainBoard(int N) {
 
 
 
-void initialaizeMainBoard() {
+void initializeMainBoard() {
 	int i;
 	int j;
 

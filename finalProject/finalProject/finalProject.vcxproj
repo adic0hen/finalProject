@@ -143,6 +143,7 @@
     <ClCompile Include="..\..\GamePlay.c" />
     <ClCompile Include="..\..\InGameCommands.c" />
     <ClCompile Include="..\..\InitAndTerminateModule.c" />
+    <ClCompile Include="..\..\IOCommands.c" />
     <ClCompile Include="..\..\Main.c" />
     <ClCompile Include="..\..\Parser.c" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="..\..\GameDataStructs.h" />
     <ClInclude Include="..\..\GamePlay.h" />
     <ClInclude Include="..\..\InGameCommands.h" />
+    <ClInclude Include="..\..\IOCommands.h" />
     <ClInclude Include="..\..\Parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
