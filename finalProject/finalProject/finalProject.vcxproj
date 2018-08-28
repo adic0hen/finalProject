@@ -151,6 +151,7 @@
     <ClInclude Include="..\..\GameDataStructs.h" />
     <ClInclude Include="..\..\GamePlay.h" />
     <ClInclude Include="..\..\InGameCommands.h" />
+    <ClInclude Include="..\..\InitAndTerminateModule.h" />
     <ClInclude Include="..\..\IOCommands.h" />
     <ClInclude Include="..\..\Parser.h" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 #ifndef GAMEDATASTRUCTS_H_
 #define GAMEDATASTRUCTS_H_
 
-/*Board is internally represented as an array of N*N pointers to cells, N = n*m */
+/*Board is internally represented as a 2D array of N*N pointers to cells, N = n*m */
 
 
 typedef struct Cell {

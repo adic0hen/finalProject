@@ -3,6 +3,7 @@
 #include "InGameCommands.h"
 #include "GamePlay.h"
 #include "GameDataStructs.h"
+#include "InitAndTerminateModule.h"
 
 /* Declaration of functions*/
 
@@ -53,4 +54,20 @@ writeBoardToFile(FILE* fptr) {
 		}
 		fprintf(fptr, "\n");
 	}
+}
+
+int load(char* path) {
+	FILE* fptr;
+	fptr = fopen(path, "r");
+	if (fptr == NULL) {
+		/*need to print error*/
+		return 0;
+	}
+	fscanf(fptr, "%d", &blockHeight);
+	fscanf(fptr, "%d", &blockWidth);
+	boardSize = (blockHeight * blockWidth);
+	allocateMemForMainBoard(boardSize);
+	initializeLoadedMainBoard(fptr);
+	fclose(fptr);
+	return 1;
 }
