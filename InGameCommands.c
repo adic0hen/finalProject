@@ -192,6 +192,36 @@ int setMAIN(int row, int coloumn, int number) {
 }
 
 
+int isErroneous() {
+	int i;
+	int j;
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int markErrors(int mark) {
+	int markerrors;
+
+	if (mode == 2) {
+		if (mark == 0 || mark == 1) {
+			markerrors = mark;
+		}
+		return 1;
+	}
+	else {
+		printf("Error: the value should be 0 or 1\n");
+		return 0;
+	}
+}
+
+/* -------------- autofill commands--------------- */
+
 
 int autofill() {
 	int i;
@@ -394,9 +424,7 @@ void autofillFILLCELLS(int** boardToFill) {
 
 
 
-// UNDO-REDO commands//
-// Need to save the state of the board after these commands: 
-//set,  autofill(as one),  generate 
+/* ---------------UNDO-REDO commands----------------- */
 
 
 
@@ -673,33 +701,7 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 
 void redo() {}
 
-int isErroneous() {
-	int i;
-	int j;
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
 
-int markErrors(int mark) {
-	int markerrors;
-
-	if (mode == 2) {
-		if (mark == 0 || mark == 1) {
-			markerrors = mark;
-		}
-		return 1;
-	}
-	else {
-		printf("Error: the value should be 0 or 1\n");
-		return 0;
-	}
-}
 
 
 
