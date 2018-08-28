@@ -3,6 +3,8 @@
 	#include <string.h>
 	#include "GamePlay.h"
 	#include "InGameCommands.h"
+	#include "InitAndTerminateModule.h"
+	#include "IOCommands.h"
 
 int parse(char* buffer) {
 	char* cmd;
@@ -23,26 +25,31 @@ int parse(char* buffer) {
 	/*this variable will be used as part of the "mark_errors" command*/
 	int mark;
 
-	if (fgets(buffer, 1024, stdin) != NULL) {
+	if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
 		cmd = strtok(buffer, " \t\r\n");
 		while (cmd != NULL) {
 			if (strcmp(cmd, "set") == 0) {
-				sRow = strtok(NULL, " \t\r\n");
-				sCol = strtok(NULL, " \t\r\n");
-				sVal = strtok(NULL, " \t\r\n");
-				if (sCol != NULL && sRow != NULL && sVal != NULL) { /*making sure we have all the values*/
-					col = atoi(sCol) - 1;
-					row = atoi(sRow) - 1;
-					val = atoi(sVal);
-					setMain(row, col, val);
+				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+					sRow = strtok(NULL, " \t\r\n");
+					sCol = strtok(NULL, " \t\r\n");
+					sVal = strtok(NULL, " \t\r\n");
+					if (sCol != NULL && sRow != NULL && sVal != NULL) { /*making sure we have all the values*/
+						col = atoi(sCol) - 1;
+						row = atoi(sRow) - 1;
+						val = atoi(sVal);
+						setMain(row, col, val);
+					}
+					break;
 				}
-				break;
+				else {
+					continue; /*this will result in getting to the invalid command part*/
+				}
 			}
 			if (strcmp(cmd, "solve") == 0) {
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) {
 					mode = 2;
-					/*need to complete code!*/
+					load(filePath);
 				}
 				break;
 			}
@@ -51,9 +58,12 @@ int parse(char* buffer) {
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) {
 					mode = 3;
-					/*need to complete code!*/
+					load(filePath);
 				}
-
+				else { /*initializing an empty board because there was no file path given*/
+					mode = 3;
+					initializeMainBoard();
+				}
 				break;
 			}
 			if (strcmp(cmd, "mark_errors") == 0) {
@@ -66,8 +76,13 @@ int parse(char* buffer) {
 				}
 			}
 			if (strcmp(cmd, "print_board") == 0) {
-				printBoard(markerrors);
-				break;
+				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+					printBoard(markerrors);
+					break;
+				}
+				else {
+					continue; /*this will result in getting to the invalid command part*/
+				}
 			}
 			if (strcmp(cmd, "validate") == 0) {
 				/*need to complete code!*/
@@ -129,7 +144,7 @@ int parse(char* buffer) {
 				mode = 0;
 				break;
 			}
-			/*we get to this part of the parser only if there was an invalid command*/
+			/*Invalid command part - we get to this part of the parser only if there was an invalid command*/
 			printf("Error: invalid command\n");
 		}
 	}

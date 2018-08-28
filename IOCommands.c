@@ -60,7 +60,12 @@ int load(char* path) {
 	FILE* fptr;
 	fptr = fopen(path, "r");
 	if (fptr == NULL) {
-		/*need to print error*/
+		if (mode == 2) { /*error in solve mode*/
+			printf("Error: File doesn't exit or cannot be opened\n");
+		}
+		if (mode == 3) { /*error in edit mode*/
+			printf("Error: File cannot be opened\n");
+		}
 		return 0;
 	}
 	fscanf(fptr, "%d", &blockHeight);

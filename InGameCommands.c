@@ -682,6 +682,7 @@ int markErrors(int mark) {
 		return 1;
 	}
 	else {
+		fprintf("Error: the value should be 0 or 1\n");
 		return 0;
 	}
 }
