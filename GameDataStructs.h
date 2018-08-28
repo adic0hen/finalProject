@@ -44,8 +44,8 @@ typedef struct cellNodeGuard {
 struct URNodeGuard UndoRedoList;
 struct cellNodeGuard** LIFOCells;
 
-extern struct Cell** mainGameBoard;
 
+extern struct Cell** mainGameBoard;
 extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;

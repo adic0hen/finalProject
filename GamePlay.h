@@ -6,7 +6,7 @@ int game();
 extern int mode;
 extern int markerrors;
 
-/* mode values:
+/* mode values and their meaning:
 1 = init
 2 = solve
 3 = edit

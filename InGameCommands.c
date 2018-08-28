@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameDataStructs.h"
+#include "GamePlay.h"
 
 
 /* Declaration of functions*/
@@ -11,6 +12,7 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 void updateMainBoardAfterUndoRedo(int row, int coloumn);
 int isErroneous();
+int markErrors(int mark);
 
 
 
@@ -672,6 +674,17 @@ int isErroneous() {
 	}
 }
 
+int markErrors(int mark) {
+	if (mode == 2) {
+		if (mark == 0 || mark == 1) {
+			markerrors = mark;
+		}
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
 
 
 

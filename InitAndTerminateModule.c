@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "GameDataStructs.h"
 
+int init() {
+}
 
 int allocateMemForMainBoard(int N) {
 	Cell** allocatedMemAddr;

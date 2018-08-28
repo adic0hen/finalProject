@@ -20,6 +20,8 @@ int parse(char* buffer) {
 	char* sCellsToKeep;
 	int cellsToFill;
 	int cellsToKeep;
+	/*this variable will be used as part of the "mark_errors" command*/
+	int mark;
 
 	if (fgets(buffer, 1024, stdin) != NULL) {
 		cmd = strtok(buffer, " \t\r\n");
@@ -55,8 +57,13 @@ int parse(char* buffer) {
 				break;
 			}
 			if (strcmp(cmd, "mark_errors") == 0) {
-				markerrors = atoi(strtok(NULL, " \t\r\n"));
-				break;
+				mark = atoi(strtok(NULL, " \t\r\n"));
+				if (markErrors(mark)) {/*this is True when we are in Solve mode*/
+					break;
+				}
+				else {
+					continue;/*this will result in getting to the invalid command part*/
+				}
 			}
 			if (strcmp(cmd, "print_board") == 0) {
 				printBoard(markerrors);
@@ -96,7 +103,7 @@ int parse(char* buffer) {
 			if (strcmp(cmd, "hint") == 0) {
 				sRow = strtok(NULL, " \t\r\n");
 				sCol = strtok(NULL, " \t\r\n");
-				if (sRow != NULL || sCol != NULL) {
+				if (sRow != NULL && sCol != NULL) {
 					row = atoi(sRow);
 					col = atoi(sCol);
 					/*need to complete code!*/
@@ -123,7 +130,7 @@ int parse(char* buffer) {
 				break;
 			}
 			/*we get to this part of the parser only if there was an invalid command*/
-			/*need to complete code!*/
+			printf("Error: invalid command\n");
 		}
 	}
 }

@@ -6,5 +6,6 @@ void redo();
 int setMAIN(int row, int coloumn, int number);
 void undoMAIN();
 int isErroneous();
+int markErrors(int mark);
 
 #endif
