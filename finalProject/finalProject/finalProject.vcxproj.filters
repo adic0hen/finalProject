@@ -33,12 +33,27 @@
     <ClCompile Include="..\..\GamePlay.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\IOCommands.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\GameDataStructs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GamePlay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\InGameCommands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IOCommands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\InitAndTerminateModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

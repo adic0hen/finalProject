@@ -3,6 +3,7 @@
 #include "GameDataStructs.h"
 
 
+
 int allocateMemForMainBoard(int N) {
 	Cell** allocatedMemAddr;
 	int i;
@@ -30,7 +31,7 @@ int allocateMemForMainBoard(int N) {
 
 
 
-void initialaizeMainBoard() {
+void initializeMainBoard() {
 	int i;
 	int j;
 
@@ -43,6 +44,32 @@ void initialaizeMainBoard() {
 		}
 	}
 
+}
+
+void initializeLoadedMainBoard(FILE *fptr) {
+	int i;
+	int j;
+	int* tempNum;
+	char* tempDot;
+
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			fscanf(fptr, "%d", tempNum); /*scanning the current Cell's number*/
+			fscanf(fptr, "%d", tempDot);/*either a dot right after the number, or a white space*/
+
+			mainGameBoard[i][j].currentCellvalue = *tempNum;
+
+			if (strcmp(tempDot, ".") == 0) {
+				mainGameBoard[i][j].isFixed = 1;
+			}
+			else {
+				mainGameBoard[i][j].isFixed = 0;
+			}
+
+			mainGameBoard[i][j].isErroneus = 0;
+		}
+	}
 }
 
 

@@ -1,14 +1,14 @@
 #ifndef GAMEDATASTRUCTS_H_
 #define GAMEDATASTRUCTS_H_
 
-/*Board is internally represented as an array of N*N pointers to cells, N = n*m */
+/*Board is internally represented as a 2D array of N*N pointers to cells, N = n*m */
 
 
 typedef struct Cell {
 	int currentCellvalue; /* the number the user has entered. -1 if empty. val==solVal if isFixed */
 	int isFixed; /* 1 if the cell is fixed, 0 else */
-	int isErroneus;
-} Cell; /*Cell structure is reffered to as -cell- */
+	int isErroneus; /*1 if the cell is erroneus, 0 else*/
+} Cell; /*Cell structure is reffered to as -Cell- */
 
 
 
@@ -44,10 +44,8 @@ typedef struct cellNodeGuard {
 struct URNodeGuard UndoRedoList;
 struct cellNodeGuard** LIFOCells;
 
+
 extern struct Cell** mainGameBoard;
-
-
-
 extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;

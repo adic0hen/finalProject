@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameDataStructs.h"
+#include "GamePlay.h"
 
 
 /* Declaration of functions*/
@@ -9,6 +10,9 @@ void autofillROWS(int** boardToFill, int expectedSum);
 void autofillCOLOUMS(int** boardToFill,int expectedSum);
 void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
+void updateMainBoardAfterUndoRedo(int row, int coloumn);
+int isErroneous();
+int markErrors(int mark);
 
 
 
@@ -129,9 +133,9 @@ void deleteCell(int row, int coloumn, int number) {
 }
 
 
-void set(int row, int coloumn, int number, int isErroneus) {
+void set(int row, int coloumn, int number, int isErroneous) {
 
-	if (isErroneus) {
+	if (isErroneous) {
 		mainGameBoard[row][coloumn].currentCellvalue = number;
 		mainGameBoard[row][coloumn].isErroneus = 1;
 		return 1;
@@ -655,8 +659,33 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 
 
 
-void redo() {
+void redo() {}
 
+int isErroneous() {
+	int i;
+	int j;
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int markErrors(int mark) {
+	if (mode == 2) {
+		if (mark == 0 || mark == 1) {
+			markerrors = mark;
+		}
+		return 1;
+	}
+	else {
+		fprintf("Error: the value should be 0 or 1\n");
+		return 0;
+	}
+}
 
 
 
