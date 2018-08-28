@@ -4,18 +4,18 @@
 
 
 
-int allocateMemForMainBoard(int N) {
+int allocateMemForMainBoard() {
 	Cell** allocatedMemAddr;
 	int i;
 	void*  tempPTR;
 
-	allocatedMemAddr = (Cell**)malloc(sizeof(Cell*) *N);
+	allocatedMemAddr = (Cell**)malloc(sizeof(Cell*) *boardSize);
 	if (allocatedMemAddr == NULL) {
 		return 0;
 	}
 
-	for (i = 0; i < N; i++) {
-		tempPTR = (malloc(sizeof(Cell) *N));
+	for (i = 0; i < boardSize; i++) {
+		tempPTR = (malloc(sizeof(Cell) *boardSize));
 		if (tempPTR == NULL) {
 			return 0;
 		}
@@ -28,8 +28,6 @@ int allocateMemForMainBoard(int N) {
 
 	return 1;
 }
-
-
 
 void initializeMainBoard() {
 	int i;
@@ -71,6 +69,14 @@ void initializeLoadedMainBoard(FILE *fptr) {
 		}
 	}
 }
+
+
+void initiallizeGameParameters(int N, int bHeight, int bWidth) {
+	boardSize = N;
+	blockHeight = bHeight;
+	blockWidth = bWidth;
+}
+
 
 
 

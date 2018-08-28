@@ -24,6 +24,8 @@ int parse(char* buffer) {
 	int cellsToKeep;
 	/*this variable will be used as part of the "mark_errors" command*/
 	int mark;
+	int markerrors;
+	int mode;
 
 	if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
 		cmd = strtok(buffer, " \t\r\n");
@@ -37,7 +39,7 @@ int parse(char* buffer) {
 						col = atoi(sCol) - 1;
 						row = atoi(sRow) - 1;
 						val = atoi(sVal);
-						setMain(row, col, val);
+						setMAIN(row, col, val);
 					}
 					break;
 				}

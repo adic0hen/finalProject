@@ -41,8 +41,8 @@ typedef struct cellNodeGuard {
 } cellNodeGuard;
 
 
-struct URNodeGuard UndoRedoList;
-struct cellNodeGuard** LIFOCells;
+extern struct URNodeGuard UndoRedoList;
+extern struct cellNodeGuard** LIFOCells;
 
 
 extern struct Cell** mainGameBoard;
@@ -50,8 +50,10 @@ extern int boardSize;
 extern int blockHeight;
 extern int blockWidth;
 
+extern int mode;
 
-#define MAXNUM = boardSize;
+
+
 
 
 

@@ -47,57 +47,65 @@ void printBoard(int markErrors) {
 	int i;
 	int j;
 	int rowCounter;
-	int numberOfBlocks;
+	int numberOfBlocksInRow;
+	int boardRow;
+	int numOfIterations;
 
-	numberOfBlocks = boardSize / blockWidth;
+	numOfIterations = boardSize + (boardSize / blockHeight);
+	numberOfBlocksInRow = boardSize / blockWidth;
 	rowCounter = 0;
-	while (rowCounter < boardSize)
+	boardRow = 0;
+
+	while (rowCounter <= numOfIterations)
 	{
 
 		/*print dashes*/
-		if (rowCounter % blockHeight == 0)
+		if (rowCounter % (blockHeight+1) == 0)
 		{
-			for (i = 0; i < (4 * boardSize + blockWidth + 1);i++) {
+			for (i = 0; i < (4 * boardSize + blockHeight + 1);i++) {
 				printf("-");
 			}
+			printf("\n");
 		}
 
 		/* for each row of numbers*/
-		if (rowCounter % blockHeight != 0)
+		if (rowCounter % (blockHeight+1) != 0)
 		{
 
 			/* for each block*/
-			for (i = 0; i < numberOfBlocks; i++)
+			for (i = 0; i < numberOfBlocksInRow; i++)
 			{
 				printf("|");
 
 				/* for each cell in the block, per row*/
-				for (j = 0; j < blockWidth; j++)
+				for (j = (i*blockWidth); j < ((i+1)*blockWidth); j++)
 				{
 					printf(" ");
-					if (mainGameBoard[rowCounter][j].currentCellvalue == -1) {
+					if (mainGameBoard[boardRow][j].currentCellvalue == -1) {
 						printf("  ");
 					}
 					else {
-						printf("%2d", mainGameBoard[rowCounter][j].currentCellvalue);
+						printf("%2d", mainGameBoard[boardRow][j].currentCellvalue);
 					}
 
-					if (mainGameBoard[rowCounter][j].isFixed) {
+					if (mainGameBoard[boardRow][j].isFixed) {
 						printf(".");
 					}
-					else if (mainGameBoard[rowCounter][j].isErroneus) {
+					else if (mainGameBoard[boardRow][j].isErroneus) {
 						printf("*");
 					}
 					else {
 						printf(" ");
 					}
 				}
-
-				printf("|");
 			}
+			
+			boardRow += 1;
+			printf("|\n");
 
-			rowCounter += 1;
 		}
+
+		rowCounter += 1;
 	}
 }
 
@@ -138,7 +146,6 @@ void set(int row, int coloumn, int number, int isErroneous) {
 	if (isErroneous) {
 		mainGameBoard[row][coloumn].currentCellvalue = number;
 		mainGameBoard[row][coloumn].isErroneus = 1;
-		return 1;
 	}
 	else {
 		mainGameBoard[row][coloumn].currentCellvalue = number;
@@ -146,6 +153,7 @@ void set(int row, int coloumn, int number, int isErroneous) {
 }
 
 
+/* row,coloumn as user entered */
 int setMAIN(int row, int coloumn, int number) {
 	int isValidNumber;
 
@@ -153,29 +161,33 @@ int setMAIN(int row, int coloumn, int number) {
 	if (number > boardSize || number < 0) {
 		return 0; /*Error of Invalid Number*/
 	}
-	if (row >= boardSize || coloumn >= boardSize) {
+	if (row > boardSize || coloumn > boardSize) {
+		return 0;
+	}
+	if (row < 1 || coloumn < 1) {
 		return 0;
 	}
 
+
 	if (number == 0) {
-		if (mainGameBoard[row][coloumn].isFixed) {
+		if (mainGameBoard[row-1][coloumn-1].isFixed) {
 			return 2; /*Error of clearing a fixed cell*/
 		}
 		else {
-			deleteCell(row, coloumn, number);
-			return 1;
+			deleteCell(row-1, coloumn-1, number);
 		}
 	}
 
-	isValidNumber = checkValidityOfNum(number, row, coloumn);
+	isValidNumber = checkValidityOfNum(number, row-1, coloumn-1);
 
 	if (!isValidNumber) {
-		set(row, coloumn, number, 1);
+		set(row-1, coloumn-1, number, 1);
 	}
 	else {
-		set(row, coloumn, number, 0);
+		set(row-1, coloumn-1, number, 0);
 	}
 
+	return 1;
 
 }
 
@@ -217,10 +229,10 @@ int autofill() {
 		expectedSum += i;
 	}
 
-	autofillROWS(&boardToFill ,expectedSum);
-	autofillCOLOUMS(&boardToFill, expectedSum);
-	autofillBLOCKS(&boardToFill, expectedSum);
-	autofillFILLCELLS(&boardToFill);
+	autofillROWS(boardToFill ,expectedSum);
+	autofillCOLOUMS(boardToFill, expectedSum);
+	autofillBLOCKS(boardToFill, expectedSum);
+	autofillFILLCELLS(boardToFill);
 
 	for (i = 0; i < boardSize; i++) {
 		free(boardToFill[i]);
@@ -254,7 +266,6 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 			for (j = 0; j < boardSize; j++) {
 				if (mainGameBoard[i][j].currentCellvalue == -1) {
 					col = j;
-					break;
 				}
 			}
 			numToFill = expectedSum - sum;
@@ -317,12 +328,13 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 
 	for (rowBlockStart=0 ; rowBlockStart < boardSize; rowBlockStart+=blockHeight) {
 
-		for (coloumnBlockStart; coloumnBlockStart < boardSize; coloumnBlockStart+=blockWidth) {
+		for (coloumnBlockStart=0; coloumnBlockStart < boardSize; coloumnBlockStart+=blockWidth) {
 
 			flag = 1;
 			counter = 0;
 			rowIndex = 0;
 			colIndex = 0;
+			sum = 0;
 
 			/* checking each block*/ 
 			for (i = rowBlockStart; i < rowBlockStart + blockHeight; i++) {
@@ -675,6 +687,8 @@ int isErroneous() {
 }
 
 int markErrors(int mark) {
+	int markerrors;
+
 	if (mode == 2) {
 		if (mark == 0 || mark == 1) {
 			markerrors = mark;
@@ -682,7 +696,7 @@ int markErrors(int mark) {
 		return 1;
 	}
 	else {
-		fprintf("Error: the value should be 0 or 1\n");
+		printf("Error: the value should be 0 or 1\n");
 		return 0;
 	}
 }

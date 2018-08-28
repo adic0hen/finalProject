@@ -18,6 +18,7 @@ writeBoardToFile(FILE* fptr);
 
 int save(char* path) {
 	FILE* fptr;
+	
 
 	if (mode == 3) { /*in Edit mode we need to make some validations*/
 		if (isErroneous(mainGameBoard)) {
