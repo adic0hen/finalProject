@@ -22,10 +22,19 @@ int main(int argc, char *argv[]) {
 	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
+	allocateMemForLIFOCells();
+	initialUndoRedoListAndLIFOCells();
 	printBoard(0);
-	mode = 1;
-	markerrors = 1;
-	game();
+	setMAIN(1, 1, 1);
+	setMAIN(1, 2, 2);
+	setMAIN(2, 5, 7);
+	undoMAIN();
+	undoMAIN();
+	redoMAIN();
+
+
+	printBoard(0);
+	
 
 
 }

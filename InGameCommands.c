@@ -13,6 +13,7 @@ void autofillFILLCELLS(int** boardToFill);
 void updateMainBoardAfterUndoRedo(int row, int coloumn);
 int isErroneous();
 int markErrors(int mark);
+void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode);
 
 
 
@@ -137,6 +138,7 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 
 void deleteCell(int row, int coloumn, int number) {
 	mainGameBoard[row][coloumn].currentCellvalue = -1;
+	mainGameBoard[row][coloumn].isErroneus = 0;
 
 }
 
@@ -186,6 +188,8 @@ int setMAIN(int row, int coloumn, int number) {
 	else {
 		set(row-1, coloumn-1, number, 0);
 	}
+
+	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 
 	return 1;
 
@@ -413,10 +417,13 @@ void autofillFILLCELLS(int** boardToFill) {
 			if (boardToFill[i][j] != 0) {
 				numToFill = boardToFill[i][j];
 				set(i, j, numToFill, 0);
+				updateURListAfterSet(i, j, &mainGameBoard[i][j], 2);
 				printf("Cell %d,%d set to %d\n", i + 1, j + 1, numToFill);
 			}
 		}
 	}
+	/* Marking the end of the autofill*/
+	updateURListAfterSet(-1, -1, NULL, 3);
 }
 
 
@@ -490,8 +497,6 @@ void clearSingleURNode(URNode* nodeToDelete) {
 	free(nodeToDelete);
 }
 
-
-
 /* clear all the list from current position (not including the startNode, to clear all list, use clearList() */
 void clearURListFromCurrentPosition(URNode* startNode) {
 	URNode* current;
@@ -507,7 +512,6 @@ void clearURListFromCurrentPosition(URNode* startNode) {
 	
 }
 
-
 /* mode: 0- generate, 1-Regular set, 2 - autofill */
 void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirst) {
 	URNode* next;
@@ -518,6 +522,9 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 
 	if (!isFirst) {
 		currPos = UndoRedoList.currentMove;
+	}
+	else {
+		currPos = NULL;
 	}
 
 	tempPTR = malloc(sizeof(URNode));
@@ -540,7 +547,9 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 	cellNodeToEnter->data = cell;
 	cellNodeToEnter->next = temp;
 	cellNodeToEnter->prev = NULL;
-	temp->prev = cellNodeToEnter;
+	if (temp != NULL) {
+		temp->prev = cellNodeToEnter;
+	}
 	LIFOCells[row][coloumn].first = cellNodeToEnter;
 
 	next->row = row;
@@ -558,48 +567,53 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 		currPos->next = next;
 	}
 
-	UndoRedoList.currentMove = currPos;
+	UndoRedoList.currentMove = next;
 
 	
 
 }
 
-
 void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	int isFirst;
+	Cell* cloneCell;
+
+	cloneCell = (Cell*)malloc(sizeof(cell));
+	cloneCell->currentCellvalue = cell->currentCellvalue;
+	cloneCell->isErroneus = cell->isErroneus;
+	cloneCell->isFixed = cell->isFixed;
 
 
 	if (UndoRedoList.isEmpty) {
 		isFirst = 1;
+		UndoRedoList.isEmpty = 0;
 	}
 	else {
 		isFirst = 0;
 	}
 
-	if (!UndoRedoList.isEmpty) {
+	if (!isFirst) {
 		clearURListFromCurrentPosition(UndoRedoList.currentMove);
 	}
 
-	insertURListAfterSET(row, coloumn, cell, mode, isFirst);
+	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
 }
-
 
 void updateMainBoardAfterUndoRedo(int row, int coloumn) {
 	Cell* cellToEnter;
 
 
-	cellToEnter = LIFOCells[row][coloumn].first->data;
-
-	if (cellToEnter == NULL) {
+	if (LIFOCells[row][coloumn].first == NULL) {
 		mainGameBoard[row][coloumn].currentCellvalue = -1;
 		mainGameBoard[row][coloumn].isErroneus = 0;
 		mainGameBoard[row][coloumn].isFixed = 0;
 	}
 	else {
+		cellToEnter = LIFOCells[row][coloumn].first->data;
 		mainGameBoard[row][coloumn] = *cellToEnter;
 	}
 
 }
+
 
 
 void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
@@ -631,26 +645,30 @@ void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
 
 void undo() {
 	URNode* currentMove;
+	cellNode* nextNode;
 	int prevNumber;
-	int newNumber;
+	int row;
+	int coloumn;
 
 
 	currentMove = UndoRedoList.currentMove;
 	prevNumber = currentMove->move->data->currentCellvalue;
+	row = currentMove->row;
+	coloumn = currentMove->col;
 
-	disconnectNodeFromLIFOCell(currentMove->row, currentMove->col, currentMove->move);
+	disconnectNodeFromLIFOCell(row, coloumn, currentMove->move);
 
-	updateMainBoardAfterUndoRedo(currentMove->row, currentMove->col);
+	updateMainBoardAfterUndoRedo(row, coloumn);
 
 	UndoRedoList.currentMove = currentMove->prev;
 	
-	newNumber = UndoRedoList.currentMove->move->data->currentCellvalue;
+	nextNode = LIFOCells[row][coloumn].first;
 
-	if (newNumber != -1) {
-		printf("Undo %d,%d: from %d to %d\n", currentMove->row, currentMove->col, prevNumber, newNumber);
+	if (nextNode != NULL) {
+		printf("Undo %d,%d: from %d to %d\n", row, coloumn, prevNumber, nextNode->data->currentCellvalue);
 	}
 	else {
-		printf("Undo %d,%d: from %d to _\n", currentMove->row, currentMove->col, prevNumber);
+		printf("Undo %d,%d: from %d to _\n", row, coloumn, prevNumber);
 	}
 }
 
@@ -671,10 +689,14 @@ void undoMAIN() {
 	}
 	else if (currentMove->type == 2) {
 		while (currentMove->type == 2) {
-			currentMove = currentMove->prev;
 			undo();
 		}
 	}
+	else if (currentMove->type == 3) {
+		UndoRedoList.currentMove = currentMove->prev;
+	}
+
+	/* NEED TO HANDLE CASES OF GENERATE AND END OF AUTOFILL*/
 
 }
 
@@ -697,8 +719,75 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 }
 
 
+void redo() {
+	URNode* currentNode;
+	URNode* nextNode;
+	cellNode* prevNode;
+	int row;
+	int coloumn;
+	int newNumber;
 
-void redo() {}
+	nextNode = UndoRedoList.currentMove->next;
+
+	UndoRedoList.currentMove = nextNode;
+	row = nextNode->row;
+	coloumn = nextNode->col;
+
+	prevNode = LIFOCells[row][coloumn].first;
+
+	connectNodeToLIFOCell(row, coloumn, nextNode->move);
+	updateMainBoardAfterUndoRedo(row, coloumn);
+
+	newNumber = LIFOCells[row][coloumn].first->data->currentCellvalue;
+
+	UndoRedoList.currentMove = nextNode;
+
+	if (prevNode != NULL) {
+		printf("Redo %d,%d: from %d to %d\n", row, coloumn, prevNode->data->currentCellvalue, newNumber);
+	}
+	else {
+		printf("Redo %d,%d: from _ to %d\n", row, coloumn, newNumber);
+	}
+}
+
+
+void redoMAIN() {
+	URNode* currentMove;
+
+	currentMove = UndoRedoList.currentMove;
+	if (UndoRedoList.isEmpty) {
+		printf("Error: no moves to Redo\n");
+	}
+
+	else if (currentMove == NULL) {
+		UndoRedoList.currentMove = UndoRedoList.next;
+	}
+	else if (currentMove->next = NULL) {
+		printf("Error: no moves to Redo\n");
+	}
+	else {
+		if (currentMove->type == 1) {
+			redo();
+		}
+		else if (currentMove->type == 2) {
+			while (currentMove->type == 2) {
+				redo();
+			}
+		}
+		else if (currentMove->type ==3) {
+			if (UndoRedoList.currentMove->next == NULL) {
+			}
+			else {
+				UndoRedoList.currentMove = currentMove->next;
+			}
+		}
+		else {}
+		/* NEED TO HANDLE CASES OF GENERATE AND END OF AUTOFILL*/
+
+	}
+
+
+}
 
 
 

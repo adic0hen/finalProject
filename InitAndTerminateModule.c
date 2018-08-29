@@ -78,6 +78,46 @@ void initiallizeGameParameters(int N, int bHeight, int bWidth) {
 }
 
 
+int allocateMemForLIFOCells() {
+	cellNodeGuard** allocatedMemAddr;
+	int i;
+	void*  tempPTR;
+
+	allocatedMemAddr = (cellNodeGuard**)malloc(sizeof(cellNodeGuard*) *boardSize);
+	if (allocatedMemAddr == NULL) {
+		return 0;
+	}
+
+	for (i = 0; i < boardSize; i++) {
+		tempPTR = (malloc(sizeof(cellNodeGuard) *boardSize));
+		if (tempPTR == NULL) {
+			return 0;
+		}
+		allocatedMemAddr[i] = (cellNodeGuard*)tempPTR;
+	}
+
+	// DONE ALLOCATING MEMORY FOR BOARD //
+
+	LIFOCells = allocatedMemAddr;
+
+	return 1;
+}
+
+
+void initialUndoRedoListAndLIFOCells() {
+	int i;
+	int j;
+
+	UndoRedoList.currentMove = NULL;
+	UndoRedoList.isEmpty = 1;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize;j++) {
+			LIFOCells[i][j].first = NULL;
+		}
+	}
+
+}
 
 
 
