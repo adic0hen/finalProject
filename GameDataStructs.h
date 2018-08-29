@@ -51,6 +51,15 @@ extern int blockHeight;
 extern int blockWidth;
 
 extern int mode;
+/* mode values and their meaning:
+1 = init
+2 = solve
+3 = edit
+4 = restart
+0 = exit
+*/
+
+extern int markerrors;
 
 
 

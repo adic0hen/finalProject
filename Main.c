@@ -18,18 +18,14 @@
 
 /* main for tests*/ 
 
-int main() {
-	int i;
+int main(int argc, char *argv[]) {
 	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
 	printBoard(0);
-
-	printBoard(0);
-
-	autofill();
-
-	printBoard(1);
+	mode = 1;
+	markerrors = 1;
+	game();
 
 
 }

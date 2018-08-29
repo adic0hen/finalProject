@@ -14,6 +14,7 @@ int boardSize;
 int blockHeight;
 int blockWidth;
 int mode;
+int markerrors;
 
 
 

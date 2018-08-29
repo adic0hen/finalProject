@@ -3,8 +3,7 @@
 
 int game();
 
-extern int mode;
-extern int markerrors;
+
 
 /* mode values and their meaning:
 1 = init

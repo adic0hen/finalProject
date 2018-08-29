@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\IOCommands.c" />
     <ClCompile Include="..\..\Main.c" />
     <ClCompile Include="..\..\Parser.c" />
+    <ClCompile Include="..\..\Solver.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\GameDataStructs.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="..\..\InitAndTerminateModule.h" />
     <ClInclude Include="..\..\IOCommands.h" />
     <ClInclude Include="..\..\Parser.h" />
+    <ClInclude Include="..\..\Solver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

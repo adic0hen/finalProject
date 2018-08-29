@@ -206,7 +206,6 @@ int isErroneous() {
 }
 
 int markErrors(int mark) {
-	int markerrors;
 
 	if (mode == 2) {
 		if (mark == 0 || mark == 1) {

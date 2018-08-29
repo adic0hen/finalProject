@@ -5,7 +5,8 @@
 	#include "InGameCommands.h"
 	#include "InitAndTerminateModule.h"
 	#include "IOCommands.h"
-
+	#include "GameDataStructs.h"
+void invalid(char* cmd);
 int parse(char* buffer) {
 	char* cmd;
 	/*these variables will be used as part of the "set","hint" commands*/
@@ -24,10 +25,8 @@ int parse(char* buffer) {
 	int cellsToKeep;
 	/*this variable will be used as part of the "mark_errors" command*/
 	int mark;
-	int markerrors;
-	int mode;
 
-	if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+	if (fgets(buffer, 256, stdin) != NULL) {
 		cmd = strtok(buffer, " \t\r\n");
 		while (cmd != NULL) {
 			if (strcmp(cmd, "set") == 0) {
@@ -44,7 +43,8 @@ int parse(char* buffer) {
 					break;
 				}
 				else {
-					continue; /*this will result in getting to the invalid command part*/
+					invalid(cmd); /*this will result in getting to the invalid command part*/
+					break;
 				}
 			}
 			if (strcmp(cmd, "solve") == 0) {
@@ -55,7 +55,6 @@ int parse(char* buffer) {
 				}
 				break;
 			}
-
 			if (strcmp(cmd, "edit") == 0) {
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) {
@@ -69,21 +68,26 @@ int parse(char* buffer) {
 				break;
 			}
 			if (strcmp(cmd, "mark_errors") == 0) {
+				int mark;
 				mark = atoi(strtok(NULL, " \t\r\n"));
+				
 				if (markErrors(mark)) {/*this is True when we are in Solve mode*/
 					break;
 				}
 				else {
-					continue;/*this will result in getting to the invalid command part*/
+					invalid(cmd);/*this will result in getting to the invalid command part*/
+					break;
 				}
 			}
 			if (strcmp(cmd, "print_board") == 0) {
+				
 				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
 					printBoard(markerrors);
 					break;
 				}
 				else {
-					continue; /*this will result in getting to the invalid command part*/
+					invalid(cmd); /*this will result in getting to the invalid command part*/
+					break;
 				}
 			}
 			if (strcmp(cmd, "validate") == 0) {
@@ -147,7 +151,13 @@ int parse(char* buffer) {
 				break;
 			}
 			/*Invalid command part - we get to this part of the parser only if there was an invalid command*/
-			printf("Error: invalid command\n");
+			invalid(cmd);
+			break;
 		}
 	}
 }
+
+void invalid(char* cmd) {
+		printf("Error: invalid command\n");
+		cmd = NULL;
+	}
