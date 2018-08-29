@@ -56,13 +56,12 @@ int parse(char* buffer) {
 				break;
 			}
 			if (strcmp(cmd, "edit") == 0) {
+				mode = 3;
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) {
-					mode = 3;
 					load(filePath);
 				}
 				else { /*initializing an empty board because there was no file path given*/
-					mode = 3;
 					initializeMainBoard();
 				}
 				break;
