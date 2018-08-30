@@ -19,8 +19,7 @@
 /* main for tests*/ 
 
 int main(int argc, char *argv[]) {
-	/*
-	initiallizeGameParameters(9, 3, 3);
+	/*initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
 	allocateMemForLIFOCells();
@@ -31,15 +30,10 @@ int main(int argc, char *argv[]) {
 	setMAIN(2, 5, 7);
 	undoMAIN();
 	undoMAIN();
-	printBoard(0);
 	redoMAIN();
 
 
 	printBoard(0);
-	*/
-	int* arr =(int*)malloc(3 * sizeof(int));
-	arr[1] = 0;
-	printf("%d", arr[1]);
 	
 
 
