@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 	setMAIN(2, 5, 7);
 	undoMAIN();
 	undoMAIN();
+	printBoard(0);
 	redoMAIN();
 
 
