@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameDataStructs.h"
+#include "gurobi_c.h"
 
 
 
@@ -176,11 +177,8 @@ int validateSolve() {
 	return isSolvabe;
 }
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "GameDataStructs.h"
-#include "gurobi_c.h"
+
+
 
 int solve() {
 	/*declaring variables*/
