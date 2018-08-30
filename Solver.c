@@ -1,14 +1,46 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "GameDataStructs.h"
+/*#include "GameDataStructs.h"*/
 #include "gurobi_c.h"
+#include <string.h>
 
 
-
-
+int boardSize;
+int blockHeight;
+int blockWidth;
 int** board;
 
-int test_boardSize;
+void solve();
+void quit(int error, GRBenv *env);
+void test_MAIN();
+
+int main() {
+	int good;
+	printf("enter boardSize\n");
+	if (scanf("%d", &boardSize)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("enter blockHeight\n");
+	if (scanf("%d", &blockHeight)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("enter blockWidth\n");
+	if (scanf("%d", &blockWidth)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("%d", good);
+	test_MAIN();
+	return 0;
+}
 
 
 int allocateMemForBoard(int test) {
@@ -19,7 +51,7 @@ int allocateMemForBoard(int test) {
 
 
 	if (test) {
-		size = test_boardSize;
+		size = boardSize;
 	}
 	else {
 		size = boardSize;
@@ -44,7 +76,7 @@ int allocateMemForBoard(int test) {
 	}
 
 	board = allocatedMemAddr;
-
+	return 1;
 }
 
 
@@ -57,9 +89,9 @@ void test_initBoard() {
 	int i;
 	int j;
 
-	for (i = 0; i < test_boardSize; i++) {
-		for (j = 0; j < test_boardSize; j++) {
-			board[i][j] = 0;
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			board[i][j] = -1;
 		}
 	}
 }
@@ -71,8 +103,8 @@ void test_printBoard() {
 
 
 
-	for (i = 0; i < test_boardSize; i++) {
-		for (j = 0; j < test_boardSize; j++) {
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
 			printf(" %2d ", board[i][j]);
 		}
 		printf("\n");
@@ -81,16 +113,17 @@ void test_printBoard() {
 }
 
 void test_MAIN() {
-	test_boardSize = 9;
 	allocateMemForBoard(1);
-	test_initBoard;
+	test_initBoard();
+
 	board[1][2] = 5;
 	board[3][4] = 7;
-	board[8][1] = 4;
+	board[2][1] = 4;
 	board[5][3] = 4;
-	board[1][3] = 9;
+	board[1][3] = 3;
 	board[0][0] = 7;
 	board[0][3] = 2;
+
 
 	test_printBoard();
 	solve();
@@ -101,7 +134,7 @@ void test_MAIN() {
 
 
 
-/* -------- NO NEED THESE FUNCTIONS FOR TESTING-------------*/
+/* -------- NO NEED THESE FUNCTIONS FOR TESTING-------------
 void copyMainBoardToGourobiBoard() {
 	int i;
 	int j;
@@ -169,18 +202,18 @@ int validateSolve() {
 	allocateMemForBoard(0);
 	copyMainBoardToGourobiBoard();
 
-	/* NEED TO CHECK IF SOLVER HAS FINISHED */
-	isSolvabe = 0; /* ---TEMP VALUE--- NEED TO REPLACE WITH THE TRUE VALUE */
-
+	
+	isSolvabe = 0; 
 	free(board);
 
 	return isSolvabe;
 }
 
+*/
 
 
 
-int solve() {
+void solve() {
 	/*declaring variables*/
 	GRBenv *env;
 	GRBmodel *model;
@@ -194,26 +227,32 @@ int solve() {
 	double *val; /**/
 	double *lb; /**/
 	char *vtype; /**/
-	char *names;
+	char **names; /**/
 	char *namestorage; /**/
 	char *cursor;
 	int optimstatus;
 	double objval;
+	/*
 	int zero;
+	*/
 	int error;
+	double* sol;
 
-
+	printf("0");
 	/*defining variables*/
 	ind = (int*)malloc(boardSize * sizeof(int));
-	val = (double*)malloc(boardSize * sizeof(int));
+	val = (double*)malloc(boardSize * sizeof(double));
 	lb = (double*)malloc(boardSize * boardSize * boardSize * sizeof(double));
 	vtype = (char*)malloc(boardSize * boardSize * boardSize * sizeof(char));
-	names = (char*)malloc(boardSize * boardSize * boardSize * sizeof(char));
+	names = (char**)malloc(boardSize * boardSize * boardSize * sizeof(char));
 	namestorage = (char*)malloc(10 * boardSize * boardSize * boardSize * sizeof(char));
 	error = 0;
+	/*
 	zero = 0;
+	*/
 	model = NULL;
 	env = NULL;
+	sol = (double*)malloc(boardSize * boardSize*boardSize * sizeof(double));
 
 	/* Create an empty model */
 
@@ -320,9 +359,66 @@ int solve() {
 			}
 		}
 	}
+	
+
+	/* Optimize model */
+
+	error = GRBoptimize(model);
+	if (error) {
+		quit(error, env);
+	}
+	
+	/* Write model to 'sudoku.lp' */
+
+	error = GRBwrite(model, "sudoku.lp");
+	if (error) {
+		quit(error, env);
+	}
+	
+	/* Capture solution information */
+
+	error = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
+	if (error) {
+		quit(error, env);
+	}
+	
+	error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &objval);
+	if (error) {
+		quit(error, env);
+	}
+
+	error = GRBgetdblattrarray(model, GRB_DBL_ATTR_X, 0, boardSize*boardSize*boardSize, sol);
+	if (error) {
+		quit(error, env);
+	}
+	
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			for (v = 0; v < boardSize; v++) {
+				if (sol[i*boardSize* boardSize + j * boardSize + v] == 1) {
+					printf("%d ", v+1);
+				}
+			}
+			printf("  ");
+		}
+		printf("\n\n");
+	}
+
+	
+
+	printf("\nOptimization complete\n");
+	if (optimstatus == GRB_OPTIMAL)
+		printf("Optimal objective: %.4e\n", objval);
+	else if (optimstatus == GRB_INF_OR_UNBD)
+		printf("Model is infeasible or unbounded\n");
+	else
+		printf("Optimization was stopped early\n");
+	printf("\n");
+
+
 }
 
-quit(int error, GRBenv *env) {
+void quit(int error, GRBenv *env) {
 
 	/* Error reporting */
 
