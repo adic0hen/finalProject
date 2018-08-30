@@ -35,8 +35,8 @@ int parse(char* buffer) {
 					sCol = strtok(NULL, " \t\r\n");
 					sVal = strtok(NULL, " \t\r\n");
 					if (sCol != NULL && sRow != NULL && sVal != NULL) { /*making sure we have all the values*/
-						col = atoi(sCol) - 1;
-						row = atoi(sRow) - 1;
+						col = atoi(sCol);
+						row = atoi(sRow);
 						val = atoi(sVal);
 						setMAIN(row, col, val);
 					}
@@ -79,7 +79,6 @@ int parse(char* buffer) {
 				}
 			}
 			if (strcmp(cmd, "print_board") == 0) {
-				
 				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
 					printBoard(markerrors);
 					break;
