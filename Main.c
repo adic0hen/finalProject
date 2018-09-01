@@ -5,39 +5,35 @@
 #include "GameDataStructs.h"
 #include "InGameCommands.h"
 #include "InitAndTerminateModule.h"
+#include "IOCommands.h"
 
 
 
-/*int main() {
-	mode = 1;
-	markerrors = 1; default value is 1 - "True"
-	game();
-} 
+/*
+int main(int argc, char* argv[]) {
+	printf("hi");
+	return 0;
+}
 */
+
 
 
 /* main for tests*/ 
 
 int main(int argc, char *argv[]) {
-	/*initiallizeGameParameters(9, 3, 3);
+	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
-	allocateMemForLIFOCells();
-	initialUndoRedoListAndLIFOCells();
 	printBoard(0);
-	setMAIN(1, 1, 1);
-	setMAIN(1, 2, 2);
-	setMAIN(2, 5, 7);
-	undoMAIN();
-	undoMAIN();
-	redoMAIN();
-
-
+	set(1, 1, 1, 0);
+	set(1, 2, 2, 0);
+	set(2, 5, 7, 0);
 	printBoard(0);
-	
 
-
+	IOTest();
+	free(mainGameBoard);
 }
+
 
 
 
