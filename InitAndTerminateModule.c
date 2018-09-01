@@ -47,18 +47,23 @@ void initializeMainBoard() {
 void initializeLoadedMainBoard(FILE *fptr) {
 	int i;
 	int j;
-	int* tempNum;
-	char* tempDot;
-
+	int tempNum;
+	char tempDot;
+	
+	
 
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			fscanf(fptr, "%d", tempNum); /*scanning the current Cell's number*/
-			fscanf(fptr, "%d", tempDot);/*either a dot right after the number, or a white space*/
-
-			mainGameBoard[i][j].currentCellvalue = *tempNum;
-
-			if (strcmp(tempDot, ".") == 0) {
+			fscanf(fptr, "%d", &tempNum); /*scanning the current Cell's number*/
+			fscanf(fptr, "%c", &tempDot);/*either a dot right after the number, or a white space*/
+			if (tempNum == 0) { /*this part relates to working with their save format*/
+				mainGameBoard[i][j].currentCellvalue = -1;
+			}
+			else {
+				mainGameBoard[i][j].currentCellvalue = tempNum;
+			}
+			printf("%d%c", tempNum, tempDot);/*for debugging, need do be removed*/
+			if (strcmp(&tempDot, ".") == 0) {
 				mainGameBoard[i][j].isFixed = 1;
 			}
 			else {
@@ -67,6 +72,7 @@ void initializeLoadedMainBoard(FILE *fptr) {
 
 			mainGameBoard[i][j].isErroneus = 0;
 		}
+		printf("\n"); /*for debugging, need do be removed*/
 	}
 }
 
