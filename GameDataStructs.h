@@ -17,6 +17,8 @@ typedef struct Cell {
 typedef struct URNodeGuard {
 	struct URNode* next;
 	struct URNode* currentMove;
+	struct Cell** initialBoard;
+	int isInitBoardValid;
 	int isEmpty;
 } URNodeGuard;
 

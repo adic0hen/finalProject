@@ -512,6 +512,8 @@ void clearURListFromCurrentPosition(URNode* startNode) {
 	
 }
 
+
+
 /* mode: 0- generate, 1-Regular set, 2 - autofill */
 void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirst) {
 	URNode* next;
@@ -527,6 +529,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 		currPos = NULL;
 	}
 
+	/* allocate Mem for UR Node, need anyway*/ 
 	tempPTR = malloc(sizeof(URNode));
 	if (tempPTR == NULL) {
 		return;
@@ -534,53 +537,69 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 	else {
 		next = (URNode*)tempPTR;
 	}
+	/* --- */ 
 
-	tempPTR = malloc(sizeof(cellNode));
-	if (tempPTR == NULL) {
-		return;
-	}
-	else {
-		cellNodeToEnter = (cellNode*)tempPTR;
-	}
 
-	temp = LIFOCells[row][coloumn].first; 
-	cellNodeToEnter->data = cell;
-	cellNodeToEnter->next = temp;
-	cellNodeToEnter->prev = NULL;
-	if (temp != NULL) {
-		temp->prev = cellNodeToEnter;
-	}
-	LIFOCells[row][coloumn].first = cellNodeToEnter;
 
-	next->row = row;
-	next->col = coloumn;
-	next->move = cellNodeToEnter;
+	/* allocate Mem and update fields for non-guard UR node */
+	if (mode == 1 || mode == 2) 
+	{
+		tempPTR = malloc(sizeof(cellNode));
+		if (tempPTR == NULL) {
+			return;
+		}
+		else {
+			cellNodeToEnter = (cellNode*)tempPTR;
+		}
+
+		/* enter to LIFOCells */
+		temp = LIFOCells[row][coloumn].first;
+		cellNodeToEnter->data = cell;
+		cellNodeToEnter->next = temp;
+		cellNodeToEnter->prev = NULL;
+		if (temp != NULL) {
+			temp->prev = cellNodeToEnter;
+		}
+		LIFOCells[row][coloumn].first = cellNodeToEnter;
+		/* --- */
+
+
+		next->row = row;
+		next->col = coloumn;
+		next->move = cellNodeToEnter;
+		if (isFirst) {
+			next->prev = NULL;
+			UndoRedoList.next = next;
+			UndoRedoList.isEmpty = 0;
+		}
+		else {
+			next->prev = currPos;
+			currPos->next = next;
+		}
+	}
+	/* --- */ 
+
 	next->type = mode;
 	next->next = NULL;
-	if (isFirst) {
-		next->prev = NULL;
-		UndoRedoList.next = next;
-		UndoRedoList.isEmpty = 0;
-	}
-	else {
-		next->prev = currPos;
-		currPos->next = next;
-	}
-
 	UndoRedoList.currentMove = next;
 
-	
-
 }
+
+
 
 void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	int isFirst;
 	Cell* cloneCell;
 
-	cloneCell = (Cell*)malloc(sizeof(cell));
-	cloneCell->currentCellvalue = cell->currentCellvalue;
-	cloneCell->isErroneus = cell->isErroneus;
-	cloneCell->isFixed = cell->isFixed;
+	if (cell != NULL) {
+		cloneCell = (Cell*)malloc(sizeof(cell));
+		cloneCell->currentCellvalue = cell->currentCellvalue;
+		cloneCell->isErroneus = cell->isErroneus;
+		cloneCell->isFixed = cell->isFixed;
+	}
+	else {
+		cloneCell = NULL;
+	}
 
 
 	if (UndoRedoList.isEmpty) {
@@ -597,6 +616,9 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 
 	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
 }
+
+
+
 
 void updateMainBoardAfterUndoRedo(int row, int coloumn) {
 	Cell* cellToEnter;
@@ -643,13 +665,40 @@ void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
 }
 
 
+void updateMainBoardToNone() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			mainGameBoard[i][j].currentCellvalue = -1;
+			mainGameBoard[i][j].isFixed = 0;
+			mainGameBoard[i][j].isErroneus = 0;
+		}
+	}
+}
+
+
+void updateMainBoardToFirstBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			mainGameBoard[i][j].currentCellvalue = (UndoRedoList.initialBoard[i][j]).currentCellvalue;
+			mainGameBoard[i][j].isFixed = (UndoRedoList.initialBoard[i][j]).isFixed;
+			mainGameBoard[i][j].isErroneus = (UndoRedoList.initialBoard[i][j]).isErroneus;
+		}
+	}
+}
+
+
 void undo() {
 	URNode* currentMove;
 	cellNode* nextNode;
 	int prevNumber;
 	int row;
 	int coloumn;
-
 
 	currentMove = UndoRedoList.currentMove;
 	prevNumber = currentMove->move->data->currentCellvalue;
@@ -676,12 +725,24 @@ void undo() {
 void undoMAIN() {
 	URNode* currentMove;
 
-	currentMove = UndoRedoList.currentMove;
+
 	if (UndoRedoList.isEmpty) {
 		printf("Error: no moves to undo\n");
+		return;
 	}
+
+	currentMove = UndoRedoList.currentMove;
+	
 	if (currentMove->prev == NULL) {
-		UndoRedoList.currentMove = NULL;
+		if (currentMove->type == 0) {
+			/* case of encounter a generate/load from file guard */
+			UndoRedoList.currentMove = NULL;
+			updateMainBoardToNone();
+		}
+		else {
+			UndoRedoList.currentMove = NULL;
+		}
+		return;
 	}
 
 	if (currentMove->type == 1) {
@@ -694,9 +755,10 @@ void undoMAIN() {
 	}
 	else if (currentMove->type == 3) {
 		UndoRedoList.currentMove = currentMove->prev;
+		while (currentMove->type == 2) {
+			undo();
+		}
 	}
-
-	/* NEED TO HANDLE CASES OF GENERATE AND END OF AUTOFILL*/
 
 }
 
@@ -757,12 +819,16 @@ void redoMAIN() {
 	currentMove = UndoRedoList.currentMove;
 	if (UndoRedoList.isEmpty) {
 		printf("Error: no moves to Redo\n");
+		return;
 	}
 
 	else if (currentMove == NULL) {
+		if (UndoRedoList.isInitBoardValid) {
+			updateMainBoardToFirstBoard();
+		}
 		UndoRedoList.currentMove = UndoRedoList.next;
 	}
-	else if (currentMove->next = NULL) {
+	else if (currentMove->next == NULL) {
 		printf("Error: no moves to Redo\n");
 	}
 	else {
@@ -790,7 +856,49 @@ void redoMAIN() {
 }
 
 
+/* Use to clone the first board - After load from file and generate */
+void updateURListAfterFirstBoard() {
+	int i;
+	int j;
+	Cell** cloneFirstBoard;
+	void* tempPTR;
 
+	tempPTR = malloc(sizeof(Cell*) *boardSize);
+	if (tempPTR == NULL) {
+		return 0;
+	}
+	else {
+		cloneFirstBoard = (Cell**)tempPTR;
+	}
+
+	for (i = 0; i < boardSize;i++) {
+		tempPTR = malloc(sizeof(Cell) * boardSize);
+		if (tempPTR == NULL) {
+			return 0;
+		}
+		else {
+			cloneFirstBoard[i] = (Cell*)tempPTR;
+		}
+	}
+
+	for (i = 0; i < boardSize;i++) {
+		for (j = 0; j < boardSize; j++) {
+			cloneFirstBoard[i][j].currentCellvalue = mainGameBoard[i][j].currentCellvalue;
+			cloneFirstBoard[i][j].isErroneus = mainGameBoard[i][j].isErroneus;
+			cloneFirstBoard[i][j].isFixed = mainGameBoard[i][j].isFixed;
+		}
+	}
+
+	UndoRedoList.initialBoard = cloneFirstBoard;
+	updateURListAfterSet(-1, -1, NULL, 0);
+	UndoRedoList.isEmpty = 0;
+	UndoRedoList.isInitBoardValid = 1;
+
+}
+
+
+
+	
 
 
 
