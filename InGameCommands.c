@@ -31,8 +31,8 @@ int checkBlockForNumber(int row, int coloumn, int number) {
 	rowBlockStart = row / blockHeight;
 	coloumnBlockStart = coloumn / blockWidth;
 
-	for (i = rowBlockStart; i < rowBlockStart + blockHeight; i++) {
-		for (j = coloumnBlockStart; j < coloumnBlockStart + blockWidth; j++) {
+	for (i = (rowBlockStart*blockHeight); i < (rowBlockStart+1)*blockHeight; i++) {
+		for (j = (coloumnBlockStart*blockWidth); j < (coloumnBlockStart+1)*blockWidth; j++) {
 			if (mainGameBoard[i][j].currentCellvalue == number) {
 				return 1;
 			}
@@ -136,7 +136,7 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 }
 
 
-void deleteCell(int row, int coloumn, int number) {
+void deleteCell(int row, int coloumn) {
 	mainGameBoard[row][coloumn].currentCellvalue = -1;
 	mainGameBoard[row][coloumn].isErroneus = 0;
 
@@ -176,7 +176,7 @@ int setMAIN(int row, int coloumn, int number) {
 			return 2; /*Error of clearing a fixed cell*/
 		}
 		else {
-			deleteCell(row - 1, coloumn - 1, number);
+			deleteCell(row - 1, coloumn - 1);
 		}
 	}
 
@@ -222,6 +222,102 @@ int markErrors(int mark) {
 		return 0;
 	}
 }
+
+int isEmpty() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize;i++) {
+		for (j = 0; j < boardSize;j++) {
+			if (mainGameBoard[i][j].currentCellvalue != -1) {
+				return 0;
+			}
+		}
+	}
+
+	return 1;
+}
+
+
+int generate(int numCellsToStart, int numCellsToRemain) {
+	int row;
+	int coloumn;
+	int number;
+	int counter;
+	int hasSolution;
+
+	counter = 0;
+
+	while (counter < numCellsToStart) {
+		row = rand() % boardSize;
+		coloumn = rand() % boardSize;
+		number = (rand() % boardSize) + 1;
+
+		if (checkValidityOfNum(row, coloumn, number)) {
+			set(row, coloumn, number);
+			counter += 1;
+		}
+
+	}
+
+	hasSolution = solveGenerate(); /* Functions of solve*/
+
+	if (hasSolution) {
+		counter = 0;
+
+		while (counter < (numCellsToStart - numCellsToRemain)) {
+			row = rand() % boardSize;
+			coloumn = rand() % boardSize;
+			deleteCell(row, coloumn);
+			counter += 1;
+		}
+	}
+
+	return hasSolution;
+}
+
+
+void generateMAIN(int numCellsToStart, int numCellsToRemain) {
+	int i;
+
+
+	if (numCellsToStart > (boardSize*boardSize)) {
+		printf("Error: value not in range 0 - %3d\n", (boardSize*boardSize));
+		return;
+	}
+
+	if (!isEmpty) {
+		printf("Error: board is not empty \n");
+		return;
+	}
+
+	i = 0;
+	while (i < 1000) {
+		if (generate(numCellsToStart, numCellsToRemain)) {
+			break;
+		}
+		else {
+			i += 1;
+		}
+	}
+
+	if (i = 1000) {
+		printf("Error: puzzle generator failed\n");
+	}
+	else {
+		printBoard(0);
+	}
+
+	/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
+
+}
+
+
+
+
+
+
+
 
 /* -------------- autofill commands--------------- */
 
@@ -615,6 +711,10 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	}
 
 	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
+}
+
+deleteCell(row, coloumn)
+{
 }
 
 
