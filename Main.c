@@ -19,7 +19,7 @@
 /* main for tests*/ 
 
 int main(int argc, char *argv[]) {
-	initiallizeGameParameters(9, 3, 3);
+	/*initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
 	allocateMemForLIFOCells();

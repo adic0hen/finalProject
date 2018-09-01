@@ -7,7 +7,7 @@
 /* Declaration of functions*/
 
 void autofillROWS(int** boardToFill, int expectedSum);
-void autofillCOLOUMS(int** boardToFill,int expectedSum);
+void autofillCOLOUMS(int** boardToFill, int expectedSum);
 void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 void updateMainBoardAfterUndoRedo(int row, int coloumn);
@@ -61,7 +61,7 @@ void printBoard(int markErrors) {
 	{
 
 		/*print dashes*/
-		if (rowCounter % (blockHeight+1) == 0)
+		if (rowCounter % (blockHeight + 1) == 0)
 		{
 			for (i = 0; i < (4 * boardSize + blockHeight + 1);i++) {
 				printf("-");
@@ -70,7 +70,7 @@ void printBoard(int markErrors) {
 		}
 
 		/* for each row of numbers*/
-		if (rowCounter % (blockHeight+1) != 0)
+		if (rowCounter % (blockHeight + 1) != 0)
 		{
 
 			/* for each block*/
@@ -79,7 +79,7 @@ void printBoard(int markErrors) {
 				printf("|");
 
 				/* for each cell in the block, per row*/
-				for (j = (i*blockWidth); j < ((i+1)*blockWidth); j++)
+				for (j = (i*blockWidth); j < ((i + 1)*blockWidth); j++)
 				{
 					printf(" ");
 					if (mainGameBoard[boardRow][j].currentCellvalue == -1) {
@@ -100,7 +100,7 @@ void printBoard(int markErrors) {
 					}
 				}
 			}
-			
+
 			boardRow += 1;
 			printf("|\n");
 
@@ -116,7 +116,7 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 	int j;
 
 
-	if (checkBlockForNumber(row,coloumn,number)) {
+	if (checkBlockForNumber(row, coloumn, number)) {
 		return 0;
 	}
 
@@ -172,21 +172,21 @@ int setMAIN(int row, int coloumn, int number) {
 
 
 	if (number == 0) {
-		if (mainGameBoard[row-1][coloumn-1].isFixed) {
+		if (mainGameBoard[row - 1][coloumn - 1].isFixed) {
 			return 2; /*Error of clearing a fixed cell*/
 		}
 		else {
-			deleteCell(row-1, coloumn-1, number);
+			deleteCell(row - 1, coloumn - 1, number);
 		}
 	}
 
-	isValidNumber = checkValidityOfNum(number, row-1, coloumn-1);
+	isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
 
 	if (!isValidNumber) {
-		set(row-1, coloumn-1, number, 1);
+		set(row - 1, coloumn - 1, number, 1);
 	}
 	else {
-		set(row-1, coloumn-1, number, 0);
+		set(row - 1, coloumn - 1, number, 0);
 	}
 
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
@@ -262,7 +262,7 @@ int autofill() {
 		expectedSum += i;
 	}
 
-	autofillROWS(boardToFill ,expectedSum);
+	autofillROWS(boardToFill, expectedSum);
 	autofillCOLOUMS(boardToFill, expectedSum);
 	autofillBLOCKS(boardToFill, expectedSum);
 	autofillFILLCELLS(boardToFill);
@@ -283,7 +283,7 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 	int col;
 	int numToFill;
 
-	/* i stands for rows*/ 
+	/* i stands for rows*/
 	for (i = 0; i < boardSize; i++) {
 		counter = 0;
 		sum = 0;
@@ -310,7 +310,7 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 }
 
 
-void autofillCOLOUMS(int** boardToFill,int expectedSum){
+void autofillCOLOUMS(int** boardToFill, int expectedSum) {
 	int i;
 	int j;
 	int counter;
@@ -318,7 +318,7 @@ void autofillCOLOUMS(int** boardToFill,int expectedSum){
 	int row;
 	int numToFill;
 
-	/* i stands for colums*/ 
+	/* i stands for colums*/
 	for (i = 0; i < boardSize; i++) {
 		counter = 0;
 		sum = 0;
@@ -359,9 +359,9 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 	int sum;
 
 
-	for (rowBlockStart=0 ; rowBlockStart < boardSize; rowBlockStart+=blockHeight) {
+	for (rowBlockStart = 0; rowBlockStart < boardSize; rowBlockStart += blockHeight) {
 
-		for (coloumnBlockStart=0; coloumnBlockStart < boardSize; coloumnBlockStart+=blockWidth) {
+		for (coloumnBlockStart = 0; coloumnBlockStart < boardSize; coloumnBlockStart += blockWidth) {
 
 			flag = 1;
 			counter = 0;
@@ -369,7 +369,7 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 			colIndex = 0;
 			sum = 0;
 
-			/* checking each block*/ 
+			/* checking each block*/
 			for (i = rowBlockStart; i < rowBlockStart + blockHeight; i++) {
 				for (j = coloumnBlockStart; j < coloumnBlockStart + blockWidth; j++) {
 
@@ -380,7 +380,7 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 				}
 			}
 
-			/* if block has N-1 numbers */ 
+			/* if block has N-1 numbers */
 			if (counter == boardSize - 1) {
 
 				for (i = rowBlockStart; (i < rowBlockStart + blockHeight) && flag; i++) {
@@ -404,7 +404,7 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 	}
 
 }
-	
+
 
 void autofillFILLCELLS(int** boardToFill) {
 	int i;
@@ -509,7 +509,7 @@ void clearURListFromCurrentPosition(URNode* startNode) {
 	}
 
 	startNode->next = NULL;
-	
+
 }
 
 
@@ -529,7 +529,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 		currPos = NULL;
 	}
 
-	/* allocate Mem for UR Node, need anyway*/ 
+	/* allocate Mem for UR Node, need anyway*/
 	tempPTR = malloc(sizeof(URNode));
 	if (tempPTR == NULL) {
 		return;
@@ -537,12 +537,12 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 	else {
 		next = (URNode*)tempPTR;
 	}
-	/* --- */ 
+	/* --- */
 
 
 
 	/* allocate Mem and update fields for non-guard UR node */
-	if (mode == 1 || mode == 2) 
+	if (mode == 1 || mode == 2)
 	{
 		tempPTR = malloc(sizeof(cellNode));
 		if (tempPTR == NULL) {
@@ -577,7 +577,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 			currPos->next = next;
 		}
 	}
-	/* --- */ 
+	/* --- */
 
 	next->type = mode;
 	next->next = NULL;
@@ -710,7 +710,7 @@ void undo() {
 	updateMainBoardAfterUndoRedo(row, coloumn);
 
 	UndoRedoList.currentMove = currentMove->prev;
-	
+
 	nextNode = LIFOCells[row][coloumn].first;
 
 	if (nextNode != NULL) {
@@ -732,7 +732,7 @@ void undoMAIN() {
 	}
 
 	currentMove = UndoRedoList.currentMove;
-	
+
 	if (currentMove->prev == NULL) {
 		if (currentMove->type == 0) {
 			/* case of encounter a generate/load from file guard */
@@ -840,7 +840,7 @@ void redoMAIN() {
 				redo();
 			}
 		}
-		else if (currentMove->type ==3) {
+		else if (currentMove->type == 3) {
 			if (UndoRedoList.currentMove->next == NULL) {
 			}
 			else {
@@ -898,7 +898,7 @@ void updateURListAfterFirstBoard() {
 
 
 
-	
+
 
 
 
