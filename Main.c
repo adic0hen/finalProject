@@ -6,6 +6,7 @@
 #include "InGameCommands.h"
 #include "InitAndTerminateModule.h"
 #include "IOCommands.h"
+#include "Backtrack.h"
 
 
 
@@ -25,13 +26,9 @@ int main(int argc, char *argv[]) {
 	allocateMemForMainBoard();
 	initializeMainBoard();
 	printBoard(0);
-	set(1, 1, 1, 0);
-	set(1, 2, 2, 0);
-	set(2, 5, 7, 0);
-	printBoard(0);
 
-	IOTest();
-	free(mainGameBoard);
+
+	numOfSolutions();
 }
 
 
