@@ -44,6 +44,8 @@ void printBoard_Test() {
 		}
 		printf("\n");
 	}
+
+	printf("---------------\n\n");
 }
 
 /* before backtrack*/
@@ -80,6 +82,7 @@ void copyMainBoardToBTboard() {
 	int j;
 	int tempNum;
 
+	stack.maxSize = 0;
 	for (i = 0;i < boardSize;i++) {
 		for (j = 0; j < boardSize;j++) {
 			if ((tempNum = mainGameBoard[i][j].currentCellvalue) != -1) {
@@ -89,6 +92,7 @@ void copyMainBoardToBTboard() {
 			else {
 				BTboard[i][j].val = -1;
 				BTboard[i][j].isStatic = 0;
+				stack.maxSize += 1;
 			}
 		}
 	}
@@ -174,10 +178,10 @@ void pushToStack(int row, int coloum, int number) {
 
 	stack.currentSize += 1;
 
-	/* for test*/ 
+	/* for test 
 	printf("\n\n");
 	printf("%d  \n\n", stack.first->number);
-	/**/
+	*/
 
 }
 
@@ -189,7 +193,11 @@ stackNode* popFromStack() {
 	nodeToDelete = stack.first;
 	stack.first = nodeToDelete->next;
 	nodeToDelete->next = NULL;
-	stack.first->prev = NULL;
+	/*printf("\n\n   %d, %d,  %d,  node params:\n\n", nodeToDelete->row, nodeToDelete->coloumn, nodeToDelete->number);*/
+
+	if (stack.first != NULL) {
+		stack.first->prev = NULL;
+	}
 
 	stack.currentSize -= 1;
 
@@ -206,7 +214,9 @@ void backtrack() {
 	int row;
 	int coloumn;
 	stackNode* currNode;
+	int goBack;
 
+	goBack = 0;
 	number = 1;
 	row = 0;
 
@@ -214,7 +224,7 @@ void backtrack() {
 	{
 
 		coloumn = 0;
-		printBoard_Test();
+		
 		while (coloumn < boardSize)
 		{
 
@@ -225,13 +235,21 @@ void backtrack() {
 
 			else
 			{
-				if (number <= boardSize) {
+				if (number <= boardSize) 
+				{
 
 					if (checkBTValidityOfNum(row, coloumn, number)) {
 						setToBTboard(row, coloumn, number);
 						pushToStack(row, coloumn, number);
 						coloumn += 1;
 						number = 1;
+						
+						if (stack.currentSize == stack.maxSize) {
+							numberOfSolutions += 1;
+							goBack = 1;
+							coloumn -= 1;
+							printBoard_Test();
+						}
 					}
 
 					else {
@@ -240,25 +258,28 @@ void backtrack() {
 				}
 
 
-				if (number == boardSize + 1) 
+				if ((number == boardSize + 1) || goBack)
 				{
 
-					do 
+					if (!goBack) 
 					{
-						if ((coloumn == 0) && (row == 0)) {
-							numberOfSolutions = 0;
-							return;
-						}
-						else if (coloumn == 0) {
-							coloumn = boardSize - 1;
-							row -= 1;
-						}
-						else {
-							coloumn -= 1;
-						}
-					} while (BTboard[row][coloumn].isStatic);
+
+						do
+						{
+							if ((coloumn == 0) && (row == 0)) {
+								return;
+							}
+							else if (coloumn == 0) {
+								coloumn = boardSize - 1;
+								row -= 1;
+							}
+							else {
+								coloumn -= 1;
+							}
+						} while (BTboard[row][coloumn].isStatic);
+					}
 							
-				
+					goBack = 0;
 
 					currNode = popFromStack();
 					setToBTboard(row, coloumn, -1);
@@ -287,6 +308,7 @@ int numOfSolutions() {
 	allocateMemForBTBoard();
 	copyMainBoardToBTboard();
 	backtrack();
+	printf("%d &", numberOfSolutions);
 
 	/* Need to free boards and stack*/
 

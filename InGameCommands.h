@@ -11,5 +11,6 @@ void printBoard(int markErrors);
 void set(int row, int coloumn, int number, int isErroneous);
 void undoMAIN();
 void redoMAIN();
+int checkValidityOfNum(int number, int row, int coloumn);
 
 #endif

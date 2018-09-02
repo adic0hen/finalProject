@@ -254,13 +254,13 @@ int generate(int numCellsToStart, int numCellsToRemain) {
 		number = (rand() % boardSize) + 1;
 
 		if (checkValidityOfNum(row, coloumn, number)) {
-			set(row, coloumn, number);
+			set(row, coloumn, number,0);
 			counter += 1;
 		}
 
 	}
 
-	hasSolution = solveGenerate(); /* Functions of solve*/
+	/*hasSolution = solveGenerate();*/ /* Functions of solve*/
 
 	if (hasSolution) {
 		counter = 0;
@@ -712,11 +712,6 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 
 	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
 }
-
-deleteCell(row, coloumn)
-{
-}
-
 
 
 
