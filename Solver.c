@@ -11,7 +11,7 @@ int blockWidth;
 int** board;
 int solverTest();
 
-void solve();
+int* solve();
 void quit(int error, GRBenv *env);
 void test_MAIN();
 
@@ -57,6 +57,54 @@ int allocateMemForBoard(int test) {
 	return 1;
 }
 
+int** allocateMemForTransBoard(int test) {
+	int i;
+	void* tempPTR;
+	int** allocatedMemAddr;
+	int size;
+
+
+	if (test) {
+		size = boardSize;
+	}
+	else {
+		size = boardSize;
+	}
+
+
+
+	tempPTR = (malloc((sizeof(int*)) * size));
+	if (tempPTR == NULL) {
+		return 0;
+	}
+	else {
+		allocatedMemAddr = (int**)tempPTR;
+	}
+
+	for (i = 0; i < size; i++) {
+		tempPTR = malloc(sizeof(int)*size);
+		if (tempPTR == NULL) {
+			return 0;
+		}
+		allocatedMemAddr[i] = (int*)tempPTR;
+	}
+
+	return allocatedMemAddr;
+}
+
+int** transpose(int** board) {
+	int i;
+	int j;
+	int** transposed;
+	transposed = allocateMemForTransBoard(1);
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			transposed[i][j] = board[j][i];
+		}
+	}
+	return transposed;
+}
+
 
 
 
@@ -75,7 +123,7 @@ void test_initBoard() {
 }
 
 
-void test_printBoard() {
+void test_printBoard(int** board) {
 	int i;
 	int j;
 
@@ -91,17 +139,22 @@ void test_printBoard() {
 }
 
 void test_MAIN() {
-		
-		
+	int** transposed;
+
 	printf("\n\n\n NOW TESTING HEIGHT %d AND WIDTH %d\n\n\n", blockHeight, blockWidth);
 	allocateMemForBoard(1);
 	test_initBoard();
-
-	test_printBoard();
-	solve();
-
-	test_printBoard();
+	board[0][0] = 1;
+	board[1][2] = 2;
+	board[1][3] = 3;
+	board[1][4] = 4;
+	test_printBoard(board);
+	transposed = transpose(board);
+	printf("\n\n");
+	test_printBoard(transposed);
 	free(board);
+	
+	free(transposed);
 	
 }
 
@@ -187,7 +240,7 @@ int validateSolve() {
 
 
 
-void solve() {
+int* solve() {
 	/*declaring variables*/
 	GRBenv *env;
 	GRBmodel *model;
@@ -396,6 +449,8 @@ void solve() {
 	/* Free environment */
 
 	GRBfreeenv(env);
+
+	return (int*)sol;
 
 }
 
