@@ -89,19 +89,25 @@ int parse(char* buffer) {
 				}
 			}
 			if (strcmp(cmd, "validate") == 0) {
-				/*need to complete code!*/
+				/*need to connect the hintSolve to a normal hint function*/
 				break;
 			}
 			if (strcmp(cmd, "generate") == 0) {
 				if (mode != 3) {
-					/*need to complete code! the command is invalid*/
+					invalid(cmd);
 				}
 				sCellsToFill = strtok(NULL, " \t\r\n");
 				sCellsToKeep = strtok(NULL, " \t\r\n");
 				if (sCellsToFill != NULL || sCellsToKeep != NULL) {
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					/*need to complete code! make sure the values are leagal*/
+					checkGenerateParameters(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
+					if (!isEmpty()) {
+						printf("Error: board is now empty\n");
+					}
+					else {
+						/*need to connect the generateSolve function to a normal generate function*/
+					}
 				}
 				break;
 			}
@@ -125,7 +131,7 @@ int parse(char* buffer) {
 				if (sRow != NULL && sCol != NULL) {
 					row = atoi(sRow);
 					col = atoi(sCol);
-					/*need to complete code!*/
+					/*need to connect the hintSolve function to a normal hint function*/
 				}
 				break;
 			}

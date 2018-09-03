@@ -1,14 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
-/*#include "GameDataStructs.h"*/
+#include "GameDataStructs.h"
 #include "gurobi_c.h"
 #include <string.h>
+#include "InGameCommands.h"
+#include <time.h>;
 
 /*Outer variable declarations*/
 int boardSize;
 int blockHeight;
 int blockWidth;
-int** board;
+int** board; /*is used in the gurobi optimization process, "gurobi board"*/
+
 
 /*The results structure, will contain all the wanted info extracted from the gurobi optimization*/
 typedef struct results {
@@ -18,17 +21,19 @@ typedef struct results {
 }RESULTS;
 
 /*Function declarations*/
-RESULTS solve();
+void solve();
 
 int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
 void test_MAIN();
 int test_solverTest();
+RESULTS res;
 
 
 
 int main() {
+	srand(time(NULL));
 	printf("hello\n");
 	boardSize = 9;
 	blockHeight = 3;
@@ -39,7 +44,7 @@ int main() {
 
 /*The gurobi solving function*/
 
-RESULTS solve() {
+void solve() {
 	/*declaring variables*/
 	GRBenv *env;
 	GRBmodel *model;
@@ -58,7 +63,6 @@ RESULTS solve() {
 	char *cursor;
 	int optimstatus;
 	double objval;
-	RESULTS res;
 	/*
 	int zero;
 	*/
@@ -255,8 +259,6 @@ RESULTS solve() {
 
 	GRBfreeenv(env);
 
-	return res;
-
 }
 
 
@@ -290,18 +292,11 @@ int** copySol(double* sol) {
 	return solBoard;
 }
 
-int** allocateMemForBoardPTR(int test) {
+int** allocateMemForBoardPTR() {
 	int i;
 	void* tempPTR;
 	int** allocatedMemAddr;
 	int size;
-
-	if (test) {
-		size = boardSize;
-	}
-	else {
-		size = boardSize;
-	}
 
 	tempPTR = (malloc((sizeof(int*)) * size));
 	if (tempPTR == NULL) {
@@ -326,13 +321,119 @@ int** transpose(int** board) {
 	int i;
 	int j;
 	int** transposed;
-	transposed = allocateMemForBoardPTR(1);
+	transposed = allocateMemForBoardPTR();
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			transposed[i][j] = board[j][i];
 		}
 	}
 	return transposed;
+}
+
+void copyMainBoardToGourobiBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			if (mainGameBoard[i][j].currentCellvalue == -1) {
+				board[i][j] = 0;
+			}
+			else {
+				board[i][j] = mainGameBoard[i][j].currentCellvalue;
+			}
+		}
+	}
+}
+
+
+void copyGourobiBoardToMainBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			mainGameBoard[i][j].currentCellvalue = res.solBoard[i][j];
+			mainGameBoard[i][j].isErroneus = 0;
+			mainGameBoard[i][j].isFixed = 0;
+		}
+	}
+}
+
+int** setRandom(int** board,int x) {
+	int row;
+	int col;
+	int num;
+	int k;
+	k = 0;
+	while(k < x){
+		row = rand() % boardSize;
+		col = rand() % boardSize;
+		num = rand() % boardSize;
+		if (checkValidity(board, row, col, num)) {
+			board[row][col] = num;
+			k++;
+		}
+	}
+	return board;
+}
+
+int checkValidityGenerate(int** board, int row, int col, int num) {
+	int i;
+	int j;
+	if (!checkBlockValidity(board, row, col, num)) {
+		return 0;
+	}
+	for (i = 0; i < boardSize; i++) {
+		if (board[row][i] == num) {
+			return 0;
+		}
+	}
+
+	for (i = 0; i < boardSize; i++) {
+		if (board[i][col] == num) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int checkBlockValidityGenerate(int** board, int row, int col, int num) {
+	int i;
+	int j;
+	int rowBlockStart;
+	int coloumnBlockStart;
+
+	rowBlockStart = row / blockHeight;
+	coloumnBlockStart = col / blockWidth;
+
+	for (i = (rowBlockStart*blockHeight); i < (rowBlockStart + 1)*blockHeight; i++) {
+		for (j = (coloumnBlockStart*blockWidth); j < (coloumnBlockStart + 1)*blockWidth; j++) {
+			if (board[i][j] == num) {
+				return 0; /*this means invalid*/
+			}
+		}
+	}
+
+	return 1; /*valid*/
+
+}
+int** remain(int** board, int y) {
+	int row;
+	int col;
+	int toRemove;
+	int k;
+	toRemove = boardSize * boardSize - y;
+	k = 0;
+	while (k < toRemove) {
+		row = rand() % boardSize;
+		col = rand() % boardSize;
+		if (board[row][col] != -1) {
+			board[row][col] = -1;
+			k++;
+		}
+	}
+	return board;
 }
 
 
@@ -367,14 +468,14 @@ void test_MAIN() {
 	int** transposed;
 	RESULTS res;
 	printf("in test_Main\n");
-	board = allocateMemForBoardPTR(1);
+	board = allocateMemForBoardPTR();
 	test_printBoard(board);
 	printf("1\n");
 	test_initBoard();
 	test_printBoard(board);
 	printf("2\n");
 	printf("\n\n");
-	res = solve();
+	solve();
 	test_printBoard(res.solBoard);
 	printf("3\n");
 	printf("\n\n");
@@ -412,50 +513,18 @@ int test_solverTest() {
 }
 
 
-/*everything that was commented out*/
-
-/* -------- NO NEED THESE FUNCTIONS FOR TESTING-------------
-void copyMainBoardToGourobiBoard() {
-	int i;
-	int j;
-
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < board;j++) {
-			if (mainGameBoard[i][j].currentCellvalue == -1) {
-				board[i][j] = 0;
-			}
-			else {
-				board[i][j] = mainGameBoard[i][j].currentCellvalue;
-			}
-		}
-	}
-}
-
-
-void copyGourobiBoardToMainBoard() {
-	int i;
-	int j;
-
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			mainGameBoard[i][j].currentCellvalue = board[i][j];
-			mainGameBoard[i][j].isErroneus = 0;
-			mainGameBoard[i][j].isFixed = 0;
-		}
-	}
-}
-
+/*solver-based functions*/
 
 
 int hintSolve(int row, int coloumn) {
 	int num;
 
-	allocateMemForBoard(0);
+	board = allocateMemForBoardPTR();
 	copyMainBoardToGourobiBoard();
 
 	solve();
 
-	num = board[row][coloumn];
+	num = res.solBoard[row][coloumn];
 
 	free(board);
 
@@ -464,32 +533,41 @@ int hintSolve(int row, int coloumn) {
 }
 
 
-void generateSolve() {
-
-	allocateMemForBoard(0);
-
-	solve();
-
+void generateSolve(int x, int y) {
+	board = allocateMemForBoardPTR();
+	do {
+		test_initBoard();
+		setRandom(board, x);
+		solve();
+	} while (res.optimstatus != GRB_OPTIMAL);
+	
+	remain(res.solBoard, y);
 	copyGourobiBoardToMainBoard();
-
 	free(board);
-
 }
 
 
 int validateSolve() {
-	int isSolvabe;
-	allocateMemForBoard(0);
+	if (isErroneous) {
+		printf("Error: board contains erroneous values\n");
+		return 0;
+	}
+	board = allocateMemForBoardPTR();
 	copyMainBoardToGourobiBoard();
+	solve();
 
-
-	isSolvabe = 0;
+	if (res.optimstatus == GRB_OPTIMAL) {
+		printf("Validation passed: board is solvable\n");
+		return 1;
+	}
+	else if (res.optimstatus == GRB_INF_OR_UNBD) {
+		printf("Validation failed: board is unsolvable\n");
+		return 0;
+	}
 	free(board);
-
-	return isSolvabe;
 }
 
-*/
+
 
 
 

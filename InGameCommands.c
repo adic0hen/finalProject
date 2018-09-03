@@ -992,6 +992,28 @@ void updateURListAfterFirstBoard() {
 }
 
 
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
+	int error;
+	int numOfCells;
+	error = 0;
+	numOfCells = boardSize * boardSize;
+	if ((strcmp(sCellsToFill, "0") != 0) && (cellsToFill == 0)) {
+		error = 1;
+	}
+	else if ((strcmp(sCellsToKeep, "0")) != 0 && (cellsToKeep == 0)) {
+		error = 1;
+	}
+	else if (cellsToFill < 0 || cellsToFill> boardSize*boardSize) {
+		error = 1;
+	}
+	if (error) {
+		printf("Error: value not in range 0-%d", numOfCells);
+	}
+	return error;
+}
+
+
+
 
 
 

@@ -6,11 +6,13 @@ void redo();
 int setMAIN(int row, int coloumn, int number);
 void undoMAIN();
 int isErroneous();
+int isEmpty();
 int markErrors(int mark);
 void printBoard(int markErrors);
 void set(int row, int coloumn, int number, int isErroneous);
 void undoMAIN();
 void redoMAIN();
 int checkValidityOfNum(int number, int row, int coloumn);
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep)
 
 #endif
