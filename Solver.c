@@ -594,18 +594,13 @@ void test_transpose() {
 
 /*solver-based functions*/
 
-/*
+
 int hintSolve(int row, int coloumn) {
 	int num;
 
-	board = allocateMemForBoardPTR();
-	copyMainBoardToGourobiBoard();
-
-	solve();
+	solveMain();
 
 	num = res.solBoard[row][coloumn];
-
-	free(board);
 
 	return num;
 
@@ -621,7 +616,7 @@ void generateSolve(int x, int y) {
 	} while (res.optimstatus != GRB_OPTIMAL);
 	
 	deleteExcept(res.solBoard, y);
-	copyGourobiBoardToMainBoard();
+	copySolvedBoardToMainBoard(); /*the board is not "solved" but it's the one we want to use*/
 	free(board);
 }
 
@@ -631,10 +626,7 @@ int validateSolve() {
 		printf("Error: board contains erroneous values\n");
 		return 0;
 	}
-	board = allocateMemForBoardPTR();
-	copyMainBoardToGourobiBoard();
-	solve();
-
+	solveMain();
 	if (res.optimstatus == GRB_OPTIMAL) {
 		printf("Validation passed: board is solvable\n");
 		return 1;
@@ -643,10 +635,9 @@ int validateSolve() {
 		printf("Validation failed: board is unsolvable\n");
 		return 0;
 	}
-	free(board);
 }
 
-*/
+
 
 
 
