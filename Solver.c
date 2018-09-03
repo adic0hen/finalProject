@@ -42,6 +42,20 @@ int main() {
 	return 0;
 }
 
+int solveMain() {
+	board = allocateMemForBoardPTR();
+	test_initBoard();
+	copyMainBoardToGourobiBoard();
+	if (blockHeight > blockWidth) {
+		transpose(board);
+	}
+	solve();
+	if (blockHeight > blockWidth) {
+		transpose(res.solBoard);
+	}
+	copySolvedBoardToMainBoard();
+	free(board);
+}
 /*The gurobi solving function*/
 
 void solve() {
@@ -63,9 +77,6 @@ void solve() {
 	char *cursor;
 	int optimstatus;
 	double objval;
-	/*
-	int zero;
-	*/
 	int error;
 	double *sol;
 
@@ -78,9 +89,6 @@ void solve() {
 	names = (char**)malloc(boardSize * boardSize * boardSize * sizeof(char));
 	namestorage = (char*)malloc(10 * boardSize * boardSize * boardSize * sizeof(char));
 	error = 0;
-	/*
-	zero = 0;
-	*/
 	model = NULL;
 	env = NULL;
 	sol = (double*)malloc(boardSize * boardSize*boardSize * sizeof(double));
@@ -200,15 +208,15 @@ void solve() {
 	if (error) {
 		quit(error, env);
 	}
-
-	/* Write model to 'sudoku.lp' */
+	
+	/* Write model to 'sudoku.lp' ~~~~~~~~~CAN BE DELETED~~~~~*/
 
 	error = GRBwrite(model, "sudoku.lp");
 	if (error) {
 		quit(error, env);
 	}
 
-	/* Capture solution information */
+	/* Capture solution information ~~~~~~~~~CAN BE DELETED~~~~~*/
 
 	error = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
 	if (error) {
@@ -225,6 +233,7 @@ void solve() {
 		quit(error, env);
 	}
 
+	/*print test ~~~~~~~~~CAN BE DELETED~~~~~*/
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			for (v = 0; v < boardSize; v++) {
@@ -237,11 +246,7 @@ void solve() {
 		printf("\n\n");
 	}
 
-	res.objval = objval;
-	res.optimstatus = optimstatus;
-	res.solBoard = copySol(sol);
-
-
+	/*more printing ~~~~~~~~~CAN BE DELETED~~~~~*/
 	printf("\nOptimization complete\n");
 	if (optimstatus == GRB_OPTIMAL)
 		printf("Optimal objective: %.4e\n", objval);
@@ -250,6 +255,12 @@ void solve() {
 	else
 		printf("Optimization was stopped early\n");
 	printf("\n");
+
+
+	/*assigning values to results struct*/
+	res.objval = objval;
+	res.optimstatus = optimstatus;
+	res.solBoard = copySol(sol);
 
 	/* Free model */
 
@@ -279,7 +290,7 @@ int** copySol(double* sol) {
 	int j;
 	int v;
 	int** solBoard;
-	solBoard = allocateMemForBoardPTR(1);
+	solBoard = allocateMemForBoardPTR();
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			for (v = 0; v < boardSize; v++) {
@@ -346,8 +357,7 @@ void copyMainBoardToGourobiBoard() {
 	}
 }
 
-
-void copyGourobiBoardToMainBoard() {
+void copySolvedBoardToMainBoard() {
 	int i;
 	int j;
 
@@ -418,7 +428,8 @@ int checkBlockValidityGenerate(int** board, int row, int col, int num) {
 	return 1; /*valid*/
 
 }
-int** remain(int** board, int y) {
+
+int** deleteExcept(int** board, int y) {
 	int row;
 	int col;
 	int toRemove;
@@ -541,7 +552,7 @@ void generateSolve(int x, int y) {
 		solve();
 	} while (res.optimstatus != GRB_OPTIMAL);
 	
-	remain(res.solBoard, y);
+	deleteExcept(res.solBoard, y);
 	copyGourobiBoardToMainBoard();
 	free(board);
 }
