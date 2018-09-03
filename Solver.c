@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "GameDataStructs.h"
+/*#include "GameDataStructs.h"*/
 #include "gurobi_c.h"
 #include <string.h>
-#include "InGameCommands.h"
-#include <time.h>;
+/*#include "InGameCommands.h"*/
+/*#include <time.h>;*/
 
 /*Outer variable declarations*/
 int boardSize;
@@ -19,42 +19,51 @@ typedef struct results {
 	int optimstatus;
 	double objval;
 }RESULTS;
+RESULTS res;
 
 /*Function declarations*/
 void solve();
-
+void test_initBoard();
+int** transpose(int** board);
 int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
 void test_MAIN();
+void test_transpose();
 int test_solverTest();
-RESULTS res;
+void test_printSolvedBoard(int** board);
+int checkValidityGenerate(int** board, int row, int col, int num);
+int checkBlockValidityGenerate(int** board, int row, int col, int num);
+
 
 
 
 int main() {
-	srand(time(NULL));
-	printf("hello\n");
-	boardSize = 9;
-	blockHeight = 3;
-	blockWidth = 3;
-	test_MAIN();
+	printf("solveMain test\n");
+	test_transpose();
 	return 0;
 }
 
 int solveMain() {
+	int temp;
 	board = allocateMemForBoardPTR();
 	test_initBoard();
-	copyMainBoardToGourobiBoard();
-	if (blockHeight > blockWidth) {
-		transpose(board);
+	/*copyMainBoardToGourobiBoard();*/
+	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
+		board = transpose(board);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
 	}
 	solve();
-	if (blockHeight > blockWidth) {
-		transpose(res.solBoard);
+	if (blockHeight < blockWidth) {
+		res.solBoard = transpose(res.solBoard);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
 	}
-	copySolvedBoardToMainBoard();
-	free(board);
+	/*copySolvedBoardToMainBoard();*/
+	return 0;
 }
 /*The gurobi solving function*/
 
@@ -307,9 +316,8 @@ int** allocateMemForBoardPTR() {
 	int i;
 	void* tempPTR;
 	int** allocatedMemAddr;
-	int size;
 
-	tempPTR = (malloc((sizeof(int*)) * size));
+	tempPTR = (malloc((sizeof(int*)) * boardSize));
 	if (tempPTR == NULL) {
 		return 0;
 	}
@@ -317,8 +325,8 @@ int** allocateMemForBoardPTR() {
 		allocatedMemAddr = (int**)tempPTR;
 	}
 
-	for (i = 0; i < size; i++) {
-		tempPTR = malloc(sizeof(int)*size);
+	for (i = 0; i < boardSize; i++) {
+		tempPTR = malloc(sizeof(int)*boardSize);
 		if (tempPTR == NULL) {
 			return 0;
 		}
@@ -340,6 +348,9 @@ int** transpose(int** board) {
 	}
 	return transposed;
 }
+
+/*commented out for tests*/
+/*
 
 void copyMainBoardToGourobiBoard() {
 	int i;
@@ -369,6 +380,7 @@ void copySolvedBoardToMainBoard() {
 		}
 	}
 }
+*/
 
 int** setRandom(int** board,int x) {
 	int row;
@@ -380,7 +392,7 @@ int** setRandom(int** board,int x) {
 		row = rand() % boardSize;
 		col = rand() % boardSize;
 		num = rand() % boardSize;
-		if (checkValidity(board, row, col, num)) {
+		if (checkValidityGenerate(board, row, col, num)) {
 			board[row][col] = num;
 			k++;
 		}
@@ -390,8 +402,7 @@ int** setRandom(int** board,int x) {
 
 int checkValidityGenerate(int** board, int row, int col, int num) {
 	int i;
-	int j;
-	if (!checkBlockValidity(board, row, col, num)) {
+	if (!checkBlockValidityGenerate(board, row, col, num)) {
 		return 0;
 	}
 	for (i = 0; i < boardSize; i++) {
@@ -475,6 +486,20 @@ void test_printBoard(int** board) {
 	}
 }
 
+void test_printSolvedBoard(int** board) {
+	int i;
+	int j;
+
+
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			printf(" %2d ", board[i][j]+1);
+		}
+		printf("\n");
+	}
+}
+/*
 void test_MAIN() {
 	int** transposed;
 	RESULTS res;
@@ -495,7 +520,7 @@ void test_MAIN() {
 	printf("4\n");
 	
 }
-
+*/
 int test_solverTest() {
 	int good;
 	printf("enter boardSize\n");
@@ -523,10 +548,53 @@ int test_solverTest() {
 	return 0;
 }
 
+void test_transpose() {
+	int good;
+	printf("enter boardSize\n");
+	if (scanf("%d", &boardSize)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("enter blockHeight\n");
+	if (scanf("%d", &blockHeight)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("enter blockWidth\n");
+	if (scanf("%d", &blockWidth)) {
+		good = 1;
+	}
+	else {
+		good = 0;
+	}
+	printf("%d\n", good);
+	
+	board = allocateMemForBoardPTR();
+	test_initBoard();
+	test_printBoard(board);
+	printf("\n\n");
+	board[0][0] = 2;
+	board[2][2] = 4;
+	test_printBoard(board);
+	printf("\n\n");
+	solveMain();
+	printf("sol\n");
+	test_printBoard(board);
+	printf("\n\n");
+	printf("transposed sol\n");
+	printf("\n\n");
+	test_printSolvedBoard(res.solBoard);
+	printf("done\n");
+}
+
 
 /*solver-based functions*/
 
-
+/*
 int hintSolve(int row, int coloumn) {
 	int num;
 
@@ -578,7 +646,7 @@ int validateSolve() {
 	free(board);
 }
 
-
+*/
 
 
 
