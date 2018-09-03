@@ -1,14 +1,13 @@
 #ifndef GAMEDATASTRUCTS_H_
 #define GAMEDATASTRUCTS_H_
 
-/*Board is internally represented as a 2D array of N*N pointers to cells, N = n*m */
 
 
 typedef struct Cell {
-	int currentCellvalue; /* the number the user has entered. -1 if empty. val==solVal if isFixed */
-	int isFixed; /* 1 if the cell is fixed, 0 else */
-	int isErroneus; /*1 if the cell is erroneus, 0 else*/
-} Cell; /*Cell structure is reffered to as -Cell- */
+	int currentCellvalue;
+	int isFixed;
+	int isErroneus;
+} Cell;
 
 
 
@@ -53,7 +52,7 @@ extern int blockHeight;
 extern int blockWidth;
 
 extern int mode;
-/* mode values and their meaning:
+/* mode values and their meaning
 1 = init
 2 = solve
 3 = edit

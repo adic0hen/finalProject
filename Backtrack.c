@@ -219,6 +219,7 @@ void backtrack() {
 	goBack = 0;
 	number = 1;
 	row = 0;
+	numberOfSolutions = 0;
 
 	while (row < boardSize)
 	{
@@ -243,12 +244,10 @@ void backtrack() {
 						pushToStack(row, coloumn, number);
 						coloumn += 1;
 						number = 1;
-						
 						if (stack.currentSize == stack.maxSize) {
 							numberOfSolutions += 1;
 							goBack = 1;
 							coloumn -= 1;
-							printBoard_Test();
 						}
 					}
 
@@ -260,7 +259,7 @@ void backtrack() {
 
 				if ((number == boardSize + 1) || goBack)
 				{
-
+					
 					if (!goBack) 
 					{
 
@@ -284,12 +283,6 @@ void backtrack() {
 					currNode = popFromStack();
 					setToBTboard(row, coloumn, -1);
 					number = currNode->number + 1;
-					/* For Test*/
-					if (row != currNode->row || coloumn != currNode->coloumn) {
-						printf("TEST__Unmatch row or coloumn");
-					}
-					/**/
-
 				}
 
 			}
@@ -304,19 +297,41 @@ void backtrack() {
 
 
 
-int numOfSolutions() {
+
+
+
+void freeResources() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			free(&BTboard[i][j]);
+		}
+	}
+
+	for (i = 0; i < boardSize;i++) {
+		free(BTboard[i]);
+	}
+
+}
+			
+void numOfSolutions() {
 	allocateMemForBTBoard();
 	copyMainBoardToBTboard();
 	backtrack();
-	printf("%d &", numberOfSolutions);
+	printf("Number of solutions: %d\n", numberOfSolutions);
+	if (numberOfSolutions == 1) {
+		printf("This is a good board!\n");
+	}
+	else if (numberOfSolutions > 1) {
+		printf("The puzzle has more than 1 solution, try to edit it further\n");
+	}
+	else {}
 
-	/* Need to free boards and stack*/
+	freeResources();
 
-	return numberOfSolutions;
+
+	return;
 }
 
-
-void BT_TEST() {
-	allocateMemForBTBoard();
-	copyMainBoardToBTboard();
-}

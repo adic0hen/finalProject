@@ -2,11 +2,7 @@
 #define BACKTRACK_H_
 
 
-int numOfSolutions();
-
-
-
-
+void numOfSolutions();
 
 
 

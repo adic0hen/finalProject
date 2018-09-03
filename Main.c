@@ -22,18 +22,18 @@ int main(int argc, char* argv[]) {
 /* main for tests*/ 
 
 int main(int argc, char *argv[]) {
-	initiallizeGameParameters(16, 4, 4);
+	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
 	printBoard(0);
-
-	TESTRandomalyFillBoard(50);
+	srand(200);
+	TESTRandomalyFillBoard(40);
 	printBoard(0);
 
 
-
+	
 	numOfSolutions();
 }
 

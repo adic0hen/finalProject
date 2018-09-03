@@ -144,9 +144,13 @@
     <ClCompile Include="..\..\GamePlay.c" />
     <ClCompile Include="..\..\InGameCommands.c" />
     <ClCompile Include="..\..\InitAndTerminateModule.c" />
-    <ClCompile Include="..\..\IOCommands.c" />
+    <ClCompile Include="..\..\IOCommands.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Main.c" />
-    <ClCompile Include="..\..\Parser.c" />
+    <ClCompile Include="..\..\Parser.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Solver.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
