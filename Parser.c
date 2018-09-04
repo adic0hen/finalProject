@@ -53,6 +53,7 @@ int parse(char* buffer) {
 					mode = 2;
 					load(filePath);
 				}
+				printBoard(markerrors);
 				break;
 			}
 			if (strcmp(cmd, "edit") == 0) {
@@ -64,6 +65,7 @@ int parse(char* buffer) {
 				else { /*initializing an empty board because there was no file path given*/
 					initializeMainBoard();
 				}
+				printBoard(1);/*markerrors is always 1 in edit mode*/
 				break;
 			}
 			if (strcmp(cmd, "mark_errors") == 0) {

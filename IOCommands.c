@@ -35,7 +35,7 @@ int save(char* path) {
 	}
 	writeBoardToFile(fptr);
 	fclose(fptr);
-	printf("Saved to: %s", path);
+	printf("Saved to: %s\n", path);
 }
 
 writeBoardToFile(FILE* fptr) {

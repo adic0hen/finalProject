@@ -62,8 +62,8 @@ void initializeLoadedMainBoard(FILE *fptr) {
 			else {
 				mainGameBoard[i][j].currentCellvalue = tempNum;
 			}
-			printf("%d%c", tempNum, tempDot);/*for debugging, need do be removed*/
-			if (strcmp(&tempDot, ".") == 0) {
+			/*printf("%d%c", tempNum, tempDot);/*for debugging, need do be removed*/
+			if (tempDot == '.'|| (mode == 3 && mainGameBoard[i][j].currentCellvalue != -1)) {
 				mainGameBoard[i][j].isFixed = 1;
 			}
 			else {
@@ -72,7 +72,7 @@ void initializeLoadedMainBoard(FILE *fptr) {
 
 			mainGameBoard[i][j].isErroneus = 0;
 		}
-		printf("\n"); /*for debugging, need do be removed*/
+		/*printf("\n"); /*for debugging, need do be removed*/
 	}
 }
 
