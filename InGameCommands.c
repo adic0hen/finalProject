@@ -238,80 +238,87 @@ int isEmpty() {
 	return 1;
 }
 
-
-int generate(int numCellsToStart, int numCellsToRemain) {
-	int row;
-	int coloumn;
-	int number;
-	int counter;
-	int hasSolution;
-
-	counter = 0;
-
-	while (counter < numCellsToStart) {
-		row = rand() % boardSize;
-		coloumn = rand() % boardSize;
-		number = (rand() % boardSize) + 1;
-
-		if (checkValidityOfNum(row, coloumn, number)) {
-			set(row, coloumn, number,0);
-			counter += 1;
-		}
-
-	}
-
-	/*hasSolution = solveGenerate();*/ /* Functions of solve*/
-
-	if (hasSolution) {
-		counter = 0;
-
-		while (counter < (numCellsToStart - numCellsToRemain)) {
-			row = rand() % boardSize;
-			coloumn = rand() % boardSize;
-			deleteCell(row, coloumn);
-			counter += 1;
-		}
-	}
-
-	return hasSolution;
-}
-
-
-void generateMAIN(int numCellsToStart, int numCellsToRemain) {
+/*~~~~~~~~NEED  TO TEST THIS FUNCTION~~~~~*/
+int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
-
-
-	if (numCellsToStart > (boardSize*boardSize)) {
-		printf("Error: value not in range 0 - %3d\n", (boardSize*boardSize));
-		return;
-	}
-
-	if (!isEmpty) {
-		printf("Error: board is not empty \n");
-		return;
-	}
-
 	i = 0;
+	if (!checkGenerateParameters(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep)) {/*if the parameters are not valid*/
+		return 0;
+	}
+	if (!isEmpty()) {
+		printf("Error: board is now empty\n");
+		return 0;
+	}
 	while (i < 1000) {
-		if (generate(numCellsToStart, numCellsToRemain)) {
+		if (generateSolve(cellsToFill, cellsToKeep)) {
 			break;
 		}
 		else {
-			i += 1;
+			i++;
 		}
 	}
-
-	if (i = 1000) {
+	if (i == 1000) {
 		printf("Error: puzzle generator failed\n");
+		return 0;
 	}
-	else {
-		printBoard(0);
-	}
-
-	/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
-
+	return 1;
 }
 
+/*Sub function for generate*/
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
+	int error;
+	int isValid;
+	int numOfCells;
+	error = 0;
+	numOfCells = boardSize * boardSize;
+	if ((strcmp(sCellsToFill, "0") != 0) && (cellsToFill == 0)) {
+		error = 1;
+	}
+	else if ((strcmp(sCellsToKeep, "0")) != 0 && (cellsToKeep == 0)) {
+		error = 1;
+	}
+	else if (cellsToFill < 0 || cellsToFill> boardSize*boardSize) {
+		error = 1;
+	}
+
+	if (error) {
+		printf("Error: value not in range 0-%d", numOfCells);
+	}
+	isValid = !error;
+	return isValid;
+}
+
+/*~~~~~~~~NEED  TO TEST THIS FUNCTION~~~~~*/
+int hint(int row, int col) {
+	int h;
+	if (checkHintParameters(row, col)) {
+		return 0;
+	}
+	h = hintSolve(row -1, col-1); /*returns the hint value if board is solvable, 0 otherwise*/
+	if (h == 0) {
+		return 0;
+	}
+	printf("Hint, set cell to %d\n",h);
+}
+int checkHintParameters(int row, int col) {
+	if (row<1 || row>boardSize || col<1 || col>boardSize) {
+		printf("Error: value not in range 1-%d\n", boardSize);
+		return 0;
+	}
+	if (isErroneous) {
+		printf("Error: board contains erroneous values\n");
+		return 0;
+	}
+	if (mainGameBoard[row - 1][col - 1].isFixed == 1) {
+		printf("Error: cell is fixed\n");
+		return 0;
+	}
+	if (mainGameBoard[row - 1][col - 1].currentCellvalue != -1) {
+		printf("Error: cell already contains a value\n");
+		return 0;
+	}
+	return 1;
+}
 
 
 
@@ -521,6 +528,7 @@ void autofillFILLCELLS(int** boardToFill) {
 	/* Marking the end of the autofill*/
 	updateURListAfterSet(-1, -1, NULL, 3);
 }
+
 
 
 
@@ -991,26 +999,6 @@ void updateURListAfterFirstBoard() {
 
 }
 
-
-int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
-	int error;
-	int numOfCells;
-	error = 0;
-	numOfCells = boardSize * boardSize;
-	if ((strcmp(sCellsToFill, "0") != 0) && (cellsToFill == 0)) {
-		error = 1;
-	}
-	else if ((strcmp(sCellsToKeep, "0")) != 0 && (cellsToKeep == 0)) {
-		error = 1;
-	}
-	else if (cellsToFill < 0 || cellsToFill> boardSize*boardSize) {
-		error = 1;
-	}
-	if (error) {
-		printf("Error: value not in range 0-%d", numOfCells);
-	}
-	return error;
-}
 
 
 

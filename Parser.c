@@ -95,19 +95,14 @@ int parse(char* buffer) {
 			if (strcmp(cmd, "generate") == 0) {
 				if (mode != 3) {
 					invalid(cmd);
+					break;
 				}
 				sCellsToFill = strtok(NULL, " \t\r\n");
 				sCellsToKeep = strtok(NULL, " \t\r\n");
 				if (sCellsToFill != NULL || sCellsToKeep != NULL) {
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					checkGenerateParameters(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
-					if (!isEmpty()) {
-						printf("Error: board is now empty\n");
-					}
-					else {
-						/*need to connect the generateSolve function to a normal generate function*/
-					}
+					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
 				}
 				break;
 			}
@@ -122,16 +117,20 @@ int parse(char* buffer) {
 			}
 			if (strcmp(cmd, "save") == 0) {
 				filePath = strtok(NULL, " \t\r\n");
-				/*need to complete code!*/
+				save(filePath);
 				break;
 			}
 			if (strcmp(cmd, "hint") == 0) {
+				if (mode != 2) {
+					invalid(cmd);
+					break;
+				}
 				sRow = strtok(NULL, " \t\r\n");
 				sCol = strtok(NULL, " \t\r\n");
 				if (sRow != NULL && sCol != NULL) {
 					row = atoi(sRow);
 					col = atoi(sCol);
-					/*need to connect the hintSolve function to a normal hint function*/
+					hint(row, col);
 				}
 				break;
 			}
@@ -154,7 +153,7 @@ int parse(char* buffer) {
 				mode = 0;
 				break;
 			}
-			/*Invalid command part - we get to this part of the parser only if there was an invalid command*/
+			/*Invalid command part - we get to this part of the parser only if there was an invalid or unrecognized command*/
 			invalid(cmd);
 			break;
 		}

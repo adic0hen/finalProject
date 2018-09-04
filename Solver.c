@@ -31,7 +31,6 @@ int** allocateMemForBoardPTR();
 void test_MAIN();
 void test_transpose();
 int test_solverTest();
-void test_printSolvedBoard(int** board);
 int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 
@@ -304,7 +303,7 @@ int** copySol(double* sol) {
 		for (j = 0; j < boardSize; j++) {
 			for (v = 0; v < boardSize; v++) {
 				if (sol[i*boardSize* boardSize + j * boardSize + v] == 1) {
-					solBoard[i][j] = v;
+					solBoard[i][j] = v + 1;
 				}
 			}
 		}
@@ -391,7 +390,7 @@ int** setRandom(int** board,int x) {
 	while(k < x){
 		row = rand() % boardSize;
 		col = rand() % boardSize;
-		num = rand() % boardSize;
+		num = (rand() % boardSize) + 1;
 		if (checkValidityGenerate(board, row, col, num)) {
 			board[row][col] = num;
 			k++;
@@ -436,7 +435,7 @@ int checkBlockValidityGenerate(int** board, int row, int col, int num) {
 		}
 	}
 
-	return 1; /*valid*/
+	return 1; /*is valid*/
 
 }
 
@@ -486,19 +485,6 @@ void test_printBoard(int** board) {
 	}
 }
 
-void test_printSolvedBoard(int** board) {
-	int i;
-	int j;
-
-
-
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			printf(" %2d ", board[i][j]+1);
-		}
-		printf("\n");
-	}
-}
 /*
 void test_MAIN() {
 	int** transposed;
@@ -587,7 +573,7 @@ void test_transpose() {
 	printf("\n\n");
 	printf("transposed sol\n");
 	printf("\n\n");
-	test_printSolvedBoard(res.solBoard);
+	test_printBoard(res.solBoard);
 	printf("done\n");
 }
 
@@ -599,25 +585,32 @@ int hintSolve(int row, int coloumn) {
 	int num;
 
 	solveMain();
-
-	num = res.solBoard[row][coloumn];
-
-	return num;
-
+	if (res.optimstatus == GRB_OPTIMAL) {
+		num = res.solBoard[row][coloumn];
+		return num;
+	}
+	else {
+		printf("Error: board is unsolvable\n");
+		return 0;
+	}
 }
 
 
-void generateSolve(int x, int y) {
+int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
+	int b;
+	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
-	do {
-		test_initBoard();
-		setRandom(board, x);
-		solve();
-	} while (res.optimstatus != GRB_OPTIMAL);
-	
-	deleteExcept(res.solBoard, y);
-	copySolvedBoardToMainBoard(); /*the board is not "solved" but it's the one we want to use*/
+	test_initBoard();
+	setRandom(board, x);
+	solve();	
+	if (res.optimstatus == GRB_OPTIMAL) {
+		deleteExcept(res.solBoard, y);
+		copySolvedBoardToMainBoard(); /*the board is not "solved" but it's the one we want to use*/
+		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
+		b = 1;
+	}
 	free(board);
+	return b;
 }
 
 
