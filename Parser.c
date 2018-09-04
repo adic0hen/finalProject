@@ -91,9 +91,10 @@ int parse(char* buffer) {
 				}
 			}
 			if (strcmp(cmd, "validate") == 0) {
-				/*need to connect the hintSolve to a normal hint function*/
-				break;
-			}
+				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+					validate();
+					break;
+				}
 			if (strcmp(cmd, "generate") == 0) {
 				if (mode != 3) {
 					invalid(cmd);

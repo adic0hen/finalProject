@@ -322,7 +322,23 @@ int checkHintParameters(int row, int col) {
 }
 
 */
-
+int validate() {
+	int isValid;
+	if (isErroneous) {
+		printf("Error: board contains erroneous values\n");
+		return 0;
+	}
+	isValid = validateSolve();
+	if (isValid == 1) {
+		printf("Validation passed: board is solvable\n");
+		return 1;
+	}
+	else if (isValid == 0) {
+		printf("Validation failed: board is unsolvable\n");
+		return 0;
+	}
+	return 0;
+}
 
 
 

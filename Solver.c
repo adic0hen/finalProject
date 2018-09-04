@@ -615,17 +615,11 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 
 
 int validateSolve() {
-	if (isErroneous) {
-		printf("Error: board contains erroneous values\n");
-		return 0;
-	}
 	solveMain();
 	if (res.optimstatus == GRB_OPTIMAL) {
-		printf("Validation passed: board is solvable\n");
 		return 1;
 	}
-	else if (res.optimstatus == GRB_INF_OR_UNBD) {
-		printf("Validation failed: board is unsolvable\n");
+	else {
 		return 0;
 	}
 }
