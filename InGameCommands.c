@@ -238,11 +238,13 @@ int isEmpty() {
 	return 1;
 }
 
-/*~~~~~~~~NEED  TO TEST THIS FUNCTION~~~~~*/
+
+/*solver relying functions - NEED TO BE TESTED*/
+/*
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
 	i = 0;
-	if (!checkGenerateParameters(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep)) {/*if the parameters are not valid*/
+	if (!checkGenerateParameters(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep)) {
 		return 0;
 	}
 	if (!isEmpty()) {
@@ -264,7 +266,6 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 	return 1;
 }
 
-/*Sub function for generate*/
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int error;
 	int isValid;
@@ -288,13 +289,13 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	return isValid;
 }
 
-/*~~~~~~~~NEED  TO TEST THIS FUNCTION~~~~~*/
+
 int hint(int row, int col) {
 	int h;
 	if (checkHintParameters(row, col)) {
 		return 0;
 	}
-	h = hintSolve(row -1, col-1); /*returns the hint value if board is solvable, 0 otherwise*/
+	h = hintSolve(row -1, col-1); 
 	if (h == 0) {
 		return 0;
 	}
@@ -320,8 +321,7 @@ int checkHintParameters(int row, int col) {
 	return 1;
 }
 
-
-
+*/
 
 
 

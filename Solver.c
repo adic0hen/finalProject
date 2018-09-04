@@ -581,7 +581,7 @@ void test_transpose() {
 /*solver-based functions*/
 
 
-int hintSolve(int row, int coloumn) {
+int hintSolve(int row, int coloumn) { /*returns the hint value if board is solvable, 0 otherwise*/
 	int num;
 
 	solveMain();

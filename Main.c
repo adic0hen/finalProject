@@ -27,14 +27,14 @@ int main(int argc, char *argv[]) {
 	initializeMainBoard();
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
+	mode = 1;
 	printBoard(0);
 	srand(200);
 	TESTRandomalyFillBoard(40);
 	printBoard(0);
+	game();
 
 
-	
-	numOfSolutions();
 }
 
 

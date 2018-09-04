@@ -102,7 +102,7 @@ int parse(char* buffer) {
 				if (sCellsToFill != NULL || sCellsToKeep != NULL) {
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
+					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep); COMMENTED OUT FOR TESTS*/
 				}
 				break;
 			}
@@ -130,7 +130,7 @@ int parse(char* buffer) {
 				if (sRow != NULL && sCol != NULL) {
 					row = atoi(sRow);
 					col = atoi(sCol);
-					hint(row, col);
+					/*hint(row, col); COMMENTED OUT FOR TESTS*/
 				}
 				break;
 			}
@@ -139,18 +139,27 @@ int parse(char* buffer) {
 				break;
 			}
 			if (strcmp(cmd, "autofill") == 0) {
-				if (mode != 2) {/*need to complete code! making sure it is in solve mode*/
+				if (mode != 2) {
+					invalid(cmd);
+					break;
 				}
 				autofill();
 				/*need to complete code!*/
 				break;
 			}
 			if (strcmp(cmd, "reset") == 0) {
-				mode = 4;
+				if (mode != 2 && mode != 3) {/*only available in solve or edit modes*/
+					invalid(cmd);
+					break;
+				}
+				/*need to complete code, undo redo*/
+				printf("Board reset\n");
 				break;
 			}
 			if (strcmp(cmd, "exit") == 0) {
 				mode = 0;
+				/*need to complete code, free memory and resources*/
+				printf("Exiting...\n");
 				break;
 			}
 			/*Invalid command part - we get to this part of the parser only if there was an invalid or unrecognized command*/
@@ -158,9 +167,13 @@ int parse(char* buffer) {
 			break;
 		}
 	}
+	else { /*when a command longer than 256 characters has been entered*/
+		printf("ERROR: invalid command\n");
+	}
 }
 
+
 void invalid(char* cmd) {
-		printf("Error: invalid command\n");
-		cmd = NULL;
+		printf("ERROR: invalid command\n");
+		cmd = NULL; /*need to make sure if this is needed or not*/
 	}
