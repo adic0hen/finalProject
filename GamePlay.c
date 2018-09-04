@@ -3,6 +3,7 @@
 #include "GamePlay.h"
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
+#include "Parser.h"
 
 int game() {
 	/*initialize buffer*/

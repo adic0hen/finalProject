@@ -124,7 +124,8 @@ void initialUndoRedoListAndLIFOCells() {
 	}
 
 	UndoRedoList.initialBoard = NULL;
-	UndoRedoList.isInitBoardValid = 0;
+	UndoRedoList.hasLoadedBoard = 0;
+	UndoRedoList.selfCurrentMove = 0;
 }
 
 

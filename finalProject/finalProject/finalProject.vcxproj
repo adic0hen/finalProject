@@ -141,7 +141,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\Backtrack.c" />
     <ClCompile Include="..\..\GameDataStructs.c" />
-    <ClCompile Include="..\..\GamePlay.c" />
+    <ClCompile Include="..\..\GamePlay.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\InGameCommands.c" />
     <ClCompile Include="..\..\InitAndTerminateModule.c" />
     <ClCompile Include="..\..\IOCommands.c">
@@ -155,6 +157,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\UndoRedoCommands.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Backtrack.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="..\..\IOCommands.h" />
     <ClInclude Include="..\..\Parser.h" />
     <ClInclude Include="..\..\Solver.h" />
+    <ClInclude Include="..\..\UndoRedoCommands.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

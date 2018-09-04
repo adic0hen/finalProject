@@ -6,8 +6,14 @@
 	#include "InitAndTerminateModule.h"
 	#include "IOCommands.h"
 	#include "GameDataStructs.h"
+
+
 void invalid(char* cmd);
-int parse(char* buffer) {
+
+
+int parse(char* buffer)
+{
+
 	char* cmd;
 	/*these variables will be used as part of the "set","hint" commands*/
 	char* sRow;
@@ -26,15 +32,20 @@ int parse(char* buffer) {
 	/*this variable will be used as part of the "mark_errors" command*/
 	int mark;
 
-	if (fgets(buffer, 256, stdin) != NULL) {
+	if (fgets(buffer, 256, stdin) != NULL) 
+	{
 		cmd = strtok(buffer, " \t\r\n");
-		while (cmd != NULL) {
-			if (strcmp(cmd, "set") == 0) {
-				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+		while (cmd != NULL) 
+		{
+			if (strcmp(cmd, "set") == 0) 
+			{
+				if (mode == 2 || mode == 3) 
+				{ /*command available only in solve or edit modes*/
 					sRow = strtok(NULL, " \t\r\n");
 					sCol = strtok(NULL, " \t\r\n");
 					sVal = strtok(NULL, " \t\r\n");
-					if (sCol != NULL && sRow != NULL && sVal != NULL) { /*making sure we have all the values*/
+					if (sCol != NULL && sRow != NULL && sVal != NULL) 
+					{ /*making sure we have all the values*/
 						col = atoi(sCol);
 						row = atoi(sRow);
 						val = atoi(sVal);
@@ -47,102 +58,141 @@ int parse(char* buffer) {
 					break;
 				}
 			}
-			if (strcmp(cmd, "solve") == 0) {
+
+			if (strcmp(cmd, "solve") == 0) 
+			{
 				filePath = strtok(NULL, " \t\r\n");
-				if (filePath != NULL) {
+				if (filePath != NULL) 
+				{
 					mode = 2;
 					load(filePath);
 				}
 				printBoard(markerrors);
 				break;
 			}
-			if (strcmp(cmd, "edit") == 0) {
+
+			if (strcmp(cmd, "edit") == 0) 
+			{
 				mode = 3;
 				filePath = strtok(NULL, " \t\r\n");
-				if (filePath != NULL) {
+				if (filePath != NULL) 
+				{
 					load(filePath);
 				}
-				else { /*initializing an empty board because there was no file path given*/
+				else 
+				{ /*initializing an empty board because there was no file path given*/
 					initializeMainBoard();
 				}
 				printBoard(1);/*markerrors is always 1 in edit mode*/
 				break;
 			}
-			if (strcmp(cmd, "mark_errors") == 0) {
+
+			if (strcmp(cmd, "mark_errors") == 0) 
+			{
 				int mark;
 				mark = atoi(strtok(NULL, " \t\r\n"));
-				
-				if (markErrors(mark)) {/*this is True when we are in Solve mode*/
+
+				if (markErrors(mark)) 
+				{/*this is True when we are in Solve mode*/
 					break;
 				}
-				else {
+				else 
+				{
 					invalid(cmd);/*this will result in getting to the invalid command part*/
 					break;
 				}
 			}
-			if (strcmp(cmd, "print_board") == 0) {
-				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+
+			if (strcmp(cmd, "print_board") == 0) 
+			{
+				if (mode == 2 || mode == 3) 
+				{ /*command available only in solve or edit modes*/
 					printBoard(markerrors);
 					break;
 				}
-				else {
+				else
+				{
 					invalid(cmd); /*this will result in getting to the invalid command part*/
 					break;
 				}
 			}
-			if (strcmp(cmd, "validate") == 0) {
-				if (mode == 2 || mode == 3) { /*command available only in solve or edit modes*/
+
+			if (strcmp(cmd, "validate") == 0) 
+			{
+				if (mode == 2 || mode == 3) 
+				{ /*command available only in solve or edit modes*/
 					validate();
 					break;
 				}
-			if (strcmp(cmd, "generate") == 0) {
-				if (mode != 3) {
+			}
+
+			if (strcmp(cmd, "generate") == 0) 
+			{
+				if (mode != 3) 
+				{
 					invalid(cmd);
 					break;
 				}
+
 				sCellsToFill = strtok(NULL, " \t\r\n");
 				sCellsToKeep = strtok(NULL, " \t\r\n");
-				if (sCellsToFill != NULL || sCellsToKeep != NULL) {
+				if (sCellsToFill != NULL || sCellsToKeep != NULL) 
+				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
 					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep); COMMENTED OUT FOR TESTS*/
 				}
 				break;
 			}
-			if (strcmp(cmd, "undo") == 0) {
+
+			if (strcmp(cmd, "undo") == 0)
+			{
 				undoMAIN();
 				/*need to complete code!*/
 				break;
 			}
-			if (strcmp(cmd, "redo") == 0) {
+
+			if (strcmp(cmd, "redo") == 0)
+			{
 				/*need to complete code!*/
 				break;
 			}
-			if (strcmp(cmd, "save") == 0) {
+
+			if (strcmp(cmd, "save") == 0)
+			{
 				filePath = strtok(NULL, " \t\r\n");
 				save(filePath);
 				break;
 			}
-			if (strcmp(cmd, "hint") == 0) {
-				if (mode != 2) {
+
+			if (strcmp(cmd, "hint") == 0)
+			{
+				if (mode != 2) 
+				{
 					invalid(cmd);
 					break;
 				}
 				sRow = strtok(NULL, " \t\r\n");
 				sCol = strtok(NULL, " \t\r\n");
-				if (sRow != NULL && sCol != NULL) {
+				if (sRow != NULL && sCol != NULL)
+				{
 					row = atoi(sRow);
 					col = atoi(sCol);
 					/*hint(row, col); COMMENTED OUT FOR TESTS*/
 				}
 				break;
 			}
-			if (strcmp(cmd, "num_solutions") == 0) {
+
+			if (strcmp(cmd, "num_solutions") == 0) 
+			{
 				/*need to complete code!*/
 				break;
 			}
-			if (strcmp(cmd, "autofill") == 0) {
-				if (mode != 2) {
+
+			if (strcmp(cmd, "autofill") == 0) 
+			{
+				if (mode != 2) 
+				{
 					invalid(cmd);
 					break;
 				}
@@ -150,8 +200,11 @@ int parse(char* buffer) {
 				/*need to complete code!*/
 				break;
 			}
-			if (strcmp(cmd, "reset") == 0) {
-				if (mode != 2 && mode != 3) {/*only available in solve or edit modes*/
+
+			if (strcmp(cmd, "reset") == 0) 
+			{
+				if (mode != 2 && mode != 3) 
+				{/*only available in solve or edit modes*/
 					invalid(cmd);
 					break;
 				}
@@ -159,7 +212,9 @@ int parse(char* buffer) {
 				printf("Board reset\n");
 				break;
 			}
-			if (strcmp(cmd, "exit") == 0) {
+
+			if (strcmp(cmd, "exit") == 0) 
+			{
 				mode = 0;
 				/*need to complete code, free memory and resources*/
 				printf("Exiting...\n");
@@ -170,9 +225,11 @@ int parse(char* buffer) {
 			break;
 		}
 	}
+
 	else { /*when a command longer than 256 characters has been entered*/
 		printf("ERROR: invalid command\n");
 	}
+
 }
 
 
