@@ -14,12 +14,12 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 int isErroneous();
 int markErrors(int mark);
-int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
+/*int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int checkHintParameters(int row, int col);
 int validate();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
-
+*/
 
 
 
@@ -269,7 +269,7 @@ int isEmpty() {
 
 
 /*solver relying functions - NEED TO BE TESTED*/
-
+/*
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
 	i = 0;
@@ -318,8 +318,8 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	isValid = !error;
 	return isValid;
 }
-
-
+*/
+/*
 int hint(int row, int col) {
 	int h;
 	if (checkHintParameters(row, col)) {
@@ -352,8 +352,8 @@ int checkHintParameters(int row, int col) {
 	}
 	return 1;
 }
-
-
+*/
+/*
 int validate() {
 	int isValid;
 	isValid = 0;
@@ -372,7 +372,7 @@ int validate() {
 	}
 	return 0;
 }
-
+*/
 
 
 /* -------------- autofill commands--------------- */

@@ -165,7 +165,7 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	Cell* cloneCell;
 
 	if (cell != NULL) {
-		cloneCell = (Cell*)malloc(sizeof(cell));
+		cloneCell = (Cell*)malloc(sizeof(Cell));
 		cloneCell->currentCellvalue = cell->currentCellvalue;
 		cloneCell->isErroneus = cell->isErroneus;
 		cloneCell->isFixed = cell->isFixed;
@@ -317,6 +317,7 @@ void undoFromNullNode() {
 	type = UndoRedoList.currentMove->prev->type;
 
 	currentMove = currentMove->prev;
+	UndoRedoList.currentMove = currentMove;
 
 	while (currentMove->type == type) {
 		if (currentMove->prev == NULL) {
@@ -324,6 +325,7 @@ void undoFromNullNode() {
 		}
 		else {
 			undo();
+			currentMove = UndoRedoList.currentMove; /*in undo current move goes one back*/
 		}
 	}
 
@@ -408,7 +410,6 @@ void redo() {
 
 	newNumber = LIFOCells[row][coloumn].first->data->currentCellvalue;
 
-	UndoRedoList.currentMove = nextNode;
 
 	if (prevNode != NULL) {
 		printf("Redo %d,%d: from %d to %d\n", row, coloumn, prevNode->data->currentCellvalue, newNumber);
@@ -422,17 +423,16 @@ void redoUntilNullNode() {
 	URNode* currentMove;
 	int type;
 
-	currentMove = UndoRedoList.currentMove;
+	currentMove = UndoRedoList.currentMove->next;
 	type = currentMove->type;
 
 	while (currentMove->type == type) {
 		redo();
+		currentMove = UndoRedoList.currentMove->next;
 	}
 
 	if (currentMove->type == 3) {
-		if (currentMove->next != NULL) {
-			UndoRedoList.currentMove = currentMove->next;
-		}
+		UndoRedoList.currentMove = currentMove;
 	}
 }
 
@@ -520,13 +520,13 @@ void redoMAIN() {
 		return;
 	}
 
-	if (currentMove->type == 1) {
+	if (currentMove->next->type == 1) {
 		redo();
 	}
-	else if (currentMove->type == 2) {
+	else if (currentMove->next->type == 2) {
 		redoUntilNullNode();
 	}
-	else if (currentMove->type == 0) {
+	else if (currentMove->next->type == 0) {
 		redoUntilNullNode();
 	}
 }

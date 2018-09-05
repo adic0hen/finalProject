@@ -29,7 +29,7 @@ int main(){
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
 	mode = 1;
-	/*
+	
 	printBoard(0);
 	setMAIN(1, 1, 1);
 	setMAIN(1, 2, 2);
@@ -40,12 +40,32 @@ int main(){
 	setMAIN(1, 7, 7);
 	setMAIN(1, 8, 8);
 
-	autofill();
+	setMAIN(2, 1, 4);
+	setMAIN(2, 2, 5);
+	setMAIN(2, 3, 6);
+	setMAIN(2, 4, 7);
+	setMAIN(2, 5, 8);
+	setMAIN(2, 6, 9);
+	setMAIN(2, 7, 1);
+	setMAIN(2, 7, 2);
 
-	
+	autofill();
+	setMAIN(3, 1, 9);
+
+	printBoard(0);
 
 	undoMAIN();
-	*/
+	printBoard(0);
+	undoMAIN(0);
+	printBoard(0);
+	undoMAIN(0);
+	printBoard(0);
+	undoMAIN(0);
+	printBoard(0);
+	redoMAIN();
+	printBoard(0);
+	redoMAIN();
+	
 	
 	
 
@@ -53,7 +73,7 @@ int main(){
 	/*
 	TESTRandomalyFillBoard(40);*/
 	printBoard(0);
-	game();
+	/*game();*/
 	return 1;
 
 }

@@ -236,7 +236,7 @@ int parse(char* buffer)
 	}
 	return 1;
 }
-
+*/
 
 void invalid() {
 		printf("ERROR: invalid command\n");
