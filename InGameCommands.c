@@ -134,6 +134,31 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 	return 1;
 }
 
+int checkBoardValidity() {
+	int isValidNumber;
+	int num;
+	int row;
+	int col;
+	for (row = 0; row < boardSize; row++) {
+		for (col = 0; col < boardSize; col++) {
+			if (mainGameBoard[row][col].currentCellvalue == -1) {
+				continue;
+			}
+			num = mainGameBoard[row][col].currentCellvalue;
+			mainGameBoard[row][col].currentCellvalue = -1;
+			isValidNumber = checkValidityOfNum(num,row,col);
+			if (!isValidNumber) {
+				mainGameBoard[row][col].isErroneus = 1;
+			}
+			else {
+				mainGameBoard[row][col].isErroneus = 0;
+			}
+			mainGameBoard[row][col].currentCellvalue = num;
+		}
+	}
+	return 1;
+}
+
 
 void deleteCell(int row, int coloumn) {
 	mainGameBoard[row][coloumn].currentCellvalue = -1;
@@ -187,7 +212,7 @@ int setMAIN(int row, int coloumn, int number) {
 	else {
 		set(row - 1, coloumn - 1, number, 0);
 	}
-
+	checkBoardValidity();
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 	return 1;
 
