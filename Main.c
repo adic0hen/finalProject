@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
 	initializeMainBoard();
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
+	mode = 1;
+	/*
 	printBoard(0);
 	setMAIN(1, 1, 1);
 	setMAIN(1, 2, 2);
@@ -42,6 +44,7 @@ int main(int argc, char *argv[]) {
 	
 
 	undoMAIN();
+	*/
 	
 	
 
@@ -49,7 +52,7 @@ int main(int argc, char *argv[]) {
 	/*
 	TESTRandomalyFillBoard(40);*/
 	printBoard(0);
-	/*game();*/
+	game();
 
 
 }

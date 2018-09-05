@@ -50,6 +50,12 @@ int parse(char* buffer)
 						row = atoi(sRow);
 						val = atoi(sVal);
 						setMAIN(row, col, val);
+						if (mode == 2) {
+							printBoard(markerrors);
+						}
+						else {
+							printBoard(1);
+						}
 					}
 					break;
 				}
