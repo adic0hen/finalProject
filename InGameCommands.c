@@ -262,6 +262,7 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 		printf("Error: puzzle generator failed\n");
 		return 0;
 	}
+	printBoard();
 	return 1;
 }
 
