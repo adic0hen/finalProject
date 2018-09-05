@@ -50,12 +50,7 @@ int parse(char* buffer)
 						row = atoi(sRow);
 						val = atoi(sVal);
 						setMAIN(row, col, val);
-						if (mode == 2) {
-							printBoard(markerrors);
-						}
-						else {
-							printBoard(1);
-						}
+						printBoard(markerrors);
 					}
 					break;
 				}
@@ -111,10 +106,13 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "print_board") == 0) 
 			{
-				if (mode == 2 || mode == 3) 
+				if (mode == 2) 
 				{ /*command available only in solve or edit modes*/
 					printBoard(markerrors);
 					break;
+				}
+				else if (mode == 3) {
+					printBoard(1);
 				}
 				else
 				{
