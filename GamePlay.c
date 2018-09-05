@@ -15,5 +15,5 @@ int game() {
 		printf("Enter your command:\n");
 		parse(buffer);
 	}
-	
+	return 1;
 }

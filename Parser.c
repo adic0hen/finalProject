@@ -8,7 +8,7 @@
 	#include "GameDataStructs.h"
 
 
-void invalid(char* cmd);
+void invalid();
 
 
 int parse(char* buffer)
@@ -30,7 +30,9 @@ int parse(char* buffer)
 	int cellsToFill;
 	int cellsToKeep;
 	/*this variable will be used as part of the "mark_errors" command*/
+	/* can be deleted if everything works
 	int mark;
+	*/
 
 	if (fgets(buffer, 256, stdin) != NULL) 
 	{
@@ -55,7 +57,7 @@ int parse(char* buffer)
 					break;
 				}
 				else {
-					invalid(cmd); /*this will result in getting to the invalid command part*/
+					invalid(); /*this will result in getting to the invalid command part*/
 					break;
 				}
 			}
@@ -92,14 +94,13 @@ int parse(char* buffer)
 			{
 				int mark;
 				mark = atoi(strtok(NULL, " \t\r\n"));
-
-				if (markErrors(mark)) 
-				{/*this is True when we are in Solve mode*/
+				if (mode == 2) {
+					markErrors(mark);
 					break;
 				}
 				else 
 				{
-					invalid(cmd);/*this will result in getting to the invalid command part*/
+					invalid();/*this will result in getting to the invalid command part*/
 					break;
 				}
 			}
@@ -116,7 +117,7 @@ int parse(char* buffer)
 				}
 				else
 				{
-					invalid(cmd); /*this will result in getting to the invalid command part*/
+					invalid(); /*this will result in getting to the invalid command part*/
 					break;
 				}
 			}
@@ -134,7 +135,7 @@ int parse(char* buffer)
 			{
 				if (mode != 3) 
 				{
-					invalid(cmd);
+					invalid();
 					break;
 				}
 
@@ -144,7 +145,7 @@ int parse(char* buffer)
 				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep); COMMENTED OUT FOR TESTS*/
+					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
 				}
 				break;
 			}
@@ -173,7 +174,7 @@ int parse(char* buffer)
 			{
 				if (mode != 2) 
 				{
-					invalid(cmd);
+					invalid();
 					break;
 				}
 				sRow = strtok(NULL, " \t\r\n");
@@ -182,7 +183,7 @@ int parse(char* buffer)
 				{
 					row = atoi(sRow);
 					col = atoi(sCol);
-					/*hint(row, col); COMMENTED OUT FOR TESTS*/
+					hint(row, col);
 				}
 				break;
 			}
@@ -197,7 +198,7 @@ int parse(char* buffer)
 			{
 				if (mode != 2) 
 				{
-					invalid(cmd);
+					invalid();
 					break;
 				}
 				autofill();
@@ -209,7 +210,7 @@ int parse(char* buffer)
 			{
 				if (mode != 2 && mode != 3) 
 				{/*only available in solve or edit modes*/
-					invalid(cmd);
+					invalid();
 					break;
 				}
 				/*need to complete code, undo redo*/
@@ -225,7 +226,7 @@ int parse(char* buffer)
 				break;
 			}
 			/*Invalid command part - we get to this part of the parser only if there was an invalid or unrecognized command*/
-			invalid(cmd);
+			invalid();
 			break;
 		}
 	}
@@ -233,11 +234,10 @@ int parse(char* buffer)
 	else { /*when a command longer than 256 characters has been entered*/
 		printf("ERROR: invalid command\n");
 	}
-
+	return 1;
 }
 
 
-void invalid(char* cmd) {
+void invalid() {
 		printf("ERROR: invalid command\n");
-		cmd = NULL; /*need to make sure if this is needed or not*/
 	}

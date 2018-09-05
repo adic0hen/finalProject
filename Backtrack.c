@@ -134,7 +134,6 @@ int checkBTBlockForNumber(int row, int coloumn, int number) {
 
 int checkBTValidityOfNum(int row, int coloumn, int number) {
 	int i;
-	int j;
 
 
 	if (checkBTBlockForNumber(row, coloumn, number)) {

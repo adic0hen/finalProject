@@ -1,15 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
-/*#include "GameDataStructs.h"*/
+#include "GameDataStructs.h"
 #include "gurobi_c.h"
 #include <string.h>
-/*#include "InGameCommands.h"*/
-/*#include <time.h>;*/
+#include "InGameCommands.h"
+
 
 /*Outer variable declarations*/
+/* COMMENTED OUR FOR COMPILATION
 int boardSize;
 int blockHeight;
 int blockWidth;
+*/
 int** board; /*is used in the gurobi optimization process, "gurobi board"*/
 
 
@@ -28,20 +30,23 @@ int** transpose(int** board);
 int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
-void test_MAIN();
+/*void test_MAIN();*/
 void test_transpose();
 int test_solverTest();
 int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
+void copySolvedBoardToMainBoard();
+void copyMainBoardToGourobiBoard();
 
 
 
-
+/*COMMENTED OUR FOR COMPILATION
 int main() {
 	printf("solveMain test\n");
 	test_transpose();
 	return 0;
 }
+*/
 
 int solveMain() {
 	int temp;
@@ -349,7 +354,7 @@ int** transpose(int** board) {
 }
 
 /*commented out for tests*/
-/*
+
 
 void copyMainBoardToGourobiBoard() {
 	int i;
@@ -379,7 +384,7 @@ void copySolvedBoardToMainBoard() {
 		}
 	}
 }
-*/
+
 
 int** setRandom(int** board,int x) {
 	int row;

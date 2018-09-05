@@ -3,6 +3,8 @@
 #include "GameDataStructs.h"
 #include "GamePlay.h"
 #include "UndoRedoCommands.h"
+#include "Solver.h"
+#include <string.h>
 
 /* Declaration of functions*/
 
@@ -12,6 +14,11 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 int isErroneous();
 int markErrors(int mark);
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
+int checkHintParameters(int row, int col);
+int validate();
+int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
+int hint(int row, int col);
 
 
 
@@ -43,7 +50,7 @@ int checkBlockForNumber(int row, int coloumn, int number) {
 }
 
 
-void printBoard(int markErrors) {
+void printBoard() {
 	int i;
 	int j;
 	int rowCounter;
@@ -92,7 +99,9 @@ void printBoard(int markErrors) {
 						printf(".");
 					}
 					else if (mainGameBoard[boardRow][j].isErroneus) {
-						printf("*");
+						if (markerrors) {
+							printf("*");
+						}
 					}
 					else {
 						printf(" ");
@@ -112,7 +121,6 @@ void printBoard(int markErrors) {
 
 int checkValidityOfNum(int number, int row, int coloumn) {
 	int i;
-	int j;
 
 
 	if (checkBlockForNumber(row, coloumn, number)) {
@@ -234,10 +242,8 @@ int isErroneous() {
 
 int markErrors(int mark) {
 
-	if (mode == 2) {
-		if (mark == 0 || mark == 1) {
-			markerrors = mark;
-		}
+	if (mark == 0 || mark == 1) {
+		markerrors = mark;
 		return 1;
 	}
 	else {
@@ -263,7 +269,7 @@ int isEmpty() {
 
 
 /*solver relying functions - NEED TO BE TESTED*/
-/*
+
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
 	i = 0;
@@ -324,13 +330,15 @@ int hint(int row, int col) {
 		return 0;
 	}
 	printf("Hint, set cell to %d\n",h);
+	return 0;
 }
+
 int checkHintParameters(int row, int col) {
 	if (row<1 || row>boardSize || col<1 || col>boardSize) {
 		printf("Error: value not in range 1-%d\n", boardSize);
 		return 0;
 	}
-	if (isErroneous) {
+	if (isErroneous()) {
 		printf("Error: board contains erroneous values\n");
 		return 0;
 	}
@@ -345,14 +353,15 @@ int checkHintParameters(int row, int col) {
 	return 1;
 }
 
-*/
+
 int validate() {
 	int isValid;
-	if (isErroneous) {
+	isValid = 0;
+	if (isErroneous()) {
 		printf("Error: board contains erroneous values\n");
 		return 0;
 	}
-	/*isValid = validateSolve();*/
+	isValid = validateSolve();
 	if (isValid == 1) {
 		printf("Validation passed: board is solvable\n");
 		return 1;
@@ -414,7 +423,7 @@ int autofill() {
 		free(boardToFill[i]);
 	}
 	free(boardToFill);
-
+	return 1;
 }
 
 
@@ -425,7 +434,7 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 	int sum;
 	int col;
 	int numToFill;
-
+	col = 0;/*initializing*/
 	/* i stands for rows*/
 	for (i = 0; i < boardSize; i++) {
 		counter = 0;
@@ -461,6 +470,7 @@ void autofillCOLOUMS(int** boardToFill, int expectedSum) {
 	int row;
 	int numToFill;
 
+	row = 0; /*initializing*/
 	/* i stands for colums*/
 	for (i = 0; i < boardSize; i++) {
 		counter = 0;

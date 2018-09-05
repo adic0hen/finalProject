@@ -6,5 +6,5 @@ void numOfSolutions();
 
 
 
-#endif // !BACKTRACK_H_
+#endif /* !BACKTRACK_H_*/
 

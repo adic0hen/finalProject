@@ -21,7 +21,8 @@ int main(int argc, char* argv[]) {
 
 /* main for tests*/ 
 
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {*/
+int main(){	
 	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
 	TESTRandomalyFillBoard(40);*/
 	printBoard(0);
 	game();
-
+	return 1;
 
 }
 

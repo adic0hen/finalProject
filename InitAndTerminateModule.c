@@ -22,7 +22,7 @@ int allocateMemForMainBoard() {
 		allocatedMemAddr[i] = (Cell*)tempPTR;
 	}
 
-	// DONE ALLOCATING MEMORY FOR BOARD //
+	/* DONE ALLOCATING MEMORY FOR BOARD */
 
 	mainGameBoard = allocatedMemAddr;
 
@@ -54,15 +54,18 @@ void initializeLoadedMainBoard(FILE *fptr) {
 
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			fscanf(fptr, "%d", &tempNum); /*scanning the current Cell's number*/
-			fscanf(fptr, "%c", &tempDot);/*either a dot right after the number, or a white space*/
+			if(!fscanf(fptr, "%d", &tempNum)>0){; /*scanning the current Cell's number*/
+			return;
+			}
+			if(!fscanf(fptr, "%c", &tempDot)>0){;/*either a dot right after the number, or a white space*/
+				return;
+			}
 			if (tempNum == 0) { /*this part relates to working with their save format*/
 				mainGameBoard[i][j].currentCellvalue = -1;
 			}
 			else {
 				mainGameBoard[i][j].currentCellvalue = tempNum;
 			}
-			/*printf("%d%c", tempNum, tempDot);/*for debugging, need do be removed*/
 			if (tempDot == '.'|| (mode == 3 && mainGameBoard[i][j].currentCellvalue != -1)) {
 				mainGameBoard[i][j].isFixed = 1;
 			}
@@ -72,7 +75,6 @@ void initializeLoadedMainBoard(FILE *fptr) {
 
 			mainGameBoard[i][j].isErroneus = 0;
 		}
-		/*printf("\n"); /*for debugging, need do be removed*/
 	}
 }
 
@@ -102,7 +104,7 @@ int allocateMemForLIFOCells() {
 		allocatedMemAddr[i] = (cellNodeGuard*)tempPTR;
 	}
 
-	// DONE ALLOCATING MEMORY FOR BOARD //
+	/* DONE ALLOCATING MEMORY FOR BOARD */
 
 	LIFOCells = allocatedMemAddr;
 

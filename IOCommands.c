@@ -8,7 +8,7 @@
 /* Declaration of functions*/
 
 int save(char* path);
-writeBoardToFile(FILE* fptr);
+int writeBoardToFile(FILE* fptr);
 int load(char* path);
 
 
@@ -36,9 +36,10 @@ int save(char* path) {
 	writeBoardToFile(fptr);
 	fclose(fptr);
 	printf("Saved to: %s\n", path);
+	return 1;
 }
 
-writeBoardToFile(FILE* fptr) {
+int writeBoardToFile(FILE* fptr) {
 	int i;
 	int j;
 	int num;
@@ -60,6 +61,7 @@ writeBoardToFile(FILE* fptr) {
 		}
 		fprintf(fptr, "\n");
 	}
+	return 1;
 }
 
 int load(char* path) {
@@ -74,8 +76,12 @@ int load(char* path) {
 		}
 		return 0;
 	}
-	fscanf(fptr, "%d", &blockHeight);
-	fscanf(fptr, "%d", &blockWidth);
+	if (!fscanf(fptr, "%d", &blockHeight) > 0) {
+		return 0;
+	}
+	if (!fscanf(fptr, "%d", &blockWidth) > 0){
+		return 0;
+	}
 	boardSize = (blockHeight * blockWidth);
 	allocateMemForMainBoard(boardSize);
 	initializeLoadedMainBoard(fptr);
