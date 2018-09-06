@@ -3,7 +3,7 @@
 
 #include "gurobi_c.h"
 #include <string.h>
-#include "initAndTerminateModule.h"
+#include "InitAndTerminateModule.h"
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
 
@@ -35,6 +35,7 @@ int** transpose(int** board);
 int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
+void freeSolver();
 /*void test_MAIN();*/
 int testGEN();
 
@@ -703,10 +704,9 @@ int validateSolve() {
 	}
 }
 
-freeSolver() {
+void freeSolver() {
 	freeMat(board);
 	freeMat(res.solBoard);
-	free(&res);
 }
 
 
