@@ -84,6 +84,7 @@ int parse(char* buffer)
 				}
 				else 
 				{ /*initializing an empty board because there was no file path given*/
+					initiallizeGameParameters(9, 3, 3);
 					initializeMainBoard();
 				}
 				updateURListAfterSolveAndEdit();
