@@ -8,5 +8,6 @@ void initializeMainBoard();
 void initiallizeGameParameters(int N, int bHeight, int bWidth);
 int allocateMemForLIFOCells();
 void initialUndoRedoListAndLIFOCells();
-
+void freeAll();
+void freeMat(int** mat);
 #endif

@@ -3,7 +3,7 @@
 
 #include "gurobi_c.h"
 #include <string.h>
-
+#include "initAndTerminateModule.h"
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
 
@@ -368,6 +368,7 @@ int** transpose(int** board) {
 			transposed[i][j] = board[j][i];
 		}
 	}
+	freeMat(board);/*board is freed because the pointer is going to be set to the transposed bord*/
 	return transposed;
 }
 
@@ -702,6 +703,11 @@ int validateSolve() {
 	}
 }
 
+freeSolver() {
+	freeMat(board);
+	freeMat(res.solBoard);
+	free(&res);
+}
 
 
 
