@@ -295,7 +295,7 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 		return 0;
 	}
 	if (!isEmpty()) {
-		printf("Error: board is now empty\n");
+		printf("Error: board is not empty\n");
 		return 0;
 	}
 	while (i < 1000) {
@@ -333,7 +333,7 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	}
 
 	if (error) {
-		printf("Error: value not in range 0-%d", numOfCells);
+		printf("Error: value not in range 0-%d\n", numOfCells);
 	}
 	isValid = !error;
 	return isValid;
