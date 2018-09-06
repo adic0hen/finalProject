@@ -155,13 +155,12 @@ int parse(char* buffer)
 			if (strcmp(cmd, "undo") == 0)
 			{
 				undoMAIN();
-				/*need to complete code!*/
 				break;
 			}
 
 			if (strcmp(cmd, "redo") == 0)
 			{
-				/*need to complete code!*/
+				redoMAIN();
 				break;
 			}
 

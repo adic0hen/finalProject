@@ -707,7 +707,6 @@ int validateSolve() {
 void freeSolver() {
 	freeMat(board);
 	freeMat(res.solBoard);
-	free(&res);
 }
 
 
