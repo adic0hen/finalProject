@@ -10,12 +10,12 @@
 
 
 /*Outer variable declarations*/
-/* COMMENTED OUR FOR COMPILATION*/
+/* COMMENTED OUR FOR COMPILATION
 int boardSize;
 int blockHeight;
 int blockWidth;
 int** mainGameBoard;
-
+*/
 int** board; /*is used in the gurobi optimization process, "gurobi board"*/
 
 
@@ -41,16 +41,17 @@ int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
-/*test function declarations*/
+/*test function declarations
+
 int test_generate(int cellsToFill, int cellsToKeep);
 void test_transpose();
 int test_solverTest();
 void test_initMainBoard();
 void test_copySolvedBoardToMainBoard();
+*/
 
 
-
-/*COMMENTED OUR FOR COMPILATION*/
+/*COMMENTED OUR FOR COMPILATION
 int main() {
 	printf("in main\n");
 	boardSize = 9;
@@ -62,7 +63,7 @@ int main() {
 	testGEN();
 	return 0;
 }
-
+*/
 
 int solveMain() {
 	int temp;
@@ -370,7 +371,7 @@ int** transpose(int** board) {
 }
 
 /*commented out for tests*/
-/*
+
 
 void copyMainBoardToGourobiBoard() {
 	int i;
@@ -400,7 +401,7 @@ void copySolvedBoardToMainBoard() {
 		}
 	}
 }
-*/
+
 
 int** setRandom(int** board,int x) {
 	int row;
@@ -480,7 +481,7 @@ int** deleteExcept(int** board, int y) {
 
 
 /*everything that starts with 'test'*/
-
+/*
 void test_initBoard() {
 	int i;
 	int j;
@@ -526,7 +527,7 @@ void test_copySolvedBoardToMainBoard() {
 	}
 }
 
-/*
+
 void test_MAIN() {
 	int** transposed;
 	RESULTS res;
@@ -547,7 +548,7 @@ void test_MAIN() {
 	printf("4\n");
 	
 }
-*/
+
 int test_solverTest() {
 	int good;
 	printf("enter boardSize\n");
@@ -625,7 +626,26 @@ int testGEN() {
 	return 1;
 }
 
+int test_generate(int cellsToFill, int cellsToKeep) {
 
+int i;
+printf("in test_generate\n");
+i = 0;
+while (i < 1000) {
+if (generateSolve(cellsToFill, cellsToKeep)) {
+break;
+}
+else {
+i++;
+}
+}
+if (i == 1000) {
+printf("Error: puzzle generator failed\n");
+return 0;
+}
+return 1;
+}
+*/
 /*solver-based functions*/
 
 
@@ -657,8 +677,8 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	solve();	
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
-		/*copySolvedBoardToMainBoard(); the real function! the board is not "solved" but it's the one we want to use*/
-		test_copySolvedBoardToMainBoard();/*only for tests!*/
+		copySolvedBoardToMainBoard(); /*the real function! the board is not "solved" but it's the one we want to use*/
+		/*test_copySolvedBoardToMainBoard(); only for tests!*/
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 		b = 1;
 	}
@@ -676,26 +696,8 @@ int validateSolve() {
 	}
 }
 
-/*temporar functions for tests*/
-int test_generate(int cellsToFill, int cellsToKeep) {
-	
-	int i;
-	printf("in test_generate\n");
-	i = 0;
-	while (i < 1000) {
-		if (generateSolve(cellsToFill, cellsToKeep)) {
-			break;
-		}
-		else {
-			i++;
-		}
-	}
-	if (i == 1000) {
-		printf("Error: puzzle generator failed\n");
-		return 0;
-	}
-	return 1;
-}
+
+
 
 
 
