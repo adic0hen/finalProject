@@ -8,6 +8,7 @@
 	#include "GameDataStructs.h"
 #include "UndoRedoCommands.h"
 #include "Solver.h"
+#include "Backtrack.h"
 
 
 void invalid();
@@ -191,7 +192,17 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "num_solutions") == 0) 
 			{
-				/*need to complete code!*/
+				if (mode == 2 || mode == 3) {
+					if (isErroneous) {
+						printf("Error: board contains erroneous values\n");
+					}
+					else {
+						numOfSolutions();
+					}
+				}
+				else {
+					invalid();
+				}
 				break;
 			}
 
