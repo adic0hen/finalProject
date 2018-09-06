@@ -1,12 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "gurobi_c.h"
 #include <string.h>
-/*
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
-*/
+
 
 
 /*Outer variable declarations*/
@@ -29,20 +27,18 @@ RESULTS res;
 
 /*Function declarations*/
 void solve();
-void test_initBoard();
 int** transpose(int** board);
 int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
-/*void test_MAIN();*/
-int testGEN();
-
 int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
-/*test function declarations
-
+/*test function declarations:
+void test_initBoard();
+void test_MAIN();
+int testGEN();
 int test_generate(int cellsToFill, int cellsToKeep);
 void test_transpose();
 int test_solverTest();
