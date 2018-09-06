@@ -2,7 +2,11 @@
 #include <stdio.h>
 #include "GameDataStructs.h"
 #include "UndoRedoCommands.h"
+#include "Solver.h"
 
+/*function declarations*/
+void freeMainGameBoard();
+void freeAll();
 
 
 int allocateMemForMainBoard() {
@@ -131,6 +135,10 @@ void initialUndoRedoListAndLIFOCells() {
 	UndoRedoList.hasLoadedBoard = 0;
 	UndoRedoList.selfCurrentMove = 0;
 }
+
+
+
+
 
 void freeAll() { /*frees the memory of the main game board, the solver board, and the URList*/
 	freeMainGameBoard();

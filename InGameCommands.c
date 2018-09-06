@@ -201,15 +201,15 @@ int setMAIN(int row, int coloumn, int number) {
 
 
 	if (number > boardSize || number < 0) {
-		printf("Error: value not in range 0-&d\n", boardSize);
+		printf("Error: value not in range 0-%d\n", boardSize);
 		return 0; /*Error of Invalid Number*/
 	}
 	if (row > boardSize || coloumn > boardSize) {
-		printf("Error: value not in range 0-&d\n", boardSize);
+		printf("Error: value not in range 0-%d\n", boardSize);
 		return 0;
 	}
 	if (row < 1 || coloumn < 1) {
-		printf("Error: value not in range 0-&d\n", boardSize);
+		printf("Error: value not in range 0-%d\n", boardSize);
 		return 0;
 	}
 
