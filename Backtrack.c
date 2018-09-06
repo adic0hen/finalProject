@@ -282,6 +282,7 @@ void backtrack() {
 					currNode = popFromStack();
 					setToBTboard(row, coloumn, -1);
 					number = currNode->number + 1;
+					free(currNode);
 				}
 
 			}
