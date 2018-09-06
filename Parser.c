@@ -68,9 +68,9 @@ int parse(char* buffer)
 				{
 					mode = 2;
 					load(filePath);
+					updateURListAfterSolveAndEdit();
+					printBoard(markerrors);
 				}
-				updateURListAfterSolveAndEdit();
-				printBoard(markerrors);
 				break;
 			}
 
@@ -82,7 +82,7 @@ int parse(char* buffer)
 				{
 					load(filePath);
 				}
-				else 
+				else
 				{ /*initializing an empty board because there was no file path given*/
 					initiallizeGameParameters(9, 3, 3);
 					initializeMainBoard();
