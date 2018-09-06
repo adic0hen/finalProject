@@ -52,6 +52,7 @@ int main(){
 
 	printBoard(0);
 	setMAIN(3, 1, 9);
+	mainGameBoard[2][0].isFixed = 1;
 	setMAIN(4, 1, 9);
 	printBoard(1);
 	undo();

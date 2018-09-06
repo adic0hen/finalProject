@@ -72,6 +72,7 @@ int parse(char* buffer)
 					mode = 2;
 					load(filePath);
 				}
+				updateURListAfterSolveAndEdit();
 				printBoard(markerrors);
 				break;
 			}
@@ -88,6 +89,7 @@ int parse(char* buffer)
 				{ /*initializing an empty board because there was no file path given*/
 					initializeMainBoard();
 				}
+				updateURListAfterSolveAndEdit();
 				printBoard(1);/*markerrors is always 1 in edit mode*/
 				break;
 			}
