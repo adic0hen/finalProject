@@ -1,17 +1,21 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "GameDataStructs.h"
+
 #include "gurobi_c.h"
 #include <string.h>
+/*
 #include "InGameCommands.h"
+#include "GameDataStructs.h"
+*/
 
 
 /*Outer variable declarations*/
-/* COMMENTED OUR FOR COMPILATION
+/* COMMENTED OUR FOR COMPILATION*/
 int boardSize;
 int blockHeight;
 int blockWidth;
-*/
+int** mainGameBoard;
+
 int** board; /*is used in the gurobi optimization process, "gurobi board"*/
 
 
@@ -31,22 +35,34 @@ int** copySol(double* sol);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
 /*void test_MAIN();*/
-void test_transpose();
-int test_solverTest();
+int testGEN();
+
 int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
+/*test function declarations*/
+int test_generate(int cellsToFill, int cellsToKeep);
+void test_transpose();
+int test_solverTest();
+void test_initMainBoard();
+void test_copySolvedBoardToMainBoard();
 
 
 
-/*COMMENTED OUR FOR COMPILATION
+/*COMMENTED OUR FOR COMPILATION*/
 int main() {
-	printf("solveMain test\n");
-	test_transpose();
+	printf("in main\n");
+	boardSize = 9;
+	blockHeight = 3;
+	blockWidth = 3;
+	mainGameBoard = allocateMemForBoardPTR();
+	test_initMainBoard();
+	printf("generate test\n");
+	testGEN();
 	return 0;
 }
-*/
+
 
 int solveMain() {
 	int temp;
@@ -354,7 +370,7 @@ int** transpose(int** board) {
 }
 
 /*commented out for tests*/
-
+/*
 
 void copyMainBoardToGourobiBoard() {
 	int i;
@@ -384,7 +400,7 @@ void copySolvedBoardToMainBoard() {
 		}
 	}
 }
-
+*/
 
 int** setRandom(int** board,int x) {
 	int row;
@@ -475,6 +491,16 @@ void test_initBoard() {
 		}
 	}
 }
+void test_initMainBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			mainGameBoard[i][j] = -1;
+		}
+	}
+}
 
 void test_printBoard(int** board) {
 	int i;
@@ -487,6 +513,16 @@ void test_printBoard(int** board) {
 			printf(" %2d ", board[i][j]);
 		}
 		printf("\n");
+	}
+}
+void test_copySolvedBoardToMainBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			mainGameBoard[i][j] = res.solBoard[i][j];
+		}
 	}
 }
 
@@ -582,6 +618,13 @@ void test_transpose() {
 	printf("done\n");
 }
 
+int testGEN() {
+	printf("int testGEN\n");
+	test_generate(25,5);
+	test_printBoard(mainGameBoard);
+	return 1;
+}
+
 
 /*solver-based functions*/
 
@@ -602,19 +645,23 @@ int hintSolve(int row, int coloumn) { /*returns the hint value if board is solva
 
 
 int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
+	
 	int b;
+	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
 	test_initBoard();
 	setRandom(board, x);
+	printf("done setting random values\n");
+	test_printBoard(board);
 	solve();	
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
-		copySolvedBoardToMainBoard(); /*the board is not "solved" but it's the one we want to use*/
+		/*copySolvedBoardToMainBoard(); the real function! the board is not "solved" but it's the one we want to use*/
+		test_copySolvedBoardToMainBoard();/*only for tests!*/
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 		b = 1;
 	}
-	free(board);
 	return b;
 }
 
@@ -627,6 +674,27 @@ int validateSolve() {
 	else {
 		return 0;
 	}
+}
+
+/*temporar functions for tests*/
+int test_generate(int cellsToFill, int cellsToKeep) {
+	
+	int i;
+	printf("in test_generate\n");
+	i = 0;
+	while (i < 1000) {
+		if (generateSolve(cellsToFill, cellsToKeep)) {
+			break;
+		}
+		else {
+			i++;
+		}
+	}
+	if (i == 1000) {
+		printf("Error: puzzle generator failed\n");
+		return 0;
+	}
+	return 1;
 }
 
 

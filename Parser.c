@@ -6,6 +6,8 @@
 	#include "InitAndTerminateModule.h"
 	#include "IOCommands.h"
 	#include "GameDataStructs.h"
+#include "UndoRedoCommands.h"
+/*#include "Solver.h"*/
 
 
 void invalid();
@@ -70,6 +72,7 @@ int parse(char* buffer)
 					mode = 2;
 					load(filePath);
 				}
+				updateURListAfterSolveAndEdit();
 				printBoard(markerrors);
 				break;
 			}
@@ -86,6 +89,7 @@ int parse(char* buffer)
 				{ /*initializing an empty board because there was no file path given*/
 					initializeMainBoard();
 				}
+				updateURListAfterSolveAndEdit();
 				printBoard(1);/*markerrors is always 1 in edit mode*/
 				break;
 			}
@@ -126,7 +130,7 @@ int parse(char* buffer)
 			{
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
-					validate();
+					/*validate();*/
 					break;
 				}
 			}
@@ -145,7 +149,7 @@ int parse(char* buffer)
 				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
+					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);*/
 				}
 				break;
 			}
@@ -183,7 +187,7 @@ int parse(char* buffer)
 				{
 					row = atoi(sRow);
 					col = atoi(sCol);
-					hint(row, col);
+					/*hint(row, col);*/
 				}
 				break;
 			}
@@ -236,7 +240,7 @@ int parse(char* buffer)
 	}
 	return 1;
 }
-*/
+
 
 void invalid() {
 		printf("ERROR: invalid command\n");
