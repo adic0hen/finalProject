@@ -146,7 +146,7 @@ int parse(char* buffer)
 				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);*/
+					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
 				}
 				break;
 			}
