@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameDataStructs.h"
+#include "UndoRedoCommands.h"
 
 
 
@@ -130,11 +131,10 @@ void initialUndoRedoListAndLIFOCells() {
 	UndoRedoList.selfCurrentMove = 0;
 }
 
-void freeAll() {
-	freeMat(mainGameBoard);
+void freeAll() { /*frees the memory of the main game board, the solver board, and the URList*/
+	freeMainGameBoard();
 	freeSolver();
-	/*need to create these two functions*/
-	/*freeURResources();*/
+	freeURResources();
 }
 
 void freeMat(int** mat) { /*free the memory of a 2D array*/
@@ -146,12 +146,29 @@ void freeMat(int** mat) { /*free the memory of a 2D array*/
 
 }
 
+void freeMainGameBoard() {/*free the memory of the main game board only*/
+	int i;
+	int j;
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; i < boardSize; j++) {
+			free(&mainGameBoard[i][j]);
+		}
+	}
+	for (i = 0; i < boardSize; i++) {
+		free(mainGameBoard[i]);
+	}
+	free(mainGameBoard);
+}
+
 void reset() {
+	clearURListFromCurrentPosition(NULL, 1);
+	updateMainBoardToFirstBoard();
+	printf("Board reset\n");
+}
+
+void prepForLoad() {
 	freeAll();
-	initiallizeGameParameters(9, 3, 3);
-	allocateMemForMainBoard();
 	allocateMemForLIFOCells();
-	initializeMainBoard();
 	initialUndoRedoListAndLIFOCells();
 }
 
