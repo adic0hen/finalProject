@@ -214,6 +214,7 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 		else {
 			deleteCell(row - 1, coloumn - 1);
+			return 1;
 		}
 	}
 

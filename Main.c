@@ -48,6 +48,7 @@ int main(){
 	setMAIN(2, 6, 9);
 	setMAIN(2, 7, 1);
 	setMAIN(2, 7, 2);
+	setMAIN(2, 7, 0);
 
 	printBoard(0);
 	setMAIN(3, 1, 9);
