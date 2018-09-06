@@ -31,7 +31,6 @@ int main(){
 	mode = 1;
 	
 	printBoard(0);
-	setMAIN(1, 1, 1);
 	setMAIN(1, 2, 2);
 	setMAIN(1, 3, 3);
 	setMAIN(1, 4, 4);
@@ -39,6 +38,8 @@ int main(){
 	setMAIN(1, 6, 6);
 	setMAIN(1, 7, 7);
 	setMAIN(1, 8, 8);
+	setMAIN(1, 9, 9);
+	printBoard(0);
 
 	setMAIN(2, 1, 4);
 	setMAIN(2, 2, 5);
@@ -47,24 +48,43 @@ int main(){
 	setMAIN(2, 5, 8);
 	setMAIN(2, 6, 9);
 	setMAIN(2, 7, 1);
-	setMAIN(2, 7, 2);
+	setMAIN(2, 8, 2);
+	
+	setMAIN(3, 7, 4);
+	setMAIN(3, 8, 5);
+	setMAIN(3, 9, 6);
+
+	printBoard(0);
+	autofill();
+
+	printBoard(0);
 
 	autofill();
-	setMAIN(3, 1, 9);
 
 	printBoard(0);
 
 	undoMAIN();
 	printBoard(0);
+
 	undoMAIN(0);
 	printBoard(0);
+
 	undoMAIN(0);
 	printBoard(0);
+	
 	undoMAIN(0);
 	printBoard(0);
 	redoMAIN();
 	printBoard(0);
 	redoMAIN();
+
+	setMAIN(1, 1, 1);
+	setMAIN(1, 1, 0);
+	undoMAIN();
+	redoMAIN();
+	redoMAIN();
+
+
 	
 	
 	

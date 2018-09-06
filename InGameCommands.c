@@ -190,6 +190,7 @@ void set(int row, int coloumn, int number, int isErroneous) {
 /* row,coloumn as user entered */
 int setMAIN(int row, int coloumn, int number) {
 	int isValidNumber;
+	int prevNumber;
 
 
 	if (number > boardSize || number < 0) {
@@ -202,6 +203,7 @@ int setMAIN(int row, int coloumn, int number) {
 		return 0;
 	}
 
+	prevNumber = mainGameBoard[row - 1][coloumn - 1].currentCellvalue;
 
 	if (number == 0) {
 		if (mainGameBoard[row - 1][coloumn - 1].isFixed) {
@@ -210,19 +212,30 @@ int setMAIN(int row, int coloumn, int number) {
 		else {
 			deleteCell(row - 1, coloumn - 1);
 		}
+
+		if (prevNumber == -1) {
+			return 1;
+		}
 	}
 
-	isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
+	if (number != 0) {
+		if (prevNumber == number) {
+			return 1;
+		}
+		else {
+			isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
+			if (!isValidNumber) {
+				set(row - 1, coloumn - 1, number, 1);
+			}
+			else {
+				set(row - 1, coloumn - 1, number, 0);
+			}
+		}
+	}
 
-	if (!isValidNumber) {
-		set(row - 1, coloumn - 1, number, 1);
-	}
-	else {
-		set(row - 1, coloumn - 1, number, 0);
-	}
 	checkBoardValidity();
+	
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
-	return 1;
 
 }
 
@@ -563,8 +576,9 @@ void autofillFILLCELLS(int** boardToFill) {
 	int i;
 	int j;
 	int numToFill;
+	int counter;
 
-
+	counter = 0;
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			if (boardToFill[i][j] != 0) {
@@ -572,11 +586,14 @@ void autofillFILLCELLS(int** boardToFill) {
 				set(i, j, numToFill, 0);
 				updateURListAfterSet(i, j, &mainGameBoard[i][j], 2);
 				printf("Cell %d,%d set to %d\n", i + 1, j + 1, numToFill);
+				counter += 1;
 			}
 		}
 	}
 	/* Marking the end of the autofill*/
-	insertNullNode();
+	if (counter > 0) {
+		insertNullNode();
+	}
 }
 
 

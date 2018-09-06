@@ -69,18 +69,38 @@ void clearSingleURNode(URNode* nodeToDelete) {
 	free(nodeToDelete);
 }
 
-/* clear all the list from current position (not including the startNode, to clear all list, use clearList() */
-void clearURListFromCurrentPosition(URNode* startNode) {
-	URNode* current;
-	URNode* next;
+/* if clearFromGuard ==1, startNode is irrelevant, if clearFromGuard ==0, firstNodeToDelete = startNode.next */
+void clearURListFromCurrentPosition(URNode* startNode, int clearFromGuard) {
+	URNode* nodeToDelete;
+	URNode* nextNodeToDelete;
 
-	current = startNode;
-	while ((next = current->next) != NULL) {
-		current = next;
-		clearSingleURNode(current);
+	if (clearFromGuard) {
+		nodeToDelete = UndoRedoList.next;
+		if (nodeToDelete != NULL) {
+			nextNodeToDelete = nodeToDelete->next;
+			clearSingleURNode(nodeToDelete);
+			nodeToDelete = nextNodeToDelete;
+		}
+		
+	}
+	else {
+		nodeToDelete = startNode->next;
 	}
 
-	startNode->next = NULL;
+	
+	while (nodeToDelete != NULL) {
+		nextNodeToDelete = nodeToDelete->next;
+		clearSingleURNode(nodeToDelete);
+		nodeToDelete = nextNodeToDelete;
+	}
+
+	if (clearFromGuard) {
+		UndoRedoList.next = NULL;
+		UndoRedoList.isEmpty = 1;
+	}
+	else {
+		startNode->next = NULL;
+	}
 
 }
 
@@ -175,17 +195,15 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	}
 
 
-	if (UndoRedoList.isEmpty) {
+	if (UndoRedoList.currentMove == NULL) {
 		isFirst = 1;
-		UndoRedoList.isEmpty = 0;
 	}
 	else {
 		isFirst = 0;
 	}
 
-	if (!isFirst) {
-		clearURListFromCurrentPosition(UndoRedoList.currentMove);
-	}
+	
+	clearURListFromCurrentPosition(UndoRedoList.currentMove, isFirst);
 
 	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
 }
@@ -225,6 +243,7 @@ void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
 	}
 	else if (prev == NULL) {
 		LIFOCells[row][coloumn].first = next;
+		next->prev = NULL;
 	}
 	else {
 		prev->next = next;
@@ -265,7 +284,11 @@ void updateMainBoardToFirstBoard() {
 }
 
 
+/* Undo commands*/
 
+void printUndoUpdate(int row, int coloumn, char from, char to) {
+	printf("Undo %d,%d: from %c to %c\n", row+1, coloumn+1, from, to);
+}
 
 void undo() {
 	URNode* currentMove;
@@ -287,11 +310,16 @@ void undo() {
 
 	nextNode = LIFOCells[row][coloumn].first;
 
-	if (nextNode != NULL) {
-		printf("Undo %d,%d: from %d to %d\n", row, coloumn, prevNumber, nextNode->data->currentCellvalue);
+	if (nextNode == NULL) {
+		printUndoUpdate(row, coloumn, prevNumber + '0', '_');
 	}
 	else {
-		printf("Undo %d,%d: from %d to _\n", row, coloumn, prevNumber);
+		if (prevNumber == -1) {
+			printUndoUpdate(row, coloumn, '_', nextNode->data->currentCellvalue + '0');
+		}
+		else {
+			printUndoUpdate(row, coloumn, prevNumber + '0', (nextNode->data->currentCellvalue) + '0');
+		}
 	}
 }
 
@@ -306,6 +334,7 @@ void undoFromFirstNode() {
 		/* Back to empty board*/
 		UndoRedoList.currentMove = NULL;
 		updateMainBoardToNone();
+
 	}
 }
 
@@ -330,8 +359,6 @@ void undoFromNullNode() {
 	}
 
 }
-
-
 
 void undoMAIN() {
 	URNode* currentMove;
@@ -372,6 +399,11 @@ void undoMAIN() {
 
 
 
+
+
+
+/* Redo -related commands*/
+
 void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 	cellNode* next;
 	cellNode* prev;
@@ -389,10 +421,14 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 }
 
 
+void printRedoUpdate(int row, int coloumn, char from, char to) {
+	printf("Redo %d,%d: from %c to %c\n", row+1, coloumn+1, from, to);
+}
+
 void redo() {
 	URNode* currentNode;
 	URNode* nextNode;
-	cellNode* prevNode;
+	cellNode* prevLIFOCell;
 	int row;
 	int coloumn;
 	int newNumber;
@@ -403,20 +439,27 @@ void redo() {
 	row = nextNode->row;
 	coloumn = nextNode->col;
 
-	prevNode = LIFOCells[row][coloumn].first;
+	prevLIFOCell = LIFOCells[row][coloumn].first;
 
 	connectNodeToLIFOCell(row, coloumn, nextNode->move);
 	updateMainBoardAfterUndoRedo(row, coloumn);
 
 	newNumber = LIFOCells[row][coloumn].first->data->currentCellvalue;
 
-
-	if (prevNode != NULL) {
-		printf("Redo %d,%d: from %d to %d\n", row, coloumn, prevNode->data->currentCellvalue, newNumber);
+	if (prevLIFOCell == NULL) {
+		/* case of empty cell - cell that never been filled*/
+		printRedoUpdate(row, coloumn, '_', newNumber+'0');
+		/* if new node is -1 than it should never been updated*/
 	}
 	else {
-		printf("Redo %d,%d: from _ to %d\n", row, coloumn, newNumber);
+		if (newNumber == -1) {
+			printRedoUpdate(row, coloumn, (prevLIFOCell->data->currentCellvalue) + '0', '_');
+		}
+		else {
+			printRedoUpdate(row, coloumn, (prevLIFOCell->data->currentCellvalue) + '0',newNumber + '0' );
+		}
 	}
+
 }
 
 void redoUntilNullNode() {
@@ -490,10 +533,10 @@ void redoFromGuard() {
 		newNumber = LIFOCells[row][coloumn].first->data->currentCellvalue;
 
 		if (prevNumber != -1) {
-			printf("Redo %d,%d: from %d to %d\n", row, coloumn, prevNumber, newNumber);
+			printf("Redo %d,%d: from %d to %d\n", row+1, coloumn+1, prevNumber, newNumber);
 		}
 		else {
-			printf("Redo %d,%d: from _ to %d\n", row, coloumn, newNumber);
+			printf("Redo %d,%d: from _ to %d\n", row+1, coloumn+1, newNumber);
 		}
 	}
 }
@@ -530,6 +573,8 @@ void redoMAIN() {
 		redoUntilNullNode();
 	}
 }
+
+
 
 
 
