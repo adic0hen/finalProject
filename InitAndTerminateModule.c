@@ -118,6 +118,7 @@ void initialUndoRedoListAndLIFOCells() {
 
 	UndoRedoList.currentMove = NULL;
 	UndoRedoList.isEmpty = 1;
+	UndoRedoList.next = NULL;
 
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize;j++) {

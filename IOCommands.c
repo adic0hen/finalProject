@@ -83,7 +83,7 @@ int load(char* path) {
 		return 0;
 	}
 	boardSize = (blockHeight * blockWidth);
-	allocateMemForMainBoard(boardSize);
+	allocateMemForMainBoard();
 	initializeLoadedMainBoard(fptr);
 	fclose(fptr);
 	return 1;

@@ -618,6 +618,7 @@ void updateURListAfterSolveAndEdit() {
 	UndoRedoList.initialBoard = cloneFirstBoard;
 	UndoRedoList.isEmpty = 0;
 	UndoRedoList.hasLoadedBoard = 1;
+	UndoRedoList.selfCurrentMove = 1;
 
 }
 
@@ -626,16 +627,53 @@ void updateURListAfterSolveAndEdit() {
 void updateURListAfterGenerate() {
 	int i;
 	int j;
+	int counter;
 
+	counter = 0;
 	for (i = 0; i < boardSize;i++) {
 		for (j = 0; j < boardSize;j++) {
 			if (mainGameBoard[i][j].currentCellvalue != -1) {
+				counter += 1;
 				updateURListAfterSet(i, j, &mainGameBoard[i][j], 0);
 			}
 		}
 	}
-
-	insertNullNode();
+	if (counter != 0) {
+		insertNullNode();
+	}
 }
 
+
+
+void freeURResources() {
+	int i;
+	int j;
+
+	/* free list*/
+
+	clearURListFromCurrentPosition(NULL, 1);
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			free(&UndoRedoList.initialBoard[i][j]);
+		}
+		free(UndoRedoList.initialBoard[i]);
+	}
+	free(UndoRedoList.initialBoard);
+
+
+	/* free LIFOCells*/
+
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			LIFOCells[i][j].first = NULL;
+			free(&LIFOCells[i][j]);
+		}
+		free(LIFOCells[i]);
+	}
+
+	free(LIFOCells);
+
+}
 

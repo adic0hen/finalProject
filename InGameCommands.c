@@ -145,14 +145,18 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 	return 1;
 }
 
-int checkBoardValidity() {
+int updateErrStatAndCountEmptyCells() {
 	int isValidNumber;
 	int num;
 	int row;
 	int col;
+	int numOfEmptyCells;
+
+	numOfEmptyCells = 0;
 	for (row = 0; row < boardSize; row++) {
 		for (col = 0; col < boardSize; col++) {
 			if (mainGameBoard[row][col].currentCellvalue == -1) {
+				numOfEmptyCells += 1;
 				continue;
 			}
 			num = mainGameBoard[row][col].currentCellvalue;
@@ -167,7 +171,7 @@ int checkBoardValidity() {
 			mainGameBoard[row][col].currentCellvalue = num;
 		}
 	}
-	return 1;
+	return numOfEmptyCells;
 }
 
 
@@ -197,12 +201,15 @@ int setMAIN(int row, int coloumn, int number) {
 
 
 	if (number > boardSize || number < 0) {
+		printf("Error: value not in range 0-&d\n", boardSize);
 		return 0; /*Error of Invalid Number*/
 	}
 	if (row > boardSize || coloumn > boardSize) {
+		printf("Error: value not in range 0-&d\n", boardSize);
 		return 0;
 	}
 	if (row < 1 || coloumn < 1) {
+		printf("Error: value not in range 0-&d\n", boardSize);
 		return 0;
 	}
 
@@ -210,6 +217,7 @@ int setMAIN(int row, int coloumn, int number) {
 
 	if (number == 0) {
 		if (mainGameBoard[row - 1][coloumn - 1].isFixed) {
+			printf("Error: cell is fixed\n");
 			return 2; /*Error of clearing a fixed cell*/
 		}
 		else {
@@ -237,8 +245,17 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 	}
 
-	checkBoardValidity();
-	
+	if (!updateErrStatAndCountEmptyCells()) {
+		if (validate()) {
+			printf("Puzzle solved successfully\n");
+			mode = 1;
+			return 3;
+		}
+		else {
+			printf("Puzzle solution erroneous\n");
+		}
+	}
+
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 
 	return 1;
@@ -306,10 +323,16 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 			i++;
 		}
 	}
+
+	
+
 	if (i == 1000) {
 		printf("Error: puzzle generator failed\n");
 		return 0;
 	}
+
+	updateURListAfterGenerate();
+
 	printBoard();
 	return 1;
 }
