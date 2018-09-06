@@ -130,5 +130,28 @@ void initialUndoRedoListAndLIFOCells() {
 	UndoRedoList.selfCurrentMove = 0;
 }
 
+void freeAll() {
+	freeMat(mainGameBoard);
+	freeSolver();
+	/*need to create these two functions*/
+	/*freeURResources();*/
+}
 
+void freeMat(int** mat) { /*free the memory of a 2D array*/
+	int i;
+	for (i = 0; i < boardSize; i++) {
+		free(mat[i]);
+	}
+	free(mat);
+
+}
+
+void reset() {
+	freeAll();
+	initiallizeGameParameters(9, 3, 3);
+	allocateMemForMainBoard();
+	allocateMemForLIFOCells();
+	initializeMainBoard();
+	initialUndoRedoListAndLIFOCells();
+}
 
