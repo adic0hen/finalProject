@@ -482,7 +482,7 @@ int** deleteExcept(int** board, int y) {
 
 
 /*everything that starts with 'test'*/
-/*
+
 void test_initBoard() {
 	int i;
 	int j;
@@ -493,6 +493,8 @@ void test_initBoard() {
 		}
 	}
 }
+
+/*
 void test_initMainBoard() {
 	int i;
 	int j;
@@ -503,7 +505,9 @@ void test_initMainBoard() {
 		}
 	}
 }
+*/
 
+/*
 void test_printBoard(int** board) {
 	int i;
 	int j;
@@ -517,6 +521,7 @@ void test_printBoard(int** board) {
 		printf("\n");
 	}
 }
+
 void test_copySolvedBoardToMainBoard() {
 	int i;
 	int j;
@@ -671,10 +676,10 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
-	test_initBoard();
+	printBoard(markerrors);
 	setRandom(board, x);
 	printf("done setting random values\n");
-	test_printBoard(board);
+	printBoard(markerrors);
 	solve();	
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
