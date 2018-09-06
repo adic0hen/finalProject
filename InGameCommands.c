@@ -14,12 +14,14 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 int isErroneous();
 int markErrors(int mark);
-/*int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
+/*
 int checkHintParameters(int row, int col);
 int validate();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
 */
+
 
 
 
@@ -102,6 +104,9 @@ void printBoard() {
 						if (markerrors) {
 							printf("*");
 						}
+						else {
+							printf(" ");
+						}
 					}
 					else {
 						printf(" ");
@@ -155,7 +160,7 @@ int checkBoardValidity() {
 			num = mainGameBoard[row][col].currentCellvalue;
 			mainGameBoard[row][col].currentCellvalue = -1;
 			isValidNumber = checkValidityOfNum(num,row,col);
-			if (!isValidNumber) {
+			if (!isValidNumber&&mainGameBoard[row][col].isFixed == 0) {
 				mainGameBoard[row][col].isErroneus = 1;
 			}
 			else {
@@ -295,6 +300,8 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 	printBoard();
 	return 1;
 }
+*/
+/*
 
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int error;
@@ -320,6 +327,7 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 }
 */
 /*
+
 int hint(int row, int col) {
 	int h;
 	if (checkHintParameters(row, col)) {
@@ -354,6 +362,7 @@ int checkHintParameters(int row, int col) {
 }
 */
 /*
+
 int validate() {
 	int isValid;
 	isValid = 0;
@@ -372,8 +381,8 @@ int validate() {
 	}
 	return 0;
 }
-*/
 
+*/
 
 /* -------------- autofill commands--------------- */
 

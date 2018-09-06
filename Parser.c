@@ -6,6 +6,8 @@
 	#include "InitAndTerminateModule.h"
 	#include "IOCommands.h"
 	#include "GameDataStructs.h"
+#include "UndoRedoCommands.h"
+/*#include "Solver.h"*/
 
 
 void invalid();
@@ -126,7 +128,7 @@ int parse(char* buffer)
 			{
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
-					validate();
+					/*validate();*/
 					break;
 				}
 			}
@@ -145,7 +147,7 @@ int parse(char* buffer)
 				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
-					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
+					/*generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);*/
 				}
 				break;
 			}
@@ -183,7 +185,7 @@ int parse(char* buffer)
 				{
 					row = atoi(sRow);
 					col = atoi(sCol);
-					hint(row, col);
+					/*hint(row, col);*/
 				}
 				break;
 			}
@@ -236,7 +238,7 @@ int parse(char* buffer)
 	}
 	return 1;
 }
-*/
+
 
 void invalid() {
 		printf("ERROR: invalid command\n");
