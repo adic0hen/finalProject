@@ -7,7 +7,7 @@
 	#include "IOCommands.h"
 	#include "GameDataStructs.h"
 #include "UndoRedoCommands.h"
-/*#include "Solver.h"*/
+#include "Solver.h"
 
 
 void invalid();
@@ -32,9 +32,6 @@ int parse(char* buffer)
 	int cellsToFill;
 	int cellsToKeep;
 	/*this variable will be used as part of the "mark_errors" command*/
-	/* can be deleted if everything works
-	int mark;
-	*/
 
 	if (fgets(buffer, 256, stdin) != NULL) 
 	{
@@ -130,7 +127,7 @@ int parse(char* buffer)
 			{
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
-					/*validate();*/
+					validate();
 					break;
 				}
 			}
@@ -187,7 +184,7 @@ int parse(char* buffer)
 				{
 					row = atoi(sRow);
 					col = atoi(sCol);
-					/*hint(row, col);*/
+					hint(row, col);
 				}
 				break;
 			}

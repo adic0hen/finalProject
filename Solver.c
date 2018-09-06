@@ -3,10 +3,10 @@
 
 #include "gurobi_c.h"
 #include <string.h>
-/*
+
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
-*/
+
 
 
 /*Outer variable declarations*/
@@ -16,6 +16,7 @@ int blockHeight;
 int blockWidth;
 int** mainGameBoard;
 */
+
 int** board; /*is used in the gurobi optimization process, "gurobi board"*/
 
 

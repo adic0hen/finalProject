@@ -14,13 +14,11 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 int isErroneous();
 int markErrors(int mark);
-/*
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int checkHintParameters(int row, int col);
 int validate();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
-*/
 
 
 
@@ -243,6 +241,7 @@ int setMAIN(int row, int coloumn, int number) {
 	
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 
+	return 1;
 }
 
 
@@ -288,7 +287,7 @@ int isEmpty() {
 
 
 /*solver relying functions - NEED TO BE TESTED*/
-/*
+
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
 	i = 0;
@@ -314,8 +313,8 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 	printBoard();
 	return 1;
 }
-*/
-/*
+
+
 
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int error;
@@ -339,8 +338,8 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	isValid = !error;
 	return isValid;
 }
-*/
-/*
+
+
 
 int hint(int row, int col) {
 	int h;
@@ -374,8 +373,8 @@ int checkHintParameters(int row, int col) {
 	}
 	return 1;
 }
-*/
-/*
+
+
 
 int validate() {
 	int isValid;
@@ -396,7 +395,7 @@ int validate() {
 	return 0;
 }
 
-*/
+
 
 /* -------------- autofill commands--------------- */
 

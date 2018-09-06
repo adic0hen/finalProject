@@ -406,7 +406,6 @@ void undoMAIN() {
 
 void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 	cellNode* next;
-	cellNode* prev;
 
 	if (LIFOCells[row][coloumn].first == NULL) {
 		LIFOCells[row][coloumn].first = cell;
@@ -426,7 +425,6 @@ void printRedoUpdate(int row, int coloumn, char from, char to) {
 }
 
 void redo() {
-	URNode* currentNode;
 	URNode* nextNode;
 	cellNode* prevLIFOCell;
 	int row;
@@ -593,7 +591,7 @@ void updateURListAfterSolveAndEdit() {
 
 	tempPTR = malloc(sizeof(Cell*) *boardSize);
 	if (tempPTR == NULL) {
-		return 0;
+		return;
 	}
 	else {
 		cloneFirstBoard = (Cell**)tempPTR;
@@ -602,7 +600,7 @@ void updateURListAfterSolveAndEdit() {
 	for (i = 0; i < boardSize;i++) {
 		tempPTR = malloc(sizeof(Cell) * boardSize);
 		if (tempPTR == NULL) {
-			return 0;
+			return;
 		}
 		else {
 			cloneFirstBoard[i] = (Cell*)tempPTR;
