@@ -14,8 +14,8 @@ void autofillBLOCKS(int** boardToFill, int expectedSum);
 void autofillFILLCELLS(int** boardToFill);
 int isErroneous();
 int markErrors(int mark);
-int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 /*
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int checkHintParameters(int row, int col);
 int validate();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
