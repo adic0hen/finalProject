@@ -408,6 +408,7 @@ int validate() {
 		printf("Error: board contains erroneous values\n");
 		return 0;
 	}
+	printf("goind to validateSolve\n");
 	isValid = validateSolve();
 	if (isValid == 1) {
 		printf("Validation passed: board is solvable\n");
