@@ -29,53 +29,10 @@ int main(){
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
 	mode = 1;
-	markerrors = 1;
-	printBoard(0);
-	setMAIN(1, 2, 2);
-	setMAIN(1, 3, 3);
-	setMAIN(1, 4, 4);
-	setMAIN(1, 5, 5);
-	setMAIN(1, 6, 6);
-	setMAIN(1, 7, 7);
-	setMAIN(1, 8, 8);
-	setMAIN(1, 9, 9);
-	printBoard(0);
+	markerrors = 0;
 
-	setMAIN(2, 1, 4);
-	setMAIN(2, 2, 5);
-	setMAIN(2, 3, 6);
-	setMAIN(2, 4, 7);
-	setMAIN(2, 5, 8);
-	setMAIN(2, 6, 9);
-	setMAIN(2, 7, 1);
-	setMAIN(2, 7, 2);
-
-	autofill();
-	setMAIN(3, 1, 9);
-
-	printBoard(0);
-
-	undoMAIN();
-	printBoard(0);
-	undoMAIN(0);
-	printBoard(0);
-	undoMAIN(0);
-	printBoard(0);
-	undoMAIN(0);
-	printBoard(0);
-	redoMAIN();
-	printBoard(0);
-	redoMAIN();
+	game();
 	
-	
-	
-	
-	
-
-
-	/*
-	TESTRandomalyFillBoard(40);*/
-	/*game();*/
 	return 1;
 
 }

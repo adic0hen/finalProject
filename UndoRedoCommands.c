@@ -324,18 +324,29 @@ void undo() {
 }
 
 void undoFromFirstNode() {
+	URNode* firstNode;
+	char tempChar;
 	/* case of having a loaded board*/
+
+	firstNode = UndoRedoList.currentMove;
 	if (UndoRedoList.hasLoadedBoard == 1) {
 		UndoRedoList.currentMove = NULL;
 		UndoRedoList.selfCurrentMove = 1;
 		updateMainBoardToFirstBoard();
+		if (UndoRedoList.initialBoard[firstNode->row][firstNode->col].currentCellvalue == -1) {
+			tempChar = '_';
+		}
+		else {
+			tempChar = UndoRedoList.initialBoard[firstNode->row][firstNode->col].currentCellvalue + '0';
+		}
 	}
 	else {
 		/* Back to empty board*/
 		UndoRedoList.currentMove = NULL;
 		updateMainBoardToNone();
-
+		tempChar = '_';
 	}
+	printUndoUpdate(firstNode->row, firstNode->col, firstNode->move->data->currentCellvalue + '0', tempChar);
 }
 
 void undoFromNullNode() {

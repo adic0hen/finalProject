@@ -10,4 +10,8 @@ int allocateMemForLIFOCells();
 void initialUndoRedoListAndLIFOCells();
 void freeAll();
 void freeMat(int** mat);
+void exitGame();
+void reset();
+
+
 #endif

@@ -52,7 +52,7 @@ int parse(char* buffer)
 						row = atoi(sRow);
 						val = atoi(sVal);
 						setMAIN(row, col, val);
-						printBoard(markerrors);
+						printBoard();
 					}
 					break;
 				}
@@ -70,7 +70,7 @@ int parse(char* buffer)
 					mode = 2;
 					load(filePath);
 					updateURListAfterSolveAndEdit();
-					printBoard(markerrors);
+					printBoard();
 				}
 				break;
 			}
@@ -89,7 +89,7 @@ int parse(char* buffer)
 					initializeMainBoard();
 				}
 				updateURListAfterSolveAndEdit();
-				printBoard(1);/*markerrors is always 1 in edit mode*/
+				printBoard();/*markerrors is always 1 in edit mode*/
 				break;
 			}
 
@@ -110,13 +110,10 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "print_board") == 0) 
 			{
-				if (mode == 2) 
+				if (mode == 2 || mode==3) 
 				{ /*command available only in solve or edit modes*/
-					printBoard(markerrors);
+					printBoard();
 					break;
-				}
-				else if (mode == 3) {
-					printBoard(1);
 				}
 				else
 				{
@@ -193,7 +190,7 @@ int parse(char* buffer)
 			if (strcmp(cmd, "num_solutions") == 0) 
 			{
 				if (mode == 2 || mode == 3) {
-					if (isErroneous) {
+					if (isErroneous()) {
 						printf("Error: board contains erroneous values\n");
 					}
 					else {
@@ -213,8 +210,13 @@ int parse(char* buffer)
 					invalid();
 					break;
 				}
-				autofill();
-				/*need to complete code!*/
+				if (isErroneous()) {
+					printf("Error: board contains erroneous values\n");
+				}
+				else {
+					autofill();
+					printBoard();
+				}
 				break;
 			}
 
@@ -225,16 +227,14 @@ int parse(char* buffer)
 					invalid();
 					break;
 				}
-				/*need to complete code, undo redo*/
-				printf("Board reset\n");
+				reset();
 				break;
 			}
 
 			if (strcmp(cmd, "exit") == 0) 
 			{
 				mode = 0;
-				/*need to complete code, free memory and resources*/
-				printf("Exiting...\n");
+				exitGame();
 				break;
 			}
 			/*Invalid command part - we get to this part of the parser only if there was an invalid or unrecognized command*/

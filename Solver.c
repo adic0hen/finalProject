@@ -70,8 +70,8 @@ int main() {
 int solveMain() {
 	int temp;
 	board = allocateMemForBoardPTR();
-	test_initBoard();
-	/*copyMainBoardToGourobiBoard();*/
+	/*test_initBoard();*/
+	copyMainBoardToGourobiBoard();
 	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
 		board = transpose(board);
 		temp = blockHeight;
@@ -86,6 +86,7 @@ int solveMain() {
 		blockWidth = temp;
 	}
 	/*copySolvedBoardToMainBoard();*/
+	freeSolver();
 	return 0;
 }
 /*The gurobi solving function*/
@@ -112,6 +113,7 @@ void solve() {
 	int error;
 	double *sol;
 
+	printf("ENTER SOLVEr\n\n");
 
 	/*defining variables*/
 	ind = (int*)malloc(boardSize * sizeof(int));
@@ -125,6 +127,7 @@ void solve() {
 	env = NULL;
 	sol = (double*)malloc(boardSize * boardSize*boardSize * sizeof(double));
 
+	printf("ALLOCATED MEM\n\n");
 
 
 	/* Create an empty model */
@@ -133,33 +136,54 @@ void solve() {
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			for (v = 0; v < boardSize; v++) {
-				if (board[i][j] == v)
+				if (board[i][j] == v) {
+					
+
 					lb[i*boardSize*boardSize + j * boardSize + v] = 1;
-				else
+				}
+				else {
+					
+
 					lb[i*boardSize*boardSize + j * boardSize + v] = 0;
+				}
+				
+
 				vtype[i*boardSize*boardSize + j * boardSize + v] = GRB_BINARY;
+				
 
 				names[i*boardSize*boardSize + j * boardSize + v] = cursor;
+				
+
 				sprintf(names[i*boardSize*boardSize + j * boardSize + v], "x[%d,%d,%d]", i, j, v + 1);
+				
+
 				cursor += strlen(names[i*boardSize*boardSize + j * boardSize + v]) + 1;
 			}
 		}
 	}
 
+	printf("Created empty model\n\n");
+
 	/* Create environment */
 
-	error = GRBloadenv(&env, "sudoku.log");
+	error = GRBloadenv(&env, NULL);
 	if (error) {
+		printf("ERROR IN loadenv: %d", error);
 		quit(error, env);
 	}
+
+	printf("Created loadedenv\n\n");
 
 	/* Create new model */
 
-	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lb, NULL,
-		vtype, names);
+	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lb, NULL, vtype, names);
 	if (error) {
+		printf("ERROR IN newmodel: %d", error);
 		quit(error, env);
 	}
+
+	printf("Created new model\n\n");
+
 
 	/*~~adding constraints~~*/
 
@@ -174,11 +198,13 @@ void solve() {
 
 			error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
 			if (error) {
+				printf("ERROR IN addconstr: %d", error);
 				quit(error, env);
 			}
 		}
 	}
 
+	printf("Added constraints of cells\n\n");
 	/* Each value must appear once in each row */
 
 	for (v = 0; v < boardSize; v++) {
@@ -190,10 +216,14 @@ void solve() {
 
 			error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
 			if (error) {
+				printf("ERROR IN addconstr1: %d", error);
 				quit(error, env);
 			}
 		}
 	}
+
+	printf("Added constraints of rows\n\n");
+
 
 	/* Each value must appear once in each column */
 
@@ -210,6 +240,8 @@ void solve() {
 			}
 		}
 	}
+
+	printf("Added constraints of coloumns\n\n");
 
 	/* Each value must appear once in each subgrid */
 
@@ -232,24 +264,28 @@ void solve() {
 			}
 		}
 	}
+	printf("Added constraints of blocks\n\n");
 
 
 	/* Optimize model */
 
 	error = GRBoptimize(model);
 	if (error) {
+		printf("ERROR IN OPTIMIZATION: %d", error);
 		quit(error, env);
 	}
 	
-	/* Write model to 'sudoku.lp' ~~~~~~~~~CAN BE DELETED~~~~~*/
+	printf("After optimization\n\n");
 
+	/* Write model to 'sudoku.lp' ~~~~~~~~~CAN BE DELETED~~~~~*/
+	/*
 	error = GRBwrite(model, "sudoku.lp");
 	if (error) {
 		quit(error, env);
 	}
-
+	*/
 	/* Capture solution information ~~~~~~~~~CAN BE DELETED~~~~~*/
-
+	
 	error = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
 	if (error) {
 		quit(error, env);
@@ -301,6 +337,8 @@ void solve() {
 	/* Free environment */
 
 	GRBfreeenv(env);
+
+	printf("Free env and model");
 
 }
 
@@ -383,10 +421,10 @@ void copyMainBoardToGourobiBoard() {
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			if (mainGameBoard[i][j].currentCellvalue == -1) {
-				board[i][j] = 0;
+				board[i][j] = -1;
 			}
 			else {
-				board[i][j] = mainGameBoard[i][j].currentCellvalue;
+				board[i][j] = mainGameBoard[i][j].currentCellvalue - 1;
 			}
 		}
 	}
@@ -678,10 +716,10 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
-	printBoard(markerrors);
+	printBoard();
 	setRandom(board, x);
 	printf("done setting random values\n");
-	printBoard(markerrors);
+	printBoard();
 	solve();	
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);

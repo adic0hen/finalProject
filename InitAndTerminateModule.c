@@ -181,3 +181,9 @@ void prepForLoad() {
 	initialUndoRedoListAndLIFOCells();
 }
 
+
+void exitGame() {
+	freeAll();
+	printf("Exiting...\n");
+
+}

@@ -94,7 +94,7 @@ void IOTest(){
 	path = "file.txt";
 	save(path);
 	load(path);
-	printBoard(0);
+	printBoard();
 	printf("done testing \n");
 
 }

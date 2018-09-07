@@ -220,14 +220,16 @@ int setMAIN(int row, int coloumn, int number) {
 			printf("Error: cell is fixed\n");
 			return 2; /*Error of clearing a fixed cell*/
 		}
-		else {
-			deleteCell(row - 1, coloumn - 1);
-			return 1;
-		}
-
 		if (prevNumber == -1) {
 			return 1;
 		}
+		else {
+			deleteCell(row - 1, coloumn - 1);
+			updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
+			return 1;
+		}
+
+
 	}
 
 	if (number != 0) {

@@ -8,7 +8,7 @@ void undoMAIN();
 int isErroneous();
 int isEmpty();
 int markErrors(int mark);
-void printBoard(int markErrors);
+void printBoard();
 void set(int row, int coloumn, int number, int isErroneous);
 void undoMAIN();
 void redoMAIN();
