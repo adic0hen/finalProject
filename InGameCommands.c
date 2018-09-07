@@ -368,18 +368,22 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 
 int hint(int row, int col) {
 	int h;
-	if (checkHintParameters(row, col)) {
+	printf("in hint\n");/*for testing!*/
+	if (!checkHintParameters(row, col)) {
+		printf("parameters not good\n");/*for testing!*/
 		return 0;
 	}
 	h = hintSolve(row -1, col-1); 
+	printf("after hintSolve\n");/*for testing!*/
 	if (h == 0) {
+		printf("h is zero\n");/*for testing!*/
 		return 0;
 	}
 	printf("Hint, set cell to %d\n",h);
 	return 0;
 }
 
-int checkHintParameters(int row, int col) {
+int checkHintParameters(int row, int col) {/*returns 0 if the parameters are not good, 1 if they are good*/
 	if (row<1 || row>boardSize || col<1 || col>boardSize) {
 		printf("Error: value not in range 1-%d\n", boardSize);
 		return 0;

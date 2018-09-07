@@ -92,7 +92,7 @@ int solveMain() {
 		blockWidth = temp;
 	}
 	/*copySolvedBoardToMainBoard();*/
-	freeSolver();
+	/*freeSolver(); ~~~COMMENTED OUT BECAUSE HINT FUNCTIONS NEEDS THE INFO FROM res.solBoard*/
 	return 1;
 }
 /*The gurobi solving function*/
@@ -604,9 +604,10 @@ void printBoardSolver(int** board) {
 
 int hintSolve(int row, int coloumn) { /*returns the hint value if board is solvable, 0 otherwise*/
 	int num;
-
+	printf("in hintSolve");/*for testing!*/
 	solveMain();
 	if (res.optimstatus == GRB_OPTIMAL) {
+		printf("is optimal\n");/*for testing!*/
 		num = res.solBoard[row][coloumn];
 		return num;
 	}
