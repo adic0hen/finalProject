@@ -12,6 +12,7 @@ void freeAll();
 void freeMat(int** mat);
 void exitGame();
 void reset();
-
+void initAllDefault();
+void initAllFromFile(int blockHeight, int blockWidth);
 
 #endif

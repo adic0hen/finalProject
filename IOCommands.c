@@ -66,6 +66,9 @@ int writeBoardToFile(FILE* fptr) {
 
 int load(char* path) {
 	FILE* fptr;
+	int bHeight;
+	int bWidth;
+
 	fptr = fopen(path, "r");
 	if (fptr == NULL) {
 		if (mode == 2) { /*error in solve mode*/
@@ -76,14 +79,13 @@ int load(char* path) {
 		}
 		return 0;
 	}
-	if (!fscanf(fptr, "%d", &blockHeight) > 0) {
+	if (!fscanf(fptr, "%d", &bHeight) > 0) {
 		return 0;
 	}
-	if (!fscanf(fptr, "%d", &blockWidth) > 0){
+	if (!fscanf(fptr, "%d", &bWidth) > 0){
 		return 0;
 	}
-	boardSize = (blockHeight * blockWidth);
-	allocateMemForMainBoard();
+	initAllFromFile(bHeight, bWidth);
 	initializeLoadedMainBoard(fptr);
 	fclose(fptr);
 	return 1;
