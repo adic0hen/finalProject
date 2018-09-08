@@ -225,6 +225,7 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 		else {
 			deleteCell(row - 1, coloumn - 1);
+			updateErrStatAndCountEmptyCells();
 			updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 			return 1;
 		}
