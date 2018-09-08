@@ -311,8 +311,10 @@ void freeResources() {
 	}
 
 	for (i = 0; i < boardSize;i++) {
-		free(BTboard[i]);
+		free(&BTboard[i]);
 	}
+
+	free(BTboard);
 
 }
 			

@@ -471,7 +471,7 @@ int autofill() {
 	autofillFILLCELLS(boardToFill);
 
 	for (i = 0; i < boardSize; i++) {
-		free(boardToFill[i]);
+		free(&boardToFill[i]);
 	}
 	free(boardToFill);
 	return 1;
