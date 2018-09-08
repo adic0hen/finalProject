@@ -95,6 +95,7 @@ int solveMain() {
 	/*freeSolver(); ~~~COMMENTED OUT BECAUSE HINT FUNCTIONS NEEDS THE INFO FROM res.solBoard*/
 	return 1;
 }
+
 /*The gurobi solving function*/
 
 void solve() {
@@ -150,7 +151,7 @@ void solve() {
 		printf("error in names");
 	}
 	printf("allocating for namestorage\n");
-	namestorage = malloc(10 * boardSize * boardSize * boardSize * sizeof(char));
+	namestorage = malloc(20 * boardSize * boardSize * boardSize * sizeof(char));
 	if (!namestorage) {
 		printf("error in namestorage");
 	}
@@ -203,17 +204,18 @@ void solve() {
 	printf("Created empty model\n\n");
 
 	/* Create environment */
-
-	error = GRBloadenv(&env, NULL);
-	if (error) {
-		printf("ERROR IN loadenv: %d", error);
-		quit(error, env);
-	}
+	
+		error = GRBloadenv(&env, NULL);
+		if (error) {
+			printf("ERROR IN loadenv: %d", error);
+			quit(error, env);
+		}
+	
 
 	printf("Created loadedenv\n\n");
 
 	/* Create new model */
-
+	
 	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lb, NULL, vtype, names);
 	if (error) {
 		printf("ERROR IN newmodel: %d", error);
@@ -337,8 +339,7 @@ void solve() {
 		res.objval = objval;
 		res.optimstatus = optimstatus;
 		res.solBoard = copySol(sol);
-		printf("freeing variables\n");
-		/*freeVars(ind, val, lb, vtype, sol);*/
+		
 		printf("freeing rest of the model\n");
 	}
 
@@ -368,7 +369,8 @@ void solve() {
 
 	GRBfreeenv(env);
 
-	
+	printf("freeing variables\n");
+	/*freeVars(ind, val, lb, vtype, sol);*/
 
 	printf("Free env and model\n");
 
@@ -522,6 +524,7 @@ int** setRandom(int** board,int x) {
 					options[num - 1] = 0;
 				}
 			}
+			free(options);
 			if (!isSet) {
 				printf("impossible cell\n");/*for tests*/
 				return NULL;
@@ -648,6 +651,7 @@ int hintSolve(int row, int coloumn) { /*returns the hint value if board is solva
 
 
 int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
+	int temp;
 	int b;
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
@@ -658,7 +662,19 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	}
 	printf("done setting random values\n");
 	printBoardSolver(board);
-	solve();	
+	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
+		board = transpose(board);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
+	}
+	solve();
+	if (blockHeight < blockWidth) {/*transposing back to original board*/
+		res.solBoard = transpose(res.solBoard);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
+	}
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
 		copySolvedBoardToMainBoard(); /*the real function! the board is not "solved" but it's the one we want to use*/
