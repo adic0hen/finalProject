@@ -69,7 +69,7 @@ int load(char* path) {
 	fptr = fopen(path, "r");
 	if (fptr == NULL) {
 		if (mode == 2) { /*error in solve mode*/
-			printf("Error: File doesn't exit or cannot be opened\n");
+			printf("Error: File doesn't exist or cannot be opened\n");
 		}
 		if (mode == 3) { /*error in edit mode*/
 			printf("Error: File cannot be opened\n");

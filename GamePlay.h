@@ -2,7 +2,7 @@
 #define GAMEPLAY_H_
 
 int game();
-
+void init();
 
 
 /* mode values and their meaning:

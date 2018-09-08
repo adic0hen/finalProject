@@ -23,14 +23,7 @@ int main(int argc, char* argv[]) {
 
 /*int main(int argc, char *argv[]) {*/
 int main(){	
-	initiallizeGameParameters(9, 3, 3);
-	allocateMemForMainBoard();
-	initializeMainBoard();
-	allocateMemForLIFOCells();
-	initialUndoRedoListAndLIFOCells();
-	mode = 1;
-	markerrors = 0;
-
+	init();
 	game();
 	
 	return 1;

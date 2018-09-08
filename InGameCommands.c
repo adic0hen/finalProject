@@ -326,16 +326,14 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 			i++;
 		}
 	}
-
-	
-
 	if (i == 1000) {
 		printf("Error: puzzle generator failed\n");
 		return 0;
 	}
 
+	printf("updating URlist\n"); /*for testing*/
 	updateURListAfterGenerate();
-
+	printf("donr updating URlist\n"); /*for testing*/
 	printBoard();
 	return 1;
 }
