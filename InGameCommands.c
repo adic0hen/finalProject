@@ -331,8 +331,9 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 		return 0;
 	}
 
+	printf("updating URlist\n"); /*for testing*/
 	updateURListAfterGenerate();
-
+	printf("donr updating URlist\n"); /*for testing*/
 	printBoard();
 	return 1;
 }

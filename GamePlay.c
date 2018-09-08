@@ -4,6 +4,7 @@
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
 #include "Parser.h"
+#include "InitAndTerminateModule.h"
 
 int game() {
 	/*initialize buffer*/
@@ -24,5 +25,5 @@ void init() {
 	allocateMemForLIFOCells();
 	initialUndoRedoListAndLIFOCells();
 	mode = 1;
-	markerrors = 0;
+	markerrors = 1;
 }

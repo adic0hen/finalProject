@@ -120,6 +120,7 @@ void solve() {
 	double *sol;
 
 	printf("ENTER SOLVEr\n\n");
+	printf("current sizes are:\n boardSize - %d  bloackHeight - %d blockWidth - %d\n",boardSize,blockHeight,blockWidth);
 	res.objval = 0.0;
 	res.optimstatus = 0;
 	/*defining variables*/
@@ -492,6 +493,9 @@ int** setRandom(int** board,int x) {
 	int row;
 	int col;
 	int num;
+	int cnt;
+	int* options;
+	int index;
 	int isSet;
 	int k;
 	k = 0;
@@ -500,12 +504,22 @@ int** setRandom(int** board,int x) {
 		col = rand() % boardSize;
 		isSet = 0;
 		if (board[row][col] == -1) {
-			for (num = 1; num <= boardSize; num++) {
+			options = malloc(boardSize * sizeof(int));
+			for (index = 0; index < boardSize; index++) {
+				options[index] = 1;
+			}
+			for (cnt = 0; cnt < boardSize; cnt++) {
+				do {
+					num = rand() % boardSize + 1;
+				} while (options[num - 1] == 0); /*finding a number that we havent tried yet*/
 				if (checkValidityGenerate(board, row, col, num)) {
 					board[row][col] = num;
 					k++;
 					isSet = 1;
 					break;
+				}
+				else {
+					options[num - 1] = 0;
 				}
 			}
 			if (!isSet) {
@@ -558,19 +572,23 @@ int checkBlockValidityGenerate(int** board, int row, int col, int num) {
 }
 
 int** deleteExcept(int** board, int y) {
+	
 	int row;
 	int col;
 	int toRemove;
 	int k;
+	printf("in deletExcept\n"); /*for testing*/
 	toRemove = boardSize * boardSize - y;
 	k = 0;
 	while (k < toRemove) {
 		row = rand() % boardSize;
 		col = rand() % boardSize;
+		/*printf("deleting row - %d and col - %d\n", row, col); for testing*/
 		if (board[row][col] != -1) {
 			board[row][col] = -1;
 			k++;
 		}
+		/*printf("done deleting\n"); for testing*/
 	}
 	return board;
 }
