@@ -203,17 +203,18 @@ void solve() {
 	printf("Created empty model\n\n");
 
 	/* Create environment */
-
-	error = GRBloadenv(&env, NULL);
-	if (error) {
-		printf("ERROR IN loadenv: %d", error);
-		quit(error, env);
-	}
+	
+		error = GRBloadenv(&env, NULL);
+		if (error) {
+			printf("ERROR IN loadenv: %d", error);
+			quit(error, env);
+		}
+	
 
 	printf("Created loadedenv\n\n");
 
 	/* Create new model */
-
+	
 	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lb, NULL, vtype, names);
 	if (error) {
 		printf("ERROR IN newmodel: %d", error);
@@ -337,8 +338,7 @@ void solve() {
 		res.objval = objval;
 		res.optimstatus = optimstatus;
 		res.solBoard = copySol(sol);
-		printf("freeing variables\n");
-		/*freeVars(ind, val, lb, vtype, sol);*/
+		
 		printf("freeing rest of the model\n");
 	}
 
@@ -368,7 +368,8 @@ void solve() {
 
 	GRBfreeenv(env);
 
-	
+	printf("freeing variables\n");
+	/*freeVars(ind, val, lb, vtype, sol);*/
 
 	printf("Free env and model\n");
 
@@ -522,6 +523,7 @@ int** setRandom(int** board,int x) {
 					options[num - 1] = 0;
 				}
 			}
+			free(options);
 			if (!isSet) {
 				printf("impossible cell\n");/*for tests*/
 				return NULL;
