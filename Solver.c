@@ -492,15 +492,26 @@ int** setRandom(int** board,int x) {
 	int row;
 	int col;
 	int num;
+	int isSet;
 	int k;
 	k = 0;
 	while(k < x){
 		row = rand() % boardSize;
 		col = rand() % boardSize;
-		num = (rand() % boardSize) + 1;
-		if (checkValidityGenerate(board, row, col, num)&&board[row][col]==-1) {
-			board[row][col] = num;
-			k++;
+		isSet = 0;
+		if (board[row][col] == -1) {
+			for (num = 1; num <= boardSize; num++) {
+				if (checkValidityGenerate(board, row, col, num)) {
+					board[row][col] = num;
+					k++;
+					isSet = 1;
+					break;
+				}
+			}
+			if (!isSet) {
+				printf("impossible cell\n");/*for tests*/
+				return NULL;
+			}
 		}
 	}
 	return board;
@@ -619,13 +630,14 @@ int hintSolve(int row, int coloumn) { /*returns the hint value if board is solva
 
 
 int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
-	
 	int b;
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
 	initBoardSolver();
-	setRandom(board, x);
+	if (setRandom(board, x) == NULL) {
+		return b;
+	}
 	printf("done setting random values\n");
 	printBoardSolver(board);
 	solve();	
