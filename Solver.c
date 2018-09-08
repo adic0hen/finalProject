@@ -95,6 +95,7 @@ int solveMain() {
 	/*freeSolver(); ~~~COMMENTED OUT BECAUSE HINT FUNCTIONS NEEDS THE INFO FROM res.solBoard*/
 	return 1;
 }
+
 /*The gurobi solving function*/
 
 void solve() {
@@ -150,7 +151,7 @@ void solve() {
 		printf("error in names");
 	}
 	printf("allocating for namestorage\n");
-	namestorage = malloc(10 * boardSize * boardSize * boardSize * sizeof(char));
+	namestorage = malloc(20 * boardSize * boardSize * boardSize * sizeof(char));
 	if (!namestorage) {
 		printf("error in namestorage");
 	}
@@ -650,6 +651,7 @@ int hintSolve(int row, int coloumn) { /*returns the hint value if board is solva
 
 
 int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
+	int temp;
 	int b;
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
@@ -660,7 +662,19 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	}
 	printf("done setting random values\n");
 	printBoardSolver(board);
-	solve();	
+	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
+		board = transpose(board);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
+	}
+	solve();
+	if (blockHeight < blockWidth) {/*transposing back to original board*/
+		res.solBoard = transpose(res.solBoard);
+		temp = blockHeight;
+		blockHeight = blockWidth;
+		blockWidth = temp;
+	}
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
 		copySolvedBoardToMainBoard(); /*the real function! the board is not "solved" but it's the one we want to use*/
