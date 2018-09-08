@@ -171,6 +171,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "hint") == 0)
 			{
+				printf("in parser\n");/*for testing!*/
 				if (mode != 2) 
 				{
 					invalid();
