@@ -44,13 +44,17 @@ int parse(char* buffer)
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
 					sRow = strtok(NULL, " \t\r\n");
+					printf("sRow - %s\n", sRow);/*for testing*/
 					sCol = strtok(NULL, " \t\r\n");
+					printf("sCol - %s\n", sRow);/*for testing*/
 					sVal = strtok(NULL, " \t\r\n");
+					printf("sVal - %s\n", sRow);/*for testing*/
 					if (sCol != NULL && sRow != NULL && sVal != NULL) 
 					{ /*making sure we have all the values*/
 						col = atoi(sCol);
 						row = atoi(sRow);
 						val = atoi(sVal);
+						printf("col -%d, row -%d, val %d\n", col, row, val);/*for testing*/
 						setMAIN(row, col, val);
 						printBoard();
 					}

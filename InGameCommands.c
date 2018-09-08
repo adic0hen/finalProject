@@ -247,7 +247,7 @@ int setMAIN(int row, int coloumn, int number) {
 			}
 		}
 	}
-
+	printf("before error update\n");/*for testing*/
 	if (!updateErrStatAndCountEmptyCells()) {
 		if (validate()) {
 			printf("Puzzle solved successfully\n");
@@ -258,7 +258,7 @@ int setMAIN(int row, int coloumn, int number) {
 			printf("Puzzle solution erroneous\n");
 		}
 	}
-
+	printf("befor URUpdate\n");/*for testing*/
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 
 	return 1;
