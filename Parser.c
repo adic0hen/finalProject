@@ -82,6 +82,7 @@ int parse(char* buffer)
 			if (strcmp(cmd, "edit") == 0) 
 			{
 				mode = 3;
+				markerrors = 1;
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) 
 				{

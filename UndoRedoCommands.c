@@ -672,7 +672,7 @@ void freeURResources() {
 		for (j = 0; j < boardSize; j++) {
 			free(&UndoRedoList.initialBoard[i][j]);
 		}
-		free(&UndoRedoList.initialBoard[i]);
+		free(UndoRedoList.initialBoard[i]);
 	}
 	free(UndoRedoList.initialBoard);
 
@@ -685,7 +685,7 @@ void freeURResources() {
 			LIFOCells[i][j].first = NULL;
 			free(&LIFOCells[i][j]);
 		}
-		free(&LIFOCells[i]);
+		free(LIFOCells[i]);
 	}
 
 	free(LIFOCells);
