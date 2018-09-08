@@ -89,7 +89,7 @@ int parse(char* buffer)
 				}
 				else
 				{ /*initializing an empty board because there was no file path given*/
-					initializeMainBoard();
+					initAllDefault();
 				}
 				updateURListAfterSolveAndEdit();
 				printBoard();/*markerrors is always 1 in edit mode*/

@@ -189,3 +189,23 @@ void exitGame() {
 	printf("Exiting...\n");
 
 }
+
+
+void initAllDefault() {
+	initiallizeGameParameters(9, 3, 3);
+	allocateMemForMainBoard();
+	initializeMainBoard();
+	allocateMemForLIFOCells();
+	initialUndoRedoListAndLIFOCells();
+}
+
+
+void initAllFromFile(int blockHeight, int blockWidth) {
+	/* no need for initialaizing main board(would update from file)*/
+	initiallizeGameParameters(blockHeight*blockWidth, blockHeight, blockWidth);
+	allocateMemForMainBoard();
+	allocateMemForLIFOCells();
+	initialUndoRedoListAndLIFOCells();
+	UndoRedoList.hasLoadedBoard = 1;
+
+}

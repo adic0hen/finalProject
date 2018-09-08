@@ -406,6 +406,8 @@ void undoMAIN() {
 		undoFromNullNode();
 	}
 
+	updateErrStatAndCountEmptyCells();
+
 }
 
 
@@ -581,6 +583,8 @@ void redoMAIN() {
 	else if (currentMove->next->type == 0) {
 		redoUntilNullNode();
 	}
+
+	updateErrStatAndCountEmptyCells();
 }
 
 

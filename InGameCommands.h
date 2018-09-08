@@ -17,4 +17,7 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 int validate();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
+int updateErrStatAndCountEmptyCells();
+
+
 #endif
