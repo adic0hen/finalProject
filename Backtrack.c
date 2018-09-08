@@ -302,16 +302,9 @@ void backtrack() {
 
 void freeResources() {
 	int i;
-	int j;
-
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			free(&BTboard[i][j]);
-		}
-	}
 
 	for (i = 0; i < boardSize;i++) {
-		free(&BTboard[i]);
+		free(BTboard[i]);
 	}
 
 	free(BTboard);

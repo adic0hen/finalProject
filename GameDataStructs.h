@@ -16,9 +16,8 @@ typedef struct Cell {
 typedef struct URNodeGuard {
 	struct URNode* next;
 	struct URNode* currentMove;
-	int selfCurrentMove; /*pointer to the initiail board*/
 	struct Cell** initialBoard;
-	int hasLoadedBoard;
+	int hasLoadedBoard; /* 0 means the board is default*/
 	int isEmpty;
 } URNodeGuard;
 
@@ -31,6 +30,12 @@ typedef struct URNode {
 	struct URNode* next;
 	struct URNode* prev;
 } URNode;
+
+#define GENERATE_SET 0
+#define REG_SET 1
+#define AUTOFILL_SET 2
+#define NULL_NODE 3
+
 
 typedef struct cellNode {
 	Cell* data;

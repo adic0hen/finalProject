@@ -133,7 +133,6 @@ void initialUndoRedoListAndLIFOCells() {
 
 	UndoRedoList.initialBoard = NULL;
 	UndoRedoList.hasLoadedBoard = 0;
-	UndoRedoList.selfCurrentMove = 0;
 }
 
 
@@ -141,11 +140,11 @@ void initialUndoRedoListAndLIFOCells() {
 
 
 void freeAll() { /*frees the memory of the main game board, the solver board, and the URList*/
-	freeMainGameBoard();
 	
 	freeURResources();
-	printf("TEST:FREE MAIN GAME BOARD AND UR");
-	freeSolver();
+	freeMainGameBoard();
+	
+	
 }
 
 void freeMat(int** mat) { /*free the memory of a 2D array*/
@@ -159,19 +158,9 @@ void freeMat(int** mat) { /*free the memory of a 2D array*/
 
 void freeMainGameBoard() {/*free the memory of the main game board only*/
 	int i;
-	int j;
-	printf("enter free main game board\n");
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; i < boardSize; j++) {
-			printf("free: %d, %d", i, j);
-			free(&mainGameBoard[i][j]);
-		}
-	}
-	printf("Free all cells\n");
 	for (i = 0; i < boardSize; i++) {
 		free(mainGameBoard[i]);
 	}
-	printf("free all game board except\n");
 	free(mainGameBoard);
 }
 

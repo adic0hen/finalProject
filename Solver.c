@@ -65,7 +65,7 @@ int main() {
 	return 0;
 }
 */
-int solveMain() {
+int solveMain(int fromHint) {
 	int temp;
 	/*
 	printf("check and maybe free the board before allocationg\n");
@@ -92,7 +92,12 @@ int solveMain() {
 		blockWidth = temp;
 	}
 	/*copySolvedBoardToMainBoard();*/
-	/*freeSolver(); ~~~COMMENTED OUT BECAUSE HINT FUNCTIONS NEEDS THE INFO FROM res.solBoard*/
+	if (fromHint) {
+		return 1;
+	}
+	else {
+		freeSolver();
+	}
 	return 1;
 }
 
@@ -637,14 +642,16 @@ void printBoardSolver(int** board) {
 int hintSolve(int row, int coloumn) { /*returns the hint value if board is solvable, 0 otherwise*/
 	int num;
 	printf("in hintSolve");/*for testing!*/
-	solveMain();
+	solveMain(1);
 	if (res.optimstatus == GRB_OPTIMAL) {
 		printf("is optimal\n");/*for testing!*/
 		num = res.solBoard[row][coloumn];
+		freeSolver();
 		return num;
 	}
 	else {
 		printf("Error: board is unsolvable\n");
+		freeSolver();
 		return 0;
 	}
 }
@@ -682,13 +689,14 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 		b = 1;
 	}
+	freeSolver();
 	return b;
 }
 
 
 int validateSolve() {
 
-	solveMain();
+	solveMain(0);
 	if (res.optimstatus == GRB_OPTIMAL) {
 		return 1;
 	}
@@ -698,7 +706,10 @@ int validateSolve() {
 }
 
 void freeSolver() {
+	printf("Enter freeSolver\n");
 	freeMat(board);
+	printf("freed mat1\n");
+
 	freeMat(res.solBoard);
 }
 

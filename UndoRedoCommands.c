@@ -42,7 +42,11 @@ void clearSingleURNode(URNode* nodeToDelete) {
 	current = nodeToDelete->move;
 	row = nodeToDelete->row;
 	coloumn = nodeToDelete->col;
-	clearSingleLIFOCell(row, coloumn, current);
+	if (nodeToDelete->type != NULL_NODE) {
+		clearSingleLIFOCell(row, coloumn, current);
+	}
+
+
 
 
 	prev = nodeToDelete->prev;
@@ -55,6 +59,7 @@ void clearSingleURNode(URNode* nodeToDelete) {
 
 	else if (prev == NULL) {
 		UndoRedoList.next = next;
+		next->prev = NULL;
 	}
 
 	else if (next == NULL) {
@@ -134,7 +139,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 
 
 	/* allocate Mem and update fields for non-Null UR node */
-	if (mode == 0 || mode == 1 || mode == 2)
+	if (mode == GENERATE_SET || mode == REG_SET || mode == AUTOFILL_SET)
 	{
 		tempPTR = malloc(sizeof(cellNode));
 		if (tempPTR == NULL) {
@@ -326,27 +331,26 @@ void undo() {
 void undoFromFirstNode() {
 	URNode* firstNode;
 	char tempChar;
-	/* case of having a loaded board*/
+	int row;
+	int coloumn;
 
+	
 	firstNode = UndoRedoList.currentMove;
-	if (UndoRedoList.hasLoadedBoard == 1) {
-		UndoRedoList.currentMove = NULL;
-		UndoRedoList.selfCurrentMove = 1;
-		updateMainBoardToFirstBoard();
-		if (UndoRedoList.initialBoard[firstNode->row][firstNode->col].currentCellvalue == -1) {
-			tempChar = '_';
-		}
-		else {
-			tempChar = UndoRedoList.initialBoard[firstNode->row][firstNode->col].currentCellvalue + '0';
-		}
-	}
-	else {
-		/* Back to empty board*/
-		UndoRedoList.currentMove = NULL;
-		updateMainBoardToNone();
+	UndoRedoList.currentMove = NULL;
+	row = firstNode->row;
+	coloumn = firstNode->col;
+	
+
+	if (UndoRedoList.initialBoard[row][coloumn].currentCellvalue == -1) {
 		tempChar = '_';
 	}
-	printUndoUpdate(firstNode->row, firstNode->col, firstNode->move->data->currentCellvalue + '0', tempChar);
+	else {
+		tempChar = UndoRedoList.initialBoard[row][coloumn].currentCellvalue + '0';
+	}
+	
+	updateMainBoardToFirstBoard();
+
+	printUndoUpdate(row, coloumn, firstNode->move->data->currentCellvalue + '0', tempChar);
 }
 
 void undoFromNullNode() {
@@ -362,6 +366,7 @@ void undoFromNullNode() {
 	while (currentMove->type == type) {
 		if (currentMove->prev == NULL) {
 			undoFromFirstNode();
+			break;
 		}
 		else {
 			undo();
@@ -391,22 +396,24 @@ void undoMAIN() {
 	/* case of undo from the first Node*/
 	if (currentMove->prev == NULL) {
 		undoFromFirstNode();
+		printBoard();
 		return;
 	}
 
 	/* regular set*/
-	if (currentMove->type == 1) {
+	if (currentMove->type == REG_SET) {
 		undo();
 	}
 
-	else if (currentMove->type == 2) {
+	else if (currentMove->type == AUTOFILL_SET) {
 		printf("TEST: ERROR IN UNDO REDO LIST"); /* For Test, need to delete!*/
 	}
-	else if (currentMove->type == 3) {
+	else if (currentMove->type == NULL_NODE) {
 		undoFromNullNode();
 	}
 
 	updateErrStatAndCountEmptyCells();
+	printBoard();
 
 }
 
@@ -478,6 +485,7 @@ void redoUntilNullNode() {
 	int type;
 
 	currentMove = UndoRedoList.currentMove->next;
+	
 	type = currentMove->type;
 
 	while (currentMove->type == type) {
@@ -485,7 +493,7 @@ void redoUntilNullNode() {
 		currentMove = UndoRedoList.currentMove->next;
 	}
 
-	if (currentMove->type == 3) {
+	if (currentMove->type == NULL_NODE) {
 		UndoRedoList.currentMove = currentMove;
 	}
 }
@@ -494,61 +502,35 @@ void redoFromGuard() {
 	URNode* nextNode;
 	int row;
 	int coloumn;
-	int newNumber;
-	int prevNumber;
-	int flag;
+	char prevNum;
+	char NextNum;
 
-	flag = 0;
+	nextNode = UndoRedoList.next;
+	row = nextNode->row;
+	coloumn = nextNode->col;
+	if (UndoRedoList.initialBoard[row][coloumn].currentCellvalue == -1) {
+		prevNum = '_';
+	}
+	else {
+		prevNum = UndoRedoList.initialBoard[row][coloumn].currentCellvalue + '0';
+	}
+	NextNum = nextNode->move->data->currentCellvalue;
 
-	if (UndoRedoList.hasLoadedBoard == 1) {
-		if (UndoRedoList.selfCurrentMove == 0) {
-			updateMainBoardToFirstBoard();
-			UndoRedoList.selfCurrentMove = 1;
-		}
-
-		else {
-			if (UndoRedoList.next != NULL) {
-				flag = 1;
-			}
-
-			else {
-				printf("Error: no moves to Redo\n");
-			}
-		}
+	if (nextNode->type == GENERATE_SET || nextNode->type == AUTOFILL_SET) {
+		connectNodeToLIFOCell(row, coloumn, nextNode->move);
+		updateMainBoardAfterUndoRedo(row, coloumn);
+		printRedoUpdate(row, coloumn, prevNum, NextNum);
+		UndoRedoList.currentMove = nextNode;
+		redoUntilNullNode();
 	}
 
 	else {
-		if (UndoRedoList.next != NULL) {
-			flag = 1;
-		}
-		else {
-			printf("Error: no moves to Redo\n");
-		}
-	}
-
-	if (flag) {
-		nextNode = UndoRedoList.next;
 		UndoRedoList.currentMove = nextNode;
 		row = nextNode->row;
 		coloumn = nextNode->col;
-		if (UndoRedoList.hasLoadedBoard) {
-			prevNumber = UndoRedoList.initialBoard[row][coloumn].currentCellvalue;
-		}
-		else {
-			prevNumber = -1;
-		}
-
 		connectNodeToLIFOCell(row, coloumn, nextNode->move);
 		updateMainBoardAfterUndoRedo(row, coloumn);
-
-		newNumber = LIFOCells[row][coloumn].first->data->currentCellvalue;
-
-		if (prevNumber != -1) {
-			printf("Redo %d,%d: from %d to %d\n", row+1, coloumn+1, prevNumber, newNumber);
-		}
-		else {
-			printf("Redo %d,%d: from _ to %d\n", row+1, coloumn+1, newNumber);
-		}
+		printRedoUpdate(row, coloumn, prevNum, NextNum);
 	}
 }
 
@@ -566,6 +548,7 @@ void redoMAIN() {
 	if (currentMove == NULL)
 	{
 		redoFromGuard();
+		printBoard();
 		return;
 	}
 
@@ -574,17 +557,18 @@ void redoMAIN() {
 		return;
 	}
 
-	if (currentMove->next->type == 1) {
+	if (currentMove->next->type == REG_SET) {
 		redo();
 	}
-	else if (currentMove->next->type == 2) {
+	else if (currentMove->next->type == AUTOFILL_SET) {
 		redoUntilNullNode();
 	}
-	else if (currentMove->next->type == 0) {
+	else if (currentMove->next->type == GENERATE_SET) {
 		redoUntilNullNode();
 	}
 
 	updateErrStatAndCountEmptyCells();
+	printBoard();
 }
 
 
@@ -603,7 +587,9 @@ void updateURListAfterSolveAndEdit() {
 	int j;
 	Cell** cloneFirstBoard;
 	void* tempPTR;
+	int counter;
 
+	counter = 0;
 	tempPTR = malloc(sizeof(Cell*) *boardSize);
 	if (tempPTR == NULL) {
 		return;
@@ -624,6 +610,9 @@ void updateURListAfterSolveAndEdit() {
 
 	for (i = 0; i < boardSize;i++) {
 		for (j = 0; j < boardSize; j++) {
+			if (mainGameBoard[i][j].currentCellvalue == -1) {
+				counter += 1;
+			}
 			cloneFirstBoard[i][j].currentCellvalue = mainGameBoard[i][j].currentCellvalue;
 			cloneFirstBoard[i][j].isErroneus = mainGameBoard[i][j].isErroneus;
 			cloneFirstBoard[i][j].isFixed = mainGameBoard[i][j].isFixed;
@@ -631,9 +620,10 @@ void updateURListAfterSolveAndEdit() {
 	}
 
 	UndoRedoList.initialBoard = cloneFirstBoard;
-	UndoRedoList.isEmpty = 0;
-	UndoRedoList.hasLoadedBoard = 1;
-	UndoRedoList.selfCurrentMove = 1;
+	UndoRedoList.isEmpty = 1; /* 1 beacuse that means that no URNodes is in the list */
+	if (counter != 0) {
+		UndoRedoList.hasLoadedBoard = 1;
+	}
 
 }
 
@@ -662,29 +652,20 @@ void updateURListAfterGenerate() {
 
 void freeURResources() {
 	int i;
-	int j;
 
 	/* free list*/
 
 	clearURListFromCurrentPosition(NULL, 1);
 
 	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			free(&UndoRedoList.initialBoard[i][j]);
-		}
 		free(UndoRedoList.initialBoard[i]);
 	}
-	free(UndoRedoList.initialBoard);
 
+	free(UndoRedoList.initialBoard);
 
 	/* free LIFOCells*/
 
-
 	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			LIFOCells[i][j].first = NULL;
-			free(&LIFOCells[i][j]);
-		}
 		free(LIFOCells[i]);
 	}
 
