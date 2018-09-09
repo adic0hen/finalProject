@@ -65,19 +65,26 @@ int main() {
 	return 0;
 }
 */
-int solveMain(int fromHint) {
+int solveMain(int isGenerate) {
 	int temp;
+	int toTranspose;
 	/*
 	printf("check and maybe free the board before allocationg\n");
 	if (board != NULL) {
 		freeMat(board);
 	}
 	*/
-	printf("try allocating memory\n");
-	board = allocateMemForBoardPTR();
 	/*test_initBoard();*/
-	copyMainBoardToGourobiBoard();
-	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
+	if (!isGenerate) {
+		copyMainBoardToGourobiBoard();
+	}
+	if (blockHeight > blockWidth) {
+		toTranspose = 1;
+	}
+	else {
+		toTranspose = 0;
+	}
+	if (toTranspose) { /*solver only works if blockHeight>=blockWidth*/
 		board = transpose(board);
 		temp = blockHeight;
 		blockHeight = blockWidth;
@@ -85,19 +92,21 @@ int solveMain(int fromHint) {
 	}
 	printf("starting the solve function\n");
 	solve();
-	if (blockHeight < blockWidth) {
+	if (toTranspose) {
 		res.solBoard = transpose(res.solBoard);
 		temp = blockHeight;
 		blockHeight = blockWidth;
 		blockWidth = temp;
 	}
 	/*copySolvedBoardToMainBoard();*/
+	/*
 	if (fromHint) {
 		return 1;
 	}
 	else {
 		freeSolver();
 	}
+	*/
 	return 1;
 }
 
@@ -642,7 +651,8 @@ void printBoardSolver(int** board) {
 int hintSolve(int row, int coloumn) { /*returns the hint value if board is solvable, 0 otherwise*/
 	int num;
 	printf("in hintSolve");/*for testing!*/
-	solveMain(1);
+	board = allocateMemForBoardPTR();
+	solveMain(0);
 	if (res.optimstatus == GRB_OPTIMAL) {
 		printf("is optimal\n");/*for testing!*/
 		num = res.solBoard[row][coloumn];
@@ -658,7 +668,6 @@ int hintSolve(int row, int coloumn) { /*returns the hint value if board is solva
 
 
 int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to keep*/
-	int temp;
 	int b;
 	printf("in generateSolve\n");
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
@@ -668,20 +677,8 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 		return b;
 	}
 	printf("done setting random values\n");
-	printBoardSolver(board);
-	if (blockHeight > blockWidth) { /*solver only works if blockHeight>=blockWidth*/
-		board = transpose(board);
-		temp = blockHeight;
-		blockHeight = blockWidth;
-		blockWidth = temp;
-	}
-	solve();
-	if (blockHeight < blockWidth) {/*transposing back to original board*/
-		res.solBoard = transpose(res.solBoard);
-		temp = blockHeight;
-		blockHeight = blockWidth;
-		blockWidth = temp;
-	}
+	printBoardSolver(board); /*for testing*/
+	solveMain(1);
 	if (res.optimstatus == GRB_OPTIMAL) {
 		deleteExcept(res.solBoard, y);
 		copySolvedBoardToMainBoard(); /*the real function! the board is not "solved" but it's the one we want to use*/
@@ -689,18 +686,21 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 		b = 1;
 	}
+	printf("going to free mem\n");/*for testing*/
 	freeSolver();
 	return b;
 }
 
 
 int validateSolve() {
-
+	board = allocateMemForBoardPTR();
 	solveMain(0);
 	if (res.optimstatus == GRB_OPTIMAL) {
+		freeSolver();
 		return 1;
 	}
 	else {
+		freeSolver();
 		return 0;
 	}
 }
