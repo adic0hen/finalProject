@@ -333,7 +333,7 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 
 	printf("updating URlist\n"); /*for testing*/
 	updateURListAfterGenerate();
-	printf("donr updating URlist\n"); /*for testing*/
+	printf("done updating URlist\n"); /*for testing*/
 	printBoard();
 	return 1;
 }

@@ -684,10 +684,10 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 		copySolvedBoardToMainBoard(); /*the real function! the board is not "solved" but it's the one we want to use*/
 		/*test_copySolvedBoardToMainBoard(); only for tests!*/
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
+		printf("going to free mem\n");/*for testing*/
+		freeSolver();
 		b = 1;
 	}
-	printf("going to free mem\n");/*for testing*/
-	freeSolver();
 	return b;
 }
 
@@ -709,7 +709,6 @@ void freeSolver() {
 	printf("Enter freeSolver\n");
 	freeMat(board);
 	printf("freed mat1\n");
-
 	freeMat(res.solBoard);
 }
 
