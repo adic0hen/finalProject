@@ -39,7 +39,7 @@ int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
-void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol);
+void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol, char** names, char*namestorage);
 /*void freeVars(int* ind, double* val, double* lb, char* vtype, char** names, char* namestorage, double* sol);*/
 /*test function declarations
 void test_MAIN();
@@ -374,7 +374,7 @@ void solve() {
 
 
 
-	
+	printf("Free env and model\n");
 	/* Free model */
 
 	GRBfreemodel(model);
@@ -384,10 +384,7 @@ void solve() {
 	GRBfreeenv(env);
 
 	printf("freeing variables\n");
-	/*freeVars(ind, val, lb, vtype, sol);*/
-
-	printf("Free env and model\n");
-
+	freeVars(ind, val, lb, vtype, sol,names,namestorage);
 }
 
 
@@ -404,7 +401,7 @@ void quit(int error, GRBenv *env) {
 }
 
 /*~~~~~~~~~~~THIS FUNCTION MAY NOT BE NECESSARY~~~~~~~~~~~*/
-void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol) {
+void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol,char** names, char*namestorage) {
 	
 	printf("free ind\n");
 	free(ind);
@@ -416,6 +413,10 @@ void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol) {
 	free(vtype);
 	printf("free sol\n");
 	free(sol);
+	printf("free namestorage\n");
+	free(namestorage);
+	printf("free names\n");
+	free(names);
 }
 
 int** copySol(double* sol) {
