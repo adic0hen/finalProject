@@ -149,8 +149,10 @@ void freeAll() { /*frees the memory of the main game board, the solver board, an
 
 void freeMat(int** mat) { /*free the memory of a 2D array*/
 	int i;
-	for (i = 0; i < boardSize; i++) {
-		free(mat[i]);
+	if (mat != NULL) {
+		for (i = 0; i < boardSize; i++) {
+			free(mat[i]);
+		}
 	}
 	free(mat);
 

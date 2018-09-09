@@ -138,6 +138,7 @@ void solve() {
 	printf("current sizes are:\n boardSize - %d  bloackHeight - %d blockWidth - %d\n",boardSize,blockHeight,blockWidth);
 	res.objval = 0.0;
 	res.optimstatus = 0;
+	res.solBoard = NULL;
 	/*defining variables*/
 	printf("allocating for ind\n");
 	ind = malloc(boardSize * sizeof(int));
@@ -686,9 +687,9 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 		/*test_copySolvedBoardToMainBoard(); only for tests!*/
 		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 		printf("going to free mem\n");/*for testing*/
-		freeSolver();
 		b = 1;
 	}
+	freeSolver();
 	return b;
 }
 
