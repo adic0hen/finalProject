@@ -445,6 +445,7 @@ int** allocateMemForBoardPTR() {
 
 	tempPTR = (malloc((sizeof(int*)) * boardSize));
 	if (tempPTR == NULL) {
+		memoryError();
 		return 0;
 	}
 	else {
@@ -454,6 +455,7 @@ int** allocateMemForBoardPTR() {
 	for (i = 0; i < boardSize; i++) {
 		tempPTR = malloc(sizeof(int)*boardSize);
 		if (tempPTR == NULL) {
+			memoryError();
 			return 0;
 		}
 		allocatedMemAddr[i] = (int*)tempPTR;

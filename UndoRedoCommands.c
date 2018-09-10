@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "GameDataStructs.h"
 #include "InGameCommands.h"
+#include "InitAndTerminateModule.h"
 
 
 
@@ -128,6 +129,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 	/* allocate Mem for UR Node, need anyway*/
 	tempPTR = malloc(sizeof(URNode));
 	if (tempPTR == NULL) {
+		memoryError();
 		return;
 	}
 	else {
@@ -142,6 +144,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 	{
 		tempPTR = malloc(sizeof(cellNode));
 		if (tempPTR == NULL) {
+			memoryError();
 			return;
 		}
 		else {
@@ -688,6 +691,7 @@ void updateURListAfterSolveAndEdit() {
 	counter = 0;
 	tempPTR = malloc(sizeof(Cell*) *boardSize);
 	if (tempPTR == NULL) {
+		memoryError();
 		return;
 	}
 	else {
@@ -697,6 +701,7 @@ void updateURListAfterSolveAndEdit() {
 	for (i = 0; i < boardSize;i++) {
 		tempPTR = malloc(sizeof(Cell) * boardSize);
 		if (tempPTR == NULL) {
+			memoryError();
 			return;
 		}
 		else {

@@ -3,6 +3,7 @@
 #include "GameDataStructs.h"
 #include "GamePlay.h"
 #include "UndoRedoCommands.h"
+#include "InitAndTerminateModule.h"
 #include "Solver.h"
 #include <string.h>
 
@@ -442,6 +443,7 @@ int autofill() {
 
 	tempPTR = malloc(sizeof(int*) * boardSize);
 	if (tempPTR == NULL) {
+		memoryError();
 		return 0;
 	}
 	else {
@@ -449,6 +451,7 @@ int autofill() {
 		for (i = 0; i < boardSize;i++) {
 			tempPTR = malloc(sizeof(int) * boardSize);
 			if (tempPTR == NULL) {
+				memoryError();
 				return 0;
 			}
 			else {

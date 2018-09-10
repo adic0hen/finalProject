@@ -14,5 +14,6 @@ void exitGame();
 void reset();
 void initAllDefault();
 void initAllFromFile(int blockHeight, int blockWidth);
+void memoryError();
 
 #endif

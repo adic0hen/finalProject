@@ -7,6 +7,7 @@
 /*function declarations*/
 void freeMainGameBoard();
 void freeAll();
+void memoryError();
 
 
 int allocateMemForMainBoard() {
@@ -16,12 +17,14 @@ int allocateMemForMainBoard() {
 
 	allocatedMemAddr = (Cell**)malloc(sizeof(Cell*) *boardSize);
 	if (allocatedMemAddr == NULL) {
+		memoryError();
 		return 0;
 	}
 
 	for (i = 0; i < boardSize; i++) {
 		tempPTR = (malloc(sizeof(Cell) *boardSize));
 		if (tempPTR == NULL) {
+			memoryError();
 			return 0;
 		}
 		allocatedMemAddr[i] = (Cell*)tempPTR;
@@ -100,17 +103,20 @@ int allocateMemForLIFOCellsAndOutputBoard() {
 	allocatedMemAddr = (cellNodeGuard**)malloc(sizeof(cellNodeGuard*) *boardSize);
 	allocateOutputMemAddr = (URupdateCell**)malloc(sizeof(URupdateCell*) *boardSize);
 	if (allocatedMemAddr == NULL || allocateOutputMemAddr == NULL) {
+		memoryError();
 		return 0;
 	}
 
 	for (i = 0; i < boardSize; i++) {
 		tempPTR = (malloc(sizeof(cellNodeGuard) *boardSize));
 		if (tempPTR == NULL) {
+			memoryError();
 			return 0;
 		}
 		allocatedMemAddr[i] = (cellNodeGuard*)tempPTR;
 		tempPTR = (malloc(sizeof(URupdateCell) *boardSize));
 		if (tempPTR == NULL) {
+			memoryError();
 			return 0;
 		}
 		allocateOutputMemAddr[i] = (URupdateCell*)tempPTR;
@@ -211,4 +217,12 @@ void initAllFromFile(int blockHeight, int blockWidth) {
 	initialUndoRedoListAndLIFOCells();
 	UndoRedoList.hasLoadedBoard = 1;
 
+}
+
+
+
+void memoryError() {
+	printf("Error: Memroy allocation failed\n");
+	printf("Exiting...");
+	mode = 1;
 }

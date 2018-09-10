@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "GameDataStructs.h"
+#include "InitAndTerminateModule.h"
 
 
 
@@ -57,6 +58,7 @@ void allocateMemForBTBoard() {
 
 	tempPTR = malloc(sizeof(BTCell*) * boardSize);
 	if (tempPTR == NULL) {
+		memoryError();
 		return;
 	}
 	else {
@@ -66,6 +68,7 @@ void allocateMemForBTBoard() {
 	for (i = 0; i < boardSize;i++) {
 		tempPTR = malloc(sizeof(BTCell)*boardSize);
 		if (tempPTR == NULL) {
+			memoryError();
 			return;
 		}
 		else {
@@ -162,6 +165,7 @@ void pushToStack(int row, int coloum, int number) {
 
 	newNode = malloc(sizeof(stackNode));
 	if (newNode == NULL) {
+		memoryError();
 		return;
 	}
 
