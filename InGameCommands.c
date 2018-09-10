@@ -355,6 +355,9 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	else if (cellsToFill < 0 || cellsToFill> boardSize*boardSize) {
 		error = 1;
 	}
+	else if (cellsToKeep < 0 || cellsToKeep> boardSize*boardSize) {
+		error = 1;
+	}
 
 	if (error) {
 		printf("Error: value not in range 0-%d\n", numOfCells);
