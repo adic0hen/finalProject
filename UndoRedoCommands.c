@@ -324,6 +324,7 @@ void printUndoUpdate() {
 						printf("Undo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
 					}
 				}
+				free(tempStr);
 			}
 		}
 	}
@@ -530,6 +531,7 @@ void printRedoUpdates() {
 						printf("Redo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
 					}
 				}
+				free(tempStr);
 			}
 		}
 	}
