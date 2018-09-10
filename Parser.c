@@ -46,9 +46,9 @@ int parse(char* buffer)
 					sRow = strtok(NULL, " \t\r\n");
 					printf("sRow - %s\n", sRow);/*for testing*/
 					sCol = strtok(NULL, " \t\r\n");
-					printf("sCol - %s\n", sRow);/*for testing*/
+					printf("sCol - %s\n", sCol);/*for testing*/
 					sVal = strtok(NULL, " \t\r\n");
-					printf("sVal - %s\n", sRow);/*for testing*/
+					printf("sVal - %s\n", sVal);/*for testing*/
 					if (sCol != NULL && sRow != NULL && sVal != NULL) 
 					{ /*making sure we have all the values*/
 						col = atoi(sCol);
@@ -57,6 +57,9 @@ int parse(char* buffer)
 						printf("col -%d, row -%d, val %d\n", col, row, val);/*for testing*/
 						setMAIN(row, col, val);
 						printBoard();
+					}
+					else {
+						invalid();
 					}
 					break;
 				}
@@ -75,6 +78,9 @@ int parse(char* buffer)
 					load(filePath);
 					updateURListAfterSolveAndEdit();
 					printBoard();
+				}
+				else {
+					invalid();
 				}
 				break;
 			}
@@ -100,7 +106,13 @@ int parse(char* buffer)
 			if (strcmp(cmd, "mark_errors") == 0) 
 			{
 				int mark;
-				mark = atoi(strtok(NULL, " \t\r\n"));
+				char* sMark;
+				sMark = strtok(NULL, " \t\r\n");
+				if (sMark == NULL) {
+					invalid();
+					break;
+				}
+				mark = atoi(sMark);				
 				if (mode == 2) {
 					markErrors(mark);
 					break;
@@ -145,11 +157,14 @@ int parse(char* buffer)
 
 				sCellsToFill = strtok(NULL, " \t\r\n");
 				sCellsToKeep = strtok(NULL, " \t\r\n");
-				if (sCellsToFill != NULL || sCellsToKeep != NULL) 
+				if (sCellsToFill != NULL && sCellsToKeep != NULL) 
 				{
 					cellsToFill = atoi(sCellsToFill);
 					cellsToKeep = atoi(sCellsToKeep);
 					generate(sCellsToFill, sCellsToKeep, cellsToFill, cellsToKeep);
+				}
+				else {
+					invalid();
 				}
 				break;
 			}
