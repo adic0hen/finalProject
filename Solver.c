@@ -183,7 +183,7 @@ void solve() {
 
 	printf("ALLOCATED MEM\n\n");
 	
-
+	GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0); /*takes care of part of the terminal prints*/
 	/* Create an empty model */
 
 	cursor = namestorage;

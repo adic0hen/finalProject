@@ -16,7 +16,7 @@ int isErroneous();
 int markErrors(int mark);
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int checkHintParameters(int row, int col);
-int validate();
+int validate(int complete); /*final is 1 only when we validate for complete puzzle*/
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
 
@@ -163,6 +163,7 @@ int updateErrStatAndCountEmptyCells() {
 			mainGameBoard[row][col].currentCellvalue = -1;
 			isValidNumber = checkValidityOfNum(num,row,col);
 			if (!isValidNumber&&mainGameBoard[row][col].isFixed == 0) {
+				printf("cell value in row %d col %d erroneous\n",row,col);/*for testing*/
 				mainGameBoard[row][col].isErroneus = 1;
 			}
 			else {
@@ -246,10 +247,10 @@ int setMAIN(int row, int coloumn, int number) {
 			}
 		}
 	}
-	printBoard();
+	
 	printf("before error update\n");/*for testing*/
-	if (!updateErrStatAndCountEmptyCells() && mode == 2) {
-		if (validate()) {
+	if (!updateErrStatAndCountEmptyCells() && mode == 2) {/*there are no empty cells and er are in solve mode*/
+		if (validate(1)) {
 			printf("Puzzle solved successfully\n");
 			mode = 1;
 			return 3;
@@ -260,6 +261,7 @@ int setMAIN(int row, int coloumn, int number) {
 	}
 	printf("befor URUpdate\n");/*for testing*/
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
+	printBoard();
 
 	return 1;
 }
@@ -407,7 +409,7 @@ int checkHintParameters(int row, int col) {/*returns 0 if the parameters are not
 
 
 
-int validate() {
+int validate(int complete) {
 	int isValid;
 	isValid = 0;
 	if (isErroneous()) {
@@ -417,11 +419,15 @@ int validate() {
 	printf("goind to validateSolve\n");
 	isValid = validateSolve();
 	if (isValid == 1) {
-		printf("Validation passed: board is solvable\n");
+		if (!complete) {
+			printf("Validation passed: board is solvable\n");
+		}
 		return 1;
 	}
 	else if (isValid == 0) {
-		printf("Validation failed: board is unsolvable\n");
+		if (!complete) {
+			printf("Validation failed: board is unsolvable\n");
+		}
 		return 0;
 	}
 	return 0;

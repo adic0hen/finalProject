@@ -7,6 +7,7 @@
 #include "InitAndTerminateModule.h"
 #include "IOCommands.h"
 #include "Backtrack.h"
+#include <time.h>
 
 void TESTRandomalyFillBoard(int numOfTries);
 
@@ -22,11 +23,10 @@ int main(int argc, char* argv[]) {
 /* main for tests*/ 
 
 /*int main(int argc, char *argv[]) {*/
-int main(){	
+int main(){
+	srand(time(NULL));
 	game();
-	
 	return 1;
-
 }
 
 

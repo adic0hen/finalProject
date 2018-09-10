@@ -85,6 +85,7 @@ int load(char* path) {
 	if (!fscanf(fptr, "%d", &bWidth) > 0){
 		return 0;
 	}
+	freeAll();
 	initAllFromFile(bHeight, bWidth);
 	initializeLoadedMainBoard(fptr);
 	updateErrStatAndCountEmptyCells();

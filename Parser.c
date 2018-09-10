@@ -54,6 +54,10 @@ int parse(char* buffer)
 						col = atoi(sCol);
 						row = atoi(sRow);
 						val = atoi(sVal);
+						if (val == 0 && strcmp(sVal, "0") != 0) { /*this makes sure that we erase only when 0 is entered*/
+							printf("Error: value not in range 0-%d\n", boardSize);
+							break;
+						}
 						printf("col -%d, row -%d, val %d\n", col, row, val);/*for testing*/
 						setMAIN(row, col, val);
 					}
@@ -95,6 +99,7 @@ int parse(char* buffer)
 				}
 				else
 				{ /*initializing an empty board because there was no file path given*/
+					freeAll();
 					initAllDefault();
 				}
 				updateURListAfterSolveAndEdit();
@@ -141,7 +146,7 @@ int parse(char* buffer)
 			{
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
-					validate();
+					validate(0);
 					break;
 				}
 			}
