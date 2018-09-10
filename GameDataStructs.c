@@ -5,7 +5,7 @@
 
 
 
-
+struct URupdateCell** URoutputBoard;
 struct URNodeGuard UndoRedoList;
 struct cellNodeGuard** LIFOCells;
 struct cellNodeGuard** LIFOCells;

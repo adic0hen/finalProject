@@ -227,6 +227,7 @@ int setMAIN(int row, int coloumn, int number) {
 			deleteCell(row - 1, coloumn - 1);
 			updateErrStatAndCountEmptyCells();
 			updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
+			printBoard();
 			return 1;
 		}
 
@@ -234,9 +235,7 @@ int setMAIN(int row, int coloumn, int number) {
 	}
 
 	if (number != 0) {
-		if (prevNumber == number) {
-			return 1;
-		}
+		if (prevNumber == number) {}
 		else {
 			isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
 			if (!isValidNumber) {
@@ -247,8 +246,9 @@ int setMAIN(int row, int coloumn, int number) {
 			}
 		}
 	}
+	printBoard();
 	printf("before error update\n");/*for testing*/
-	if (!updateErrStatAndCountEmptyCells()) {
+	if (!updateErrStatAndCountEmptyCells() && mode == 2) {
 		if (validate()) {
 			printf("Puzzle solved successfully\n");
 			mode = 1;
@@ -503,13 +503,17 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 		}
 
 		if (counter == boardSize - 1) {
+			/* for test!*/ 
+			printf("Autfill enter counter == N-1\n");
 			for (j = 0; j < boardSize; j++) {
 				if (mainGameBoard[i][j].currentCellvalue == -1) {
 					col = j;
 				}
 			}
+			printf("%d", col);
 			numToFill = expectedSum - sum;
-			if (checkValidityOfNum(i, col, numToFill)) {
+			if (checkValidityOfNum(numToFill, i, col)) {
+				printf(" enter check validaty\n");
 				boardToFill[i][col] = numToFill;
 			}
 		}
@@ -546,7 +550,7 @@ void autofillCOLOUMS(int** boardToFill, int expectedSum) {
 				}
 			}
 			numToFill = expectedSum - sum;
-			if (checkValidityOfNum(row, i, numToFill)) {
+			if (checkValidityOfNum(numToFill, row, i)) {
 				boardToFill[row][i] = numToFill;
 			}
 		}
@@ -604,7 +608,7 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 
 				number = expectetSum - sum;
 
-				if (checkValidityOfNum(rowIndex, colIndex, number)) {
+				if (checkValidityOfNum(number,rowIndex, colIndex)) {
 					boardToFill[rowIndex][colIndex] = number;
 				}
 			}
@@ -635,6 +639,11 @@ void autofillFILLCELLS(int** boardToFill) {
 	/* Marking the end of the autofill*/
 	if (counter > 0) {
 		insertNullNode();
+		/* mark the end of the game*/ 
+		if (!updateErrStatAndCountEmptyCells() && !isErroneous()) {
+			mode = 1;
+			printf("Puzzle solved successfully\n");
+		}
 	}
 }
 

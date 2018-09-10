@@ -47,7 +47,14 @@ typedef struct cellNodeGuard {
 	cellNode* first;
 } cellNodeGuard;
 
+typedef struct URupdateCell {
+	int prevNumber;
+	int newNumber;
+	int isUpdated;
+} URupdateCell;
 
+
+extern struct URupdateCell** URoutputBoard;
 extern struct URNodeGuard UndoRedoList;
 extern struct cellNodeGuard** LIFOCells;
 

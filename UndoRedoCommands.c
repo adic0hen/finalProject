@@ -5,7 +5,6 @@
 
 
 
-
 void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
 	cellNode* next;
 	cellNode* prev;
@@ -291,30 +290,52 @@ void updateMainBoardToFirstBoard() {
 
 /* Undo commands*/
 
-void printUndoUpdate(int row, int coloumn, int prevNum, int newNum) {
+void printUndoUpdate() {
 	char* tempStr;
 	char* tstr;
+	int i;
+	int j;
+	int prevNum;
+	int newNum;
 
-	if (prevNum == -1) {
-		tempStr = (char*)malloc(3 * sizeof(char));
-		sprintf(tempStr, "%d", newNum);
-		printf("Undo %d,%d: from %c to %s\n", row + 1, coloumn + 1, '_', tempStr);
-	}
-	else {
-		if (newNum == -1) {
-			tempStr = (char*)malloc(3 * sizeof(char));
-			sprintf(tempStr, "%d", prevNum);
-			printf("Undo %d,%d: from %s to %c\n", row + 1, coloumn + 1, tempStr, '_');
-		}
-		else {
-			tempStr = (char*)malloc(3 * sizeof(char));
-			sprintf(tempStr, "%d", prevNum);
-			tstr = (char*)malloc(3 * sizeof(char));
-			sprintf(tstr, "%d", newNum);
-			printf("Undo %d,%d: from %s to %s\n", row + 1, coloumn + 1, tempStr, tstr);
+	for (i = 0;i < boardSize;i++) {
+		for (j = 0; j < boardSize;j++) {
+			if (URoutputBoard[i][j].isUpdated) {
+				prevNum = URoutputBoard[i][j].prevNumber;
+				newNum = URoutputBoard[i][j].newNumber;
+
+
+				if (prevNum == -1) {
+					tempStr = (char*)malloc(3 * sizeof(char));
+					sprintf(tempStr, "%d", newNum);
+					printf("Undo %d,%d: from %c to %s\n", i + 1, j + 1, '_', tempStr);
+				}
+				else {
+					if (newNum == -1) {
+						tempStr = (char*)malloc(3 * sizeof(char));
+						sprintf(tempStr, "%d", prevNum);
+						printf("Undo %d,%d: from %s to %c\n", i + 1, j + 1, tempStr, '_');
+					}
+					else {
+						tempStr = (char*)malloc(3 * sizeof(char));
+						sprintf(tempStr, "%d", prevNum);
+						tstr = (char*)malloc(3 * sizeof(char));
+						sprintf(tstr, "%d", newNum);
+						printf("Undo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
+					}
+				}
+			}
 		}
 	}
 }
+
+void updateOutputBoard(int row, int coloumn, int prevNum, int newNum) {
+	URoutputBoard[row][coloumn].newNumber = newNum;
+	URoutputBoard[row][coloumn].prevNumber = prevNum;
+	URoutputBoard[row][coloumn].isUpdated = 1;
+}
+
+
 
 
 void undo() {
@@ -339,10 +360,10 @@ void undo() {
 	nextNode = LIFOCells[row][coloumn].first;
 
 	if (nextNode == NULL) {
-		printUndoUpdate(row, coloumn, prevNumber, -1);
+		updateOutputBoard(row, coloumn, prevNumber, -1);
 	}
 	else {
-		printUndoUpdate(row, coloumn, prevNumber, nextNode->data->currentCellvalue);
+		updateOutputBoard(row, coloumn, prevNumber, nextNode->data->currentCellvalue);
 	}
 }
 
@@ -368,7 +389,7 @@ void undoFromFirstNode() {
 	
 	updateMainBoardToFirstBoard();
 
-	printUndoUpdate(row, coloumn, firstNode->move->data->currentCellvalue, tempChar);
+	updateOutputBoard(row, coloumn, firstNode->move->data->currentCellvalue, tempChar);
 }
 
 void undoFromNullNode() {
@@ -394,6 +415,20 @@ void undoFromNullNode() {
 
 }
 
+void initOutputBoard() {
+	int i;
+	int j;
+
+	for (i = 0; i < boardSize; i++) {
+		for (j = 0; j < boardSize; j++) {
+			URoutputBoard[i][j].newNumber = -1;
+			URoutputBoard[i][j].prevNumber = -1;
+			URoutputBoard[i][j].isUpdated = 0;
+		}
+	}
+}
+
+
 void undoMAIN() {
 	URNode* currentMove;
 
@@ -411,10 +446,13 @@ void undoMAIN() {
 		return;
 	}
 
+	initOutputBoard();
+
 	/* case of undo from the first Node*/
 	if (currentMove->prev == NULL) {
 		undoFromFirstNode();
 		printBoard();
+		printUndoUpdate();
 		return;
 	}
 
@@ -432,6 +470,7 @@ void undoMAIN() {
 
 	updateErrStatAndCountEmptyCells();
 	printBoard();
+	printUndoUpdate();
 
 }
 
@@ -458,27 +497,40 @@ void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell) {
 }
 
 
-void printRedoUpdate(int row, int coloumn, int prevNum, int newNum) {
+void printRedoUpdates() {
 	char* tempStr;
 	char* tstr;
+	int i;
+	int j;
+	int prevNum;
+	int newNum;
 
-	if (prevNum == -1) {
-		tempStr = (char*)malloc(3 * sizeof(char));
-		sprintf(tempStr, "%d", newNum);
-		printf("Redo %d,%d: from %c to %s\n", row + 1, coloumn + 1, '_', tempStr);
-	}
-	else {
-		if (newNum == -1) {
-			tempStr = (char*)malloc(3 * sizeof(char));
-			sprintf(tempStr, "%d", prevNum);
-			printf("Redo %d,%d: from %s to %c\n", row + 1, coloumn + 1, tempStr, '_');
-		}
-		else {
-			tempStr = (char*)malloc(3 * sizeof(char));
-			sprintf(tempStr, "%d", prevNum);
-			tstr = (char*)malloc(3 * sizeof(char));
-			sprintf(tstr, "%d", newNum);
-			printf("Redo %d,%d: from %s to %s\n", row + 1, coloumn + 1, tempStr, tstr);
+	for (i = 0; i < boardSize;i++) {
+		for (j = 0; j < boardSize;j++) {
+			if (URoutputBoard[i][j].isUpdated) {
+				prevNum = URoutputBoard[i][j].prevNumber;
+				newNum = URoutputBoard[i][j].newNumber;
+
+				if (prevNum == -1) {
+					tempStr = (char*)malloc(3 * sizeof(char));
+					sprintf(tempStr, "%d", newNum);
+					printf("Redo %d,%d: from %c to %s\n", i + 1, j + 1, '_', tempStr);
+				}
+				else {
+					if (newNum == -1) {
+						tempStr = (char*)malloc(3 * sizeof(char));
+						sprintf(tempStr, "%d", prevNum);
+						printf("Redo %d,%d: from %s to %c\n", i + 1, j + 1, tempStr, '_');
+					}
+					else {
+						tempStr = (char*)malloc(3 * sizeof(char));
+						sprintf(tempStr, "%d", prevNum);
+						tstr = (char*)malloc(3 * sizeof(char));
+						sprintf(tstr, "%d", newNum);
+						printf("Redo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
+					}
+				}
+			}
 		}
 	}
 }
@@ -506,15 +558,15 @@ void redo() {
 
 	if (prevLIFOCell == NULL) {
 		/* case of empty cell - cell that never been filled*/
-		printRedoUpdate(row, coloumn, -1, newNumber);
+		updateOutputBoard(row, coloumn, -1, newNumber);
 		/* if new node is -1 than it should never been updated*/
 	}
 	else {
 		if (newNumber == -1) {
-			printRedoUpdate(row, coloumn, prevLIFOCell->data->currentCellvalue , -1);
+			updateOutputBoard(row, coloumn, prevLIFOCell->data->currentCellvalue , -1);
 		}
 		else {
-			printRedoUpdate(row, coloumn, prevLIFOCell->data->currentCellvalue ,newNumber );
+			updateOutputBoard(row, coloumn, prevLIFOCell->data->currentCellvalue ,newNumber );
 		}
 	}
 
@@ -559,7 +611,7 @@ void redoFromGuard() {
 	if (nextNode->type == GENERATE_SET || nextNode->type == AUTOFILL_SET) {
 		connectNodeToLIFOCell(row, coloumn, nextNode->move);
 		updateMainBoardAfterUndoRedo(row, coloumn);
-		printRedoUpdate(row, coloumn, prevNum, NextNum);
+		updateOutputBoard(row, coloumn, prevNum, NextNum);
 		UndoRedoList.currentMove = nextNode;
 		redoUntilNullNode();
 	}
@@ -570,7 +622,7 @@ void redoFromGuard() {
 		coloumn = nextNode->col;
 		connectNodeToLIFOCell(row, coloumn, nextNode->move);
 		updateMainBoardAfterUndoRedo(row, coloumn);
-		printRedoUpdate(row, coloumn, prevNum, NextNum);
+		updateOutputBoard(row, coloumn, prevNum, NextNum);
 	}
 }
 
@@ -585,10 +637,13 @@ void redoMAIN() {
 
 	currentMove = UndoRedoList.currentMove;
 
+	initOutputBoard();
+
 	if (currentMove == NULL)
 	{
 		redoFromGuard();
 		printBoard();
+		printRedoUpdates();
 		return;
 	}
 
@@ -609,6 +664,7 @@ void redoMAIN() {
 
 	updateErrStatAndCountEmptyCells();
 	printBoard();
+	printRedoUpdates();
 }
 
 
@@ -711,5 +767,12 @@ void freeURResources() {
 
 	free(LIFOCells);
 
+	/* free outputBoard*/
+
+	for (i = 0; i < boardSize; i++) {
+		free(URoutputBoard[i]);
+	}
+
+	free(URoutputBoard);
 }
 

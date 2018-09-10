@@ -71,7 +71,7 @@ void initializeLoadedMainBoard(FILE *fptr) {
 			else {
 				mainGameBoard[i][j].currentCellvalue = tempNum;
 			}
-			if (tempDot == '.'|| (mode == 3 && mainGameBoard[i][j].currentCellvalue != -1)) {
+			if (tempDot == '.'|| (mode == 2 && mainGameBoard[i][j].currentCellvalue != -1)) {
 				mainGameBoard[i][j].isFixed = 1;
 			}
 			else {
@@ -91,13 +91,15 @@ void initiallizeGameParameters(int N, int bHeight, int bWidth) {
 }
 
 
-int allocateMemForLIFOCells() {
+int allocateMemForLIFOCellsAndOutputBoard() {
 	cellNodeGuard** allocatedMemAddr;
+	URupdateCell** allocateOutputMemAddr;
 	int i;
 	void*  tempPTR;
 
 	allocatedMemAddr = (cellNodeGuard**)malloc(sizeof(cellNodeGuard*) *boardSize);
-	if (allocatedMemAddr == NULL) {
+	allocateOutputMemAddr = (URupdateCell**)malloc(sizeof(URupdateCell*) *boardSize);
+	if (allocatedMemAddr == NULL || allocateOutputMemAddr == NULL) {
 		return 0;
 	}
 
@@ -107,11 +109,17 @@ int allocateMemForLIFOCells() {
 			return 0;
 		}
 		allocatedMemAddr[i] = (cellNodeGuard*)tempPTR;
+		tempPTR = (malloc(sizeof(URupdateCell) *boardSize));
+		if (tempPTR == NULL) {
+			return 0;
+		}
+		allocateOutputMemAddr[i] = (URupdateCell*)tempPTR;
 	}
 
 	/* DONE ALLOCATING MEMORY FOR BOARD */
 
 	LIFOCells = allocatedMemAddr;
+	URoutputBoard = allocateOutputMemAddr;
 
 	return 1;
 }
@@ -174,7 +182,7 @@ void reset() {
 
 void prepForLoad() {
 	freeAll();
-	allocateMemForLIFOCells();
+	allocateMemForLIFOCellsAndOutputBoard();
 	initialUndoRedoListAndLIFOCells();
 }
 
@@ -190,7 +198,7 @@ void initAllDefault() {
 	initiallizeGameParameters(9, 3, 3);
 	allocateMemForMainBoard();
 	initializeMainBoard();
-	allocateMemForLIFOCells();
+	allocateMemForLIFOCellsAndOutputBoard();
 	initialUndoRedoListAndLIFOCells();
 }
 
@@ -199,7 +207,7 @@ void initAllFromFile(int blockHeight, int blockWidth) {
 	/* no need for initialaizing main board(would update from file)*/
 	initiallizeGameParameters(blockHeight*blockWidth, blockHeight, blockWidth);
 	allocateMemForMainBoard();
-	allocateMemForLIFOCells();
+	allocateMemForLIFOCellsAndOutputBoard();
 	initialUndoRedoListAndLIFOCells();
 	UndoRedoList.hasLoadedBoard = 1;
 

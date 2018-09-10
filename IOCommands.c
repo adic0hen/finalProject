@@ -87,6 +87,7 @@ int load(char* path) {
 	}
 	initAllFromFile(bHeight, bWidth);
 	initializeLoadedMainBoard(fptr);
+	updateErrStatAndCountEmptyCells();
 	fclose(fptr);
 	return 1;
 }

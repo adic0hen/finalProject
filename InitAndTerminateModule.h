@@ -6,7 +6,7 @@ int allocateMemForMainBoard();
 void initializeLoadedMainBoard(FILE *fptr);
 void initializeMainBoard();
 void initiallizeGameParameters(int N, int bHeight, int bWidth);
-int allocateMemForLIFOCells();
+int allocateMemForLIFOCellsAndOutputBoard();
 void initialUndoRedoListAndLIFOCells();
 void freeAll();
 void freeMat(int** mat);

@@ -56,7 +56,6 @@ int parse(char* buffer)
 						val = atoi(sVal);
 						printf("col -%d, row -%d, val %d\n", col, row, val);/*for testing*/
 						setMAIN(row, col, val);
-						printBoard();
 					}
 					else {
 						invalid();
@@ -171,13 +170,23 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "undo") == 0)
 			{
-				undoMAIN();
+				if (mode == 2 || mode == 3) {
+					undoMAIN();
+				}
+				else {
+					invalid();
+				}
 				break;
 			}
 
 			if (strcmp(cmd, "redo") == 0)
 			{
-				redoMAIN();
+				if (mode == 2 || mode == 3) {
+					redoMAIN();
+				}
+				else {
+					invalid();
+				}
 				break;
 			}
 
