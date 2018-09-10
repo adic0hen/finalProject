@@ -354,7 +354,6 @@ void undo() {
 	row = currentMove->row;
 	coloumn = currentMove->col;
 	
-
 	disconnectNodeFromLIFOCell(row, coloumn, currentMove->move);
 
 	updateMainBoardAfterUndoRedo(row, coloumn);
@@ -413,7 +412,7 @@ void undoFromNullNode() {
 		}
 		else {
 			undo();
-			currentMove = UndoRedoList.currentMove; /*in undo current move goes one back*/
+			currentMove = UndoRedoList.currentMove; /*In undo current move goes one back*/
 		}
 	}
 
@@ -672,12 +671,6 @@ void redoMAIN() {
 	printRedoUpdates();
 }
 
-
-
-
-
-
-
 void insertNullNode() {
 	updateURListAfterSet(-1, -1, NULL, 3);
 }
@@ -729,7 +722,6 @@ void updateURListAfterSolveAndEdit() {
 	}
 
 }
-
 
 
 void updateURListAfterGenerate() {

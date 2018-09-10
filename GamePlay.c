@@ -14,7 +14,7 @@ int game() {
 	mode = 1;
 	markerrors = 1;
 
-	buffer = malloc(256); /*the allocation size is the same as the max length of a valid input*/
+	buffer = malloc(256); 
 
 	printf("Sudoku\n------\n");
 

@@ -62,13 +62,13 @@ void initializeLoadedMainBoard(FILE *fptr) {
 
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			if(!fscanf(fptr, "%d", &tempNum)>0){; /*scanning the current Cell's number*/
+			if(!fscanf(fptr, "%d", &tempNum)>0){; /*Scanning the current Cell's number*/
 			return;
 			}
-			if(!fscanf(fptr, "%c", &tempDot)>0){;/*either a dot right after the number, or a white space*/
+			if(!fscanf(fptr, "%c", &tempDot)>0){;/*Either a dot right after the number, or a white space*/
 				return;
 			}
-			if (tempNum == 0) { /*this part relates to working with their save format*/
+			if (tempNum == 0) { /*Converting to our definition of empty cell*/
 				mainGameBoard[i][j].currentCellvalue = -1;
 			}
 			else {
@@ -153,7 +153,7 @@ void initialUndoRedoListAndLIFOCells() {
 
 
 
-void freeAll() { /*frees the memory of the main game board, the solver board, and the URList*/
+void freeAll() { /*Free the memory of the main game board, the solver board, and the URList*/
 	
 	freeURResources();
 	freeMainGameBoard();
@@ -161,7 +161,7 @@ void freeAll() { /*frees the memory of the main game board, the solver board, an
 	
 }
 
-void freeMat(int** mat) { /*free the memory of a 2D array*/
+void freeMat(int** mat) { /*Free the memory of a 2D array*/
 	int i;
 	if (mat != NULL) {
 		for (i = 0; i < boardSize; i++) {
@@ -172,7 +172,7 @@ void freeMat(int** mat) { /*free the memory of a 2D array*/
 
 }
 
-void freeMainGameBoard() {/*free the memory of the main game board only*/
+void freeMainGameBoard() {/*Free the memory of the main game board only*/
 	int i;
 	for (i = 0; i < boardSize; i++) {
 		free(mainGameBoard[i]);
@@ -210,7 +210,6 @@ void initAllDefault() {
 
 
 void initAllFromFile(int blockHeight, int blockWidth) {
-	/* no need for initialaizing main board(would update from file)*/
 	initiallizeGameParameters(blockHeight*blockWidth, blockHeight, blockWidth);
 	allocateMemForMainBoard();
 	allocateMemForLIFOCellsAndOutputBoard();

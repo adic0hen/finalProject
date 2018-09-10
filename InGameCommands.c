@@ -17,7 +17,7 @@ int isErroneous();
 int markErrors(int mark);
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int checkHintParameters(int row, int col);
-int validate(int complete); /*final is 1 only when we validate for complete puzzle*/
+int validate(int complete); /*The parameter "complete" is 1 only when we validate for complete puzzle*/
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
 
@@ -164,7 +164,6 @@ int updateErrStatAndCountEmptyCells() {
 			mainGameBoard[row][col].currentCellvalue = -1;
 			isValidNumber = checkValidityOfNum(num,row,col);
 			if (!isValidNumber&&mainGameBoard[row][col].isFixed == 0) {
-				printf("cell value in row %d col %d erroneous\n",row,col);/*for testing*/
 				mainGameBoard[row][col].isErroneus = 1;
 			}
 			else {
@@ -249,8 +248,7 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 	}
 	
-	printf("before error update\n");/*for testing*/
-	if (!updateErrStatAndCountEmptyCells() && mode == 2) {/*there are no empty cells and er are in solve mode*/
+	if (!updateErrStatAndCountEmptyCells() && mode == 2) {/*There are no empty cells and we are in solve mode*/
 		if (validate(1)) {
 			printf("Puzzle solved successfully\n");
 			mode = 1;
@@ -260,7 +258,6 @@ int setMAIN(int row, int coloumn, int number) {
 			printf("Puzzle solution erroneous\n");
 		}
 	}
-	printf("befor URUpdate\n");/*for testing*/
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
 	printBoard();
 
@@ -273,7 +270,7 @@ int isErroneous() {
 	int j;
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			if (mainGameBoard[i][j].isErroneus == 1) {/*if one of the cells is erroneus*/
+			if (mainGameBoard[i][j].isErroneus == 1) {
 				return 1;
 			}
 		}
@@ -309,7 +306,6 @@ int isEmpty() {
 }
 
 
-/*solver relying functions - NEED TO BE TESTED*/
 
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int i;
@@ -333,11 +329,8 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 		printf("Error: puzzle generator failed\n");
 		return 0;
 	}
-
-	printf("updating URlist\n"); /*for testing*/
 	updateURListAfterGenerate();
-	printf("done updating URlist\n"); /*for testing*/
-	printBoard();
+	printBoard(); /*After the value is set the board is printed*/
 	return 1;
 }
 
@@ -373,22 +366,18 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 
 int hint(int row, int col) {
 	int h;
-	printf("in hint\n");/*for testing!*/
 	if (!checkHintParameters(row, col)) {
-		printf("parameters not good\n");/*for testing!*/
 		return 0;
 	}
 	h = hintSolve(row -1, col-1); 
-	printf("after hintSolve\n");/*for testing!*/
 	if (h == 0) {
-		printf("h is zero\n");/*for testing!*/
 		return 0;
 	}
 	printf("Hint, set cell to %d\n",h);
 	return 0;
 }
 
-int checkHintParameters(int row, int col) {/*returns 0 if the parameters are not good, 1 if they are good*/
+int checkHintParameters(int row, int col) {/*Returns 0 if the parameters are not good, 1 if they are good*/
 	if (row<1 || row>boardSize || col<1 || col>boardSize) {
 		printf("Error: value not in range 1-%d\n", boardSize);
 		return 0;
@@ -417,7 +406,6 @@ int validate(int complete) {
 		printf("Error: board contains erroneous values\n");
 		return 0;
 	}
-	printf("goind to validateSolve\n");
 	isValid = validateSolve();
 	if (isValid == 1) {
 		if (!complete) {
@@ -498,7 +486,7 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 	int sum;
 	int col;
 	int numToFill;
-	col = 0;/*initializing*/
+	col = 0; /*Initializing*/
 	/* i stands for rows*/
 	for (i = 0; i < boardSize; i++) {
 		counter = 0;
@@ -512,8 +500,6 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 		}
 
 		if (counter == boardSize - 1) {
-			/* for test!*/ 
-			printf("Autfill enter counter == N-1\n");
 			for (j = 0; j < boardSize; j++) {
 				if (mainGameBoard[i][j].currentCellvalue == -1) {
 					col = j;

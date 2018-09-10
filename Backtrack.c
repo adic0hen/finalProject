@@ -33,21 +33,6 @@ BTCell** BTboard;
 stackGuard stack;
 int numberOfSolutions;
 
-/* For test*/ 
-
-void printBoard_Test() {
-	int i;
-	int j;
-
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			printf("%2d  ", BTboard[i][j].val);
-		}
-		printf("\n");
-	}
-
-	printf("---------------\n\n");
-}
 
 /* before backtrack*/
 void allocateMemForBTBoard() {
@@ -102,11 +87,7 @@ void copyMainBoardToBTboard() {
 
 }
 
-/* --- */
-
-
-
-
+/* ------ */
 /* for backtrack*/
 void setToBTboard(int row, int coloumn, int number) {
 	BTboard[row][coloumn].val = number;
@@ -181,11 +162,6 @@ void pushToStack(int row, int coloum, int number) {
 
 	stack.currentSize += 1;
 
-	/* for test 
-	printf("\n\n");
-	printf("%d  \n\n", stack.first->number);
-	*/
-
 }
 
 
@@ -196,7 +172,6 @@ stackNode* popFromStack() {
 	nodeToDelete = stack.first;
 	stack.first = nodeToDelete->next;
 	nodeToDelete->next = NULL;
-	/*printf("\n\n   %d, %d,  %d,  node params:\n\n", nodeToDelete->row, nodeToDelete->coloumn, nodeToDelete->number);*/
 
 	if (stack.first != NULL) {
 		stack.first->prev = NULL;

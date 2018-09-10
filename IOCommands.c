@@ -21,15 +21,17 @@ int save(char* path) {
 	FILE* fptr;
 	
 
-	if (mode == 3) { /*in Edit mode we need to make some pre checks*/
+	if (mode == 3) { /*in Edit mode*/
 		if (isErroneous(mainGameBoard)) {
 			printf("Error: board contains erroneous values\n");
 			return 0;
 		}
-		/*need to add the validation part, it uses gurobi i think*/
+		if (!validate(1)) {
+			printf("Error: board validation failed\n");
+		}
 	}
 	fptr = fopen(path, "w");
-	if (fptr == NULL) {/*when fopen fails, meaning that the file cannot be created or modified*/
+	if (fptr == NULL) {
 		printf("Error: File cannot be created or modified\n");
 		return 0;
 	}
@@ -49,7 +51,7 @@ int writeBoardToFile(FILE* fptr) {
 		for (j = 0; j < boardSize; j++) {
 			currentCell = mainGameBoard[i][j];
 			num = currentCell.currentCellvalue;
-			if (num == -1) { /*this part relates to working with their save format*/
+			if (num == -1) { /*Converting from our definition for empty cell to the save format*/
 				num = 0;
 			}
 			if (currentCell.isFixed) {
@@ -92,15 +94,6 @@ int load(char* path) {
 	fclose(fptr);
 	return 1;
 }
-/*TESTIG CODE, TO BE DELETED*/
-void IOTest(){
-	char* path;
-	path = "file.txt";
-	save(path);
-	load(path);
-	printBoard();
-	printf("done testing \n");
 
-}
 
 

@@ -18,21 +18,20 @@ int parse(char* buffer)
 {
 
 	char* cmd;
-	/*these variables will be used as part of the "set","hint" commands*/
+	/*These variables will be used as part of the "set","hint" commands*/
 	char* sRow;
 	char* sCol;
 	char* sVal;
 	int row;
 	int col;
 	int val;
-	/*this variable will be used as part of the "solve","edit","save" commands*/
+	/*This variable will be used as part of the "solve","edit","save" commands*/
 	char* filePath;
-	/*these variables will be used as part of the "generate" command*/
+	/*These variables will be used as part of the "generate" command*/
 	char* sCellsToFill;
 	char* sCellsToKeep;
 	int cellsToFill;
 	int cellsToKeep;
-	/*this variable will be used as part of the "mark_errors" command*/
 
 	if (fgets(buffer, 256, stdin) != NULL) 
 	{
@@ -44,21 +43,17 @@ int parse(char* buffer)
 				if (mode == 2 || mode == 3) 
 				{ /*command available only in solve or edit modes*/
 					sRow = strtok(NULL, " \t\r\n");
-					printf("sRow - %s\n", sRow);/*for testing*/
 					sCol = strtok(NULL, " \t\r\n");
-					printf("sCol - %s\n", sCol);/*for testing*/
 					sVal = strtok(NULL, " \t\r\n");
-					printf("sVal - %s\n", sVal);/*for testing*/
 					if (sCol != NULL && sRow != NULL && sVal != NULL) 
-					{ /*making sure we have all the values*/
+					{ /*Making sure we have all the values*/
 						col = atoi(sCol);
 						row = atoi(sRow);
 						val = atoi(sVal);
-						if (val == 0 && strcmp(sVal, "0") != 0) { /*this makes sure that we erase only when 0 is entered*/
+						if (val == 0 && strcmp(sVal, "0") != 0) { /*Makes sure that we erase only when "0" is entered*/
 							printf("Error: value not in range 0-%d\n", boardSize);
 							break;
 						}
-						printf("col -%d, row -%d, val %d\n", col, row, val);/*for testing*/
 						setMAIN(row, col, val);
 					}
 					else {
@@ -67,7 +62,7 @@ int parse(char* buffer)
 					break;
 				}
 				else {
-					invalid(); /*this will result in getting to the invalid command part*/
+					invalid();
 					break;
 				}
 			}
@@ -98,12 +93,12 @@ int parse(char* buffer)
 					load(filePath);
 				}
 				else
-				{ /*initializing an empty board because there was no file path given*/
+				{ /*In case that no file path was given*/
 					freeAll();
 					initAllDefault();
 				}
 				updateURListAfterSolveAndEdit();
-				printBoard();/*markerrors is always 1 in edit mode*/
+				printBoard();
 				break;
 			}
 
@@ -123,7 +118,7 @@ int parse(char* buffer)
 				}
 				else 
 				{
-					invalid();/*this will result in getting to the invalid command part*/
+					invalid();
 					break;
 				}
 			}
@@ -137,7 +132,7 @@ int parse(char* buffer)
 				}
 				else
 				{
-					invalid(); /*this will result in getting to the invalid command part*/
+					invalid();
 					break;
 				}
 			}
@@ -204,7 +199,6 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "hint") == 0)
 			{
-				printf("in parser\n");/*for testing!*/
 				if (mode != 2) 
 				{
 					invalid();
@@ -271,14 +265,15 @@ int parse(char* buffer)
 				exitGame();
 				break;
 			}
+			/*------*/
 			/*Invalid command part - we get to this part of the parser only if there was an invalid or unrecognized command*/
 			invalid();
 			break;
 		}
 	}
 
-	else { /*when a command longer than 256 characters has been entered*/
-		printf("ERROR: invalid command\n");
+	else {
+		invalid();
 	}
 	return 1;
 }
