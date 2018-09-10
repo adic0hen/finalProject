@@ -550,15 +550,14 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 	b = 0; /*b will contain boolean value: weather the board was successfully solved or not*/
 	board = allocateMemForBoardPTR();
 	initBoardSolver();
-	if (setRandom(board, x) == NULL) {
-		return b;
-	}
-	solveMain(1);
-	if (res.optimstatus == GRB_OPTIMAL) {
-		deleteExcept(res.solBoard, y);
-		copySolvedBoardToMainBoard(); /*The board is not "solved" but it's the one we want to use*/
-		/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
-		b = 1;
+	if (setRandom(board, x) != NULL) {
+			solveMain(1);
+		if (res.optimstatus == GRB_OPTIMAL) {
+			deleteExcept(res.solBoard, y);
+			copySolvedBoardToMainBoard(); /*The board is not "solved" but it's the one we want to use*/
+			/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
+			b = 1;
+		}
 	}
 	freeSolver();
 	return b;
