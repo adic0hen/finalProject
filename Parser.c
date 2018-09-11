@@ -212,6 +212,9 @@ int parse(char* buffer)
 					col = atoi(sCol);
 					hint(row, col);
 				}
+				else {
+					invalid();
+				}
 				break;
 			}
 

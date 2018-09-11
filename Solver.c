@@ -32,7 +32,7 @@ int checkValidityGenerate(int** board, int row, int col, int num);
 int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
-void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol, char** names, char*namestorage);
+void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol);
 
 int solveMain(int isGenerate) {
 	int temp;
@@ -78,9 +78,6 @@ void solve() {
 	double *lowerBounds;
 	double *varValues; 
 	char *varType; 
-	char **names; 
-	char *namestorage; 
-	char *cursor;
 	int optimstatus;
 	double objval;
 	int error;
@@ -90,17 +87,14 @@ void solve() {
 	res.objval = 0.0;
 	res.optimstatus = 0;
 	res.solBoard = NULL;
-
 	ind = malloc(boardSize * sizeof(int));
 	varValues = malloc(boardSize * sizeof(double));
 	lowerBounds = malloc(boardSize * boardSize * boardSize * sizeof(double));
 	varType = malloc(boardSize * boardSize * boardSize * sizeof(char));
-	names = malloc(boardSize * boardSize * boardSize * sizeof(char*));
-	namestorage = malloc(20 * boardSize * boardSize * boardSize * sizeof(char));
 	sol = malloc(boardSize * boardSize*boardSize * sizeof(double));
 
 
-	if (ind == NULL || varValues == NULL || lowerBounds == NULL || varType == NULL || names == NULL || namestorage == NULL || sol == NULL) {
+	if (ind == NULL || varValues == NULL || lowerBounds == NULL || varType == NULL || sol == NULL) {
 		memoryError();
 		return;
 	}
@@ -111,17 +105,10 @@ void solve() {
 	
 	
 
-	/*
-	error = GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0); 
-	if (error) {
-		printf("ERROR IN intParam: %d", error);
-		quit(error, env);
-	}
-	*/
+	
 	
 
 	/* Defining the names of the variables and giving lower bounds*/
-	cursor = namestorage;
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
 			for (n = 0; n < boardSize; n++) {
@@ -134,12 +121,7 @@ void solve() {
 				}
 			
 				varType[i*boardSize*boardSize + j * boardSize + n] = GRB_BINARY;
-				
-				names[i*boardSize*boardSize + j * boardSize + n] = cursor;
 
-				sprintf(names[i*boardSize*boardSize + j * boardSize + n], "x[%d,%d,%d]", i, j, n + 1);
-
-				cursor += strlen(names[i*boardSize*boardSize + j * boardSize + n]) + 1;
 			}
 		}
 	}
@@ -150,8 +132,16 @@ void solve() {
 		quit(error, env);
 	}
 
+	/*command that disables log prints when optimizing*/
+	error = GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0);
+	if (error) {
+		printf("ERROR IN intParam: %d", error);
+		quit(error, env);
+	}
+	
+
 	/* creating new model*/
-	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lowerBounds, NULL, varType, names);
+	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lowerBounds, NULL, varType, NULL);
 	if (error) {
 		quit(error, env);
 	}
@@ -260,7 +250,7 @@ void solve() {
 	/*Free memory used for the optimization process*/
 	GRBfreemodel(model);
 	GRBfreeenv(env);
-	freeVars(ind, varValues, lowerBounds, varType, sol,names,namestorage);
+	freeVars(ind, varValues, lowerBounds, varType, sol);
 }
 
 
@@ -285,14 +275,12 @@ void quit(int error, GRBenv *env) {
 	}
 }
 
-void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol,char** names, char*namestorage) {
+void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol) {
 	free(ind);
 	free(val);
 	free(lb);
 	free(vtype);
 	free(sol);
-	free(namestorage);
-	free(names);
 }
 
 int** copySol(double* sol) {
@@ -335,7 +323,6 @@ int** allocateMemForBoardPTR() {
 		}
 		allocatedMemAddr[i] = (int*)tempPTR;
 	}
-
 	return allocatedMemAddr;
 }
 
