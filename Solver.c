@@ -68,18 +68,18 @@ void solve() {
 	/*declaring variables*/
 	GRBenv *env;
 	GRBmodel *model;
-	int v;
+	int n;
 	int i;
 	int j;
-	int ig;
-	int jg;
-	int count;
-	int *ind; /**/
-	double *val; /**/
-	double *lb; /**/
-	char *vtype; /**/
-	char **names; /**/
-	char *namestorage; /**/
+	int iBlocks;
+	int jBlocks;
+	int counter;
+	int *ind; 
+	double *lowerBounds;
+	double *varValues; 
+	char *varType; 
+	char **names; 
+	char *namestorage; 
 	char *cursor;
 	int optimstatus;
 	double objval;
@@ -90,34 +90,21 @@ void solve() {
 	res.objval = 0.0;
 	res.optimstatus = 0;
 	res.solBoard = NULL;
+
 	ind = malloc(boardSize * sizeof(int));
-	if (!ind) {
-		printf("error in ind");
-	}
-	val = malloc(boardSize * sizeof(double));
-	if (!val) {
-		printf("error in val");
-	}
-	lb = malloc(boardSize * boardSize * boardSize * sizeof(double));
-	if (!lb) {
-		printf("error in lb");
-	}
-	vtype = malloc(boardSize * boardSize * boardSize * sizeof(char));
-	if (!vtype) {
-		printf("error in vtype");
-	}
+	varValues = malloc(boardSize * sizeof(double));
+	lowerBounds = malloc(boardSize * boardSize * boardSize * sizeof(double));
+	varType = malloc(boardSize * boardSize * boardSize * sizeof(char));
 	names = malloc(boardSize * boardSize * boardSize * sizeof(char*));
-	if (!names) {
-		printf("error in names");
-	}
 	namestorage = malloc(20 * boardSize * boardSize * boardSize * sizeof(char));
-	if (!namestorage) {
-		printf("error in namestorage");
-	}
 	sol = malloc(boardSize * boardSize*boardSize * sizeof(double));
-	if (!sol) {
-		printf("error in sol");
+
+
+	if (ind == NULL || varValues == NULL || lowerBounds == NULL || varType == NULL || names == NULL || namestorage == NULL || sol == NULL) {
+		memoryError();
+		return;
 	}
+
 	error = 0;
 	model = NULL;
 	env = NULL;
@@ -133,114 +120,107 @@ void solve() {
 	*/
 	
 
+	/* Defining the names of the variables and giving lower bounds*/
 	cursor = namestorage;
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			for (v = 0; v < boardSize; v++) {
-				if (board[i][j] == v) {
+			for (n = 0; n < boardSize; n++) {
+				if (board[i][j] == n) {
 					
-
-					lb[i*boardSize*boardSize + j * boardSize + v] = 1;
+					lowerBounds[i*boardSize*boardSize + j * boardSize + n] = 1;
 				}
 				else {
-					
-
-					lb[i*boardSize*boardSize + j * boardSize + v] = 0;
+					lowerBounds[i*boardSize*boardSize + j * boardSize + n] = 0;
 				}
+			
+				varType[i*boardSize*boardSize + j * boardSize + n] = GRB_BINARY;
 				
+				names[i*boardSize*boardSize + j * boardSize + n] = cursor;
 
-				vtype[i*boardSize*boardSize + j * boardSize + v] = GRB_BINARY;
-				
+				sprintf(names[i*boardSize*boardSize + j * boardSize + n], "x[%d,%d,%d]", i, j, n + 1);
 
-				names[i*boardSize*boardSize + j * boardSize + v] = cursor;
-				
-
-				sprintf(names[i*boardSize*boardSize + j * boardSize + v], "x[%d,%d,%d]", i, j, v + 1);
-				
-
-				cursor += strlen(names[i*boardSize*boardSize + j * boardSize + v]) + 1;
+				cursor += strlen(names[i*boardSize*boardSize + j * boardSize + n]) + 1;
 			}
 		}
 	}
 
-	
-		error = GRBloadenv(&env, NULL);
-		if (error) {
-			printf("ERROR IN loadenv: %d", error);
-			quit(error, env);
-		}
-	
-
-	
-	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lb, NULL, vtype, names);
+	/* loading new enviroment*/
+	error = GRBloadenv(&env, NULL);
 	if (error) {
-		printf("ERROR IN newmodel: %d", error);
+		quit(error, env);
+	}
+
+	/* creating new model*/
+	error = GRBnewmodel(env, &model, "sudoku", boardSize*boardSize*boardSize, NULL, lowerBounds, NULL, varType, names);
+	if (error) {
 		quit(error, env);
 	}
 
 
-
-	/*~~adding constraints~~*/
+	/* adding constraints to each cell (need to have 1 value)*/
 
 	for (i = 0; i < boardSize; i++) {
 		for (j = 0; j < boardSize; j++) {
-			for (v = 0; v < boardSize; v++) {
-				ind[v] = i * boardSize*boardSize + j * boardSize + v;
-				val[v] = 1.0;
+			for (n = 0; n < boardSize; n++) {
+				ind[n] = i * boardSize*boardSize + j * boardSize + n;
+				varValues[n] = 1.0;
 			}
 
-			error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
+			error = GRBaddconstr(model, boardSize, ind, varValues, GRB_EQUAL, 1.0, NULL);
 			if (error) {
-				printf("ERROR IN addconstr: %d", error);
 				quit(error, env);
 			}
 		}
 	}
 
-
-	for (v = 0; v < boardSize; v++) {
-		for (j = 0; j < boardSize; j++) {
-			for (i = 0; i < boardSize; i++) {
-				ind[i] = i * boardSize*boardSize + j * boardSize + v;
-				val[i] = 1.0;
-			}
-
-			error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
-			if (error) {
-				printf("ERROR IN addconstr1: %d", error);
-				quit(error, env);
-			}
-		}
-	}
-
-
-	for (v = 0; v < boardSize; v++) {
+	/* adding constraint to coloumns- each value has to appear once in each coloumn*/
+	for (n = 0; n < boardSize; n++) {
 		for (i = 0; i < boardSize; i++) {
 			for (j = 0; j < boardSize; j++) {
-				ind[j] = i * boardSize*boardSize + j * boardSize + v;
-				val[j] = 1.0;
+				ind[j] = i * boardSize*boardSize + j * boardSize + n;
+				varValues[j] = 1.0;
 			}
 
-			error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
+			error = GRBaddconstr(model, boardSize, ind, varValues, GRB_EQUAL, 1.0, NULL);
 			if (error) {
 				quit(error, env);
 			}
 		}
 	}
 
-	for (v = 0; v < boardSize; v++) {
-		for (ig = 0; ig < blockHeight; ig++) {
-			for (jg = 0; jg < blockWidth; jg++) {
-				count = 0;
-				for (i = ig * blockHeight; i < (ig + 1)*blockHeight; i++) {
-					for (j = jg * blockWidth; j < (jg + 1)*blockWidth; j++) {
-						ind[count] = i * boardSize*boardSize + j * boardSize + v;
-						val[count] = 1.0;
-						count++;
+
+
+	/* adding constraints for the rows - each value has to appear once in each row*/
+	for (n = 0; n < boardSize; n++) {
+		for (j = 0; j < boardSize; j++) {
+			for (i = 0; i < boardSize; i++) {
+				ind[i] = i * boardSize*boardSize + j * boardSize + n;
+				varValues[i] = 1.0;
+			}
+
+			error = GRBaddconstr(model, boardSize, ind, varValues, GRB_EQUAL, 1.0, NULL);
+			if (error) {
+				quit(error, env);
+			}
+		}
+	}
+
+
+
+
+	for (n = 0; n < boardSize; n++) {
+		for (iBlocks = 0; iBlocks < blockHeight; iBlocks++) {
+			for (jBlocks = 0; jBlocks < blockWidth; jBlocks++) {
+				counter = 0;
+				for (i = iBlocks * blockHeight; i < (iBlocks + 1)*blockHeight; i++) {
+					for (j = jBlocks * blockWidth; j < (jBlocks + 1)*blockWidth; j++) {
+						ind[counter] = i * boardSize*boardSize + j * boardSize + n;
+						varValues[counter] = 1.0;
+						counter++;
 					}
 				}
 
-				error = GRBaddconstr(model, boardSize, ind, val, GRB_EQUAL, 1.0, NULL);
+				error = GRBaddconstr(model, boardSize, ind, varValues, GRB_EQUAL, 1.0, NULL);
 				if (error) {
 					quit(error, env);
 				}
@@ -250,15 +230,14 @@ void solve() {
 
 	error = GRBoptimize(model);
 	if (error) {
-		printf("ERROR IN OPTIMIZATION: %d", error);
 		quit(error, env);
 	}
-	
 	
 	error = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
 	if (error) {
 		quit(error, env);
 	}
+
 	if (optimstatus == GRB_OPTIMAL) {
 		error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &objval);
 		if (error) {
@@ -281,8 +260,17 @@ void solve() {
 	/*Free memory used for the optimization process*/
 	GRBfreemodel(model);
 	GRBfreeenv(env);
-	freeVars(ind, val, lb, vtype, sol,names,namestorage);
+	freeVars(ind, varValues, lowerBounds, varType, sol,names,namestorage);
 }
+
+
+
+
+
+
+
+
+
 
 
 /*Assisting Subfunctions*/

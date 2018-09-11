@@ -2,7 +2,10 @@
 #define GAMEDATASTRUCTS_H_
 
 
+/* This module concentrates all the Data structers that being used in several modules*/
 
+
+/* Main Game Board Cell struct*/
 typedef struct Cell {
 	int currentCellvalue;
 	int isFixed;
@@ -13,6 +16,7 @@ typedef struct Cell {
 
 /* Undo - Redo Nodes*/ 
 
+/* Guard (Sentinel) of the Undo Redo list*/
 typedef struct URNodeGuard {
 	struct URNode* next;
 	struct URNode* currentMove;
@@ -21,6 +25,7 @@ typedef struct URNodeGuard {
 	int isEmpty;
 } URNodeGuard;
 
+/* An Undo-Redo Node*/
 typedef struct URNode {
 	int type; 
 	/* 0 - Generate, 1- set, 2- autfill) */
@@ -36,7 +41,7 @@ typedef struct URNode {
 #define AUTOFILL_SET 2
 #define NULL_NODE 3
 
-
+/* a stack Node for LIFO-cells*/
 typedef struct cellNode {
 	Cell* data;
 	struct cellNode* next;
@@ -56,6 +61,8 @@ typedef struct URupdateCell {
 
 extern struct URupdateCell** URoutputBoard;
 extern struct URNodeGuard UndoRedoList;
+/* The LIFOCells is a matrix of stack, each stack represents the corresponding cell in the mainBoard, and
+saves the history of each cell*/
 extern struct cellNodeGuard** LIFOCells;
 
 
@@ -72,6 +79,13 @@ extern int mode;
 4 = restart
 0 = exit
 */
+
+#define EXIT_MODE 0
+#define INIT_MODE 1
+#define SOLVE_MODE 2
+#define EDIT_MODE 3
+#define RESTART_MODE 4
+
 
 extern int markerrors;
 

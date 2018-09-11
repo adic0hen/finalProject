@@ -28,7 +28,7 @@ int hint(int row, int col);
 
 /* ------------------ Code Part -----------------------------*/
 
-
+/* return 1 if the block that contains row,coloumn has the number*/
 int checkBlockForNumber(int row, int coloumn, int number) {
 	int i;
 	int j;
@@ -123,6 +123,7 @@ void printBoard() {
 }
 
 
+/* check the row,coloumn,and block if the number is valid in position [row][coloumn]*/
 int checkValidityOfNum(int number, int row, int coloumn) {
 	int i;
 
@@ -146,6 +147,7 @@ int checkValidityOfNum(int number, int row, int coloumn) {
 	return 1;
 }
 
+/* updates the errounios status of each cell (needs in order the check validity of board after set,undo-redo, load, autofill*/
 int updateErrStatAndCountEmptyCells() {
 	int isValidNumber;
 	int num;
@@ -196,6 +198,7 @@ void set(int row, int coloumn, int number, int isErroneous) {
 
 
 /* row,coloumn as user entered */
+/* setMain concentrates all the set-related operations, includes checking number, issue errors, set, and update UR list*/
 int setMAIN(int row, int coloumn, int number) {
 	int isValidNumber;
 	int prevNumber;
@@ -236,7 +239,11 @@ int setMAIN(int row, int coloumn, int number) {
 	}
 
 	if (number != 0) {
-		if (prevNumber == number) {}
+		if (mainGameBoard[row][coloumn].isFixed) {
+			printf("Error: cell is fixed\n");
+			return 2;
+		}
+		else if (prevNumber == number) {}
 		else {
 			isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
 			if (!isValidNumber) {
@@ -248,10 +255,10 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 	}
 	
-	if (!updateErrStatAndCountEmptyCells() && mode == 2) {/*There are no empty cells and we are in solve mode*/
+	if (!updateErrStatAndCountEmptyCells() && mode == SOLVE_MODE) {/*There are no empty cells and we are in solve mode*/
 		if (validate(1)) {
 			printf("Puzzle solved successfully\n");
-			mode = 1;
+			mode = INIT_MODE;
 			return 3;
 		}
 		else {
@@ -478,7 +485,7 @@ int autofill() {
 	return 1;
 }
 
-
+/* check the rows for filling obvious cells*/
 void autofillROWS(int** boardToFill, int expectedSum) {
 	int i;
 	int j;
@@ -505,17 +512,15 @@ void autofillROWS(int** boardToFill, int expectedSum) {
 					col = j;
 				}
 			}
-			printf("%d", col);
 			numToFill = expectedSum - sum;
 			if (checkValidityOfNum(numToFill, i, col)) {
-				printf(" enter check validaty\n");
 				boardToFill[i][col] = numToFill;
 			}
 		}
 	}
 }
 
-
+/* check the coloums for filling obvious cells*/
 void autofillCOLOUMS(int** boardToFill, int expectedSum) {
 	int i;
 	int j;
@@ -552,7 +557,7 @@ void autofillCOLOUMS(int** boardToFill, int expectedSum) {
 	}
 }
 
-
+/* check the block for filling obvious cells*/
 void autofillBLOCKS(int** boardToFill, int expectetSum) {
 	int i;
 	int j;
@@ -612,7 +617,8 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 
 }
 
-
+/* fills the cells, update Undo-Redo after autofill, insert null-node(For UR) and update errStats. 
+in addition - check if the last cell has filled*/
 void autofillFILLCELLS(int** boardToFill) {
 	int i;
 	int j;
@@ -636,10 +642,14 @@ void autofillFILLCELLS(int** boardToFill) {
 		insertNullNode();
 		/* mark the end of the game*/ 
 		if (!updateErrStatAndCountEmptyCells() && !isErroneous()) {
-			mode = 1;
+			mode = INIT_MODE;
+			printBoard();
 			printf("Puzzle solved successfully\n");
+			return;
 		}
 	}
+	
+	printBoard();
 }
 
 

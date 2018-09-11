@@ -21,7 +21,7 @@ int save(char* path) {
 	FILE* fptr;
 	
 
-	if (mode == 3) { /*in Edit mode*/
+	if (mode == EDIT_MODE) { /*in Edit mode*/
 		if (isErroneous(mainGameBoard)) {
 			printf("Error: board contains erroneous values\n");
 			return 0;
@@ -73,10 +73,10 @@ int load(char* path) {
 
 	fptr = fopen(path, "r");
 	if (fptr == NULL) {
-		if (mode == 2) { /*error in solve mode*/
+		if (mode == SOLVE_MODE) { /*error in solve mode*/
 			printf("Error: File doesn't exist or cannot be opened\n");
 		}
-		if (mode == 3) { /*error in edit mode*/
+		if (mode == EDIT_MODE) { /*error in edit mode*/
 			printf("Error: File cannot be opened\n");
 		}
 		return 0;

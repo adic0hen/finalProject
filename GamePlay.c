@@ -11,7 +11,7 @@ int game() {
 	char* buffer;
 
 	/* start game in init mode*/
-	mode = 1;
+	mode = INIT_MODE;
 	markerrors = 1;
 
 	buffer = malloc(256); 
@@ -19,7 +19,7 @@ int game() {
 	printf("Sudoku\n------\n");
 
 	/*main game loop*/
-	while (mode != 0) {/*while mode is not "exit", if mode == reset than reset() is called and game starts over*/
+	while (mode != EXIT_MODE) {/*while mode is not "exit", if mode == reset than reset() is called and game starts over*/
 		printf("Enter your command:\n");
 		parse(buffer);
 	}

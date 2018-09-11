@@ -74,7 +74,7 @@ void initializeLoadedMainBoard(FILE *fptr) {
 			else {
 				mainGameBoard[i][j].currentCellvalue = tempNum;
 			}
-			if (tempDot == '.'|| (mode == 2 && mainGameBoard[i][j].currentCellvalue != -1)) {
+			if (tempDot == '.' && (mode == SOLVE_MODE) && mainGameBoard[i][j].currentCellvalue != -1) {
 				mainGameBoard[i][j].isFixed = 1;
 			}
 			else {
@@ -223,5 +223,5 @@ void initAllFromFile(int blockHeight, int blockWidth) {
 void memoryError() {
 	printf("Error: Memroy allocation failed\n");
 	printf("Exiting...");
-	mode = 1;
+	mode = EXIT_MODE;
 }

@@ -5,7 +5,7 @@
 #include "InitAndTerminateModule.h"
 
 
-
+/* clears single cell from the stack-board*/
 void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
 	cellNode* next;
 	cellNode* prev;
@@ -31,6 +31,7 @@ void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
 	free(nodeToDelete);
 }
 
+/* clearing a single Undo-Redo Node*/
 void clearSingleURNode(URNode* nodeToDelete) {
 	URNode* prev;
 	URNode* next;
@@ -186,7 +187,7 @@ void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirs
 }
 
 
-
+/* managing the insertion of a UR- node after any kind of set, includes clonning the cell, delete the list and insert*/
 void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 	int isFirst;
 	Cell* cloneCell;
@@ -234,7 +235,7 @@ void updateMainBoardAfterUndoRedo(int row, int coloumn) {
 }
 
 
-
+/* disconnect a node from the cell-stack, without deleting it*/
 void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell) {
 	cellNode* next;
 	cellNode* prev;
@@ -328,6 +329,7 @@ void printUndoUpdate() {
 					}
 				}
 				free(tempStr);
+				free(tstr);
 			}
 		}
 	}
@@ -465,8 +467,8 @@ void undoMAIN() {
 	}
 
 	else if (currentMove->type == AUTOFILL_SET) {
-		printf("TEST: ERROR IN UNDO REDO LIST"); /* For Test, need to delete!*/
 	}
+
 	else if (currentMove->type == NULL_NODE) {
 		undoFromNullNode();
 	}
@@ -534,6 +536,7 @@ void printRedoUpdates() {
 					}
 				}
 				free(tempStr);
+				free(tstr);
 			}
 		}
 	}

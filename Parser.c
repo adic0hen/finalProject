@@ -40,7 +40,7 @@ int parse(char* buffer)
 		{
 			if (strcmp(cmd, "set") == 0) 
 			{
-				if (mode == 2 || mode == 3) 
+				if (mode == SOLVE_MODE || mode == EDIT_MODE) 
 				{ /*command available only in solve or edit modes*/
 					sRow = strtok(NULL, " \t\r\n");
 					sCol = strtok(NULL, " \t\r\n");
@@ -72,7 +72,7 @@ int parse(char* buffer)
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) 
 				{
-					mode = 2;
+					mode = SOLVE_MODE;
 					load(filePath);
 					updateURListAfterSolveAndEdit();
 					printBoard();
@@ -85,7 +85,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "edit") == 0) 
 			{
-				mode = 3;
+				mode = EDIT_MODE;
 				markerrors = 1;
 				filePath = strtok(NULL, " \t\r\n");
 				if (filePath != NULL) 
@@ -112,7 +112,7 @@ int parse(char* buffer)
 					break;
 				}
 				mark = atoi(sMark);				
-				if (mode == 2) {
+				if (mode == SOLVE_MODE) {
 					markErrors(mark);
 					break;
 				}
@@ -125,7 +125,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "print_board") == 0) 
 			{
-				if (mode == 2 || mode==3) 
+				if (mode == SOLVE_MODE || mode==EDIT_MODE) 
 				{ /*command available only in solve or edit modes*/
 					printBoard();
 					break;
@@ -139,7 +139,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "validate") == 0) 
 			{
-				if (mode == 2 || mode == 3) 
+				if (mode == SOLVE_MODE || mode == EDIT_MODE) 
 				{ /*command available only in solve or edit modes*/
 					validate(0);
 					break;
@@ -148,7 +148,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "generate") == 0) 
 			{
-				if (mode != 3) 
+				if (mode != EDIT_MODE) 
 				{
 					invalid();
 					break;
@@ -170,7 +170,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "undo") == 0)
 			{
-				if (mode == 2 || mode == 3) {
+				if (mode == SOLVE_MODE || mode == EDIT_MODE) {
 					undoMAIN();
 				}
 				else {
@@ -181,7 +181,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "redo") == 0)
 			{
-				if (mode == 2 || mode == 3) {
+				if (mode == SOLVE_MODE || mode == EDIT_MODE) {
 					redoMAIN();
 				}
 				else {
@@ -199,7 +199,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "hint") == 0)
 			{
-				if (mode != 2) 
+				if (mode != SOLVE_MODE) 
 				{
 					invalid();
 					break;
@@ -217,7 +217,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "num_solutions") == 0) 
 			{
-				if (mode == 2 || mode == 3) {
+				if (mode == SOLVE_MODE || mode == EDIT_MODE) {
 					if (isErroneous()) {
 						printf("Error: board contains erroneous values\n");
 					}
@@ -233,7 +233,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "autofill") == 0) 
 			{
-				if (mode != 2) 
+				if (mode != SOLVE_MODE) 
 				{
 					invalid();
 					break;
@@ -243,14 +243,13 @@ int parse(char* buffer)
 				}
 				else {
 					autofill();
-					printBoard();
 				}
 				break;
 			}
 
 			if (strcmp(cmd, "reset") == 0) 
 			{
-				if (mode != 2 && mode != 3) 
+				if (mode != SOLVE_MODE && mode != EDIT_MODE) 
 				{/*only available in solve or edit modes*/
 					invalid();
 					break;
@@ -261,7 +260,7 @@ int parse(char* buffer)
 
 			if (strcmp(cmd, "exit") == 0) 
 			{
-				mode = 0;
+				mode = EXIT_MODE;
 				exitGame();
 				break;
 			}
