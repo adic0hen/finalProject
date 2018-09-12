@@ -326,10 +326,10 @@ void printUndoUpdate() {
 						tstr = (char*)malloc(3 * sizeof(char));
 						sprintf(tstr, "%d", newNum);
 						printf("Undo %d,%d: from %s to %s\n", j + 1, i + 1, tempStr, tstr);
+						free(tstr);
 					}
 				}
-				free(tempStr);
-				free(tstr);
+				free(tempStr);	
 			}
 		}
 	}
@@ -533,10 +533,10 @@ void printRedoUpdates() {
 						tstr = (char*)malloc(3 * sizeof(char));
 						sprintf(tstr, "%d", newNum);
 						printf("Redo %d,%d: from %s to %s\n", j + 1, i + 1, tempStr, tstr);
+						free(tstr);
 					}
 				}
 				free(tempStr);
-				free(tstr);
 			}
 		}
 	}
