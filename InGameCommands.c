@@ -203,7 +203,6 @@ int setMAIN(int row, int coloumn, int number) {
 	int isValidNumber;
 	int prevNumber;
 
-
 	if (number > boardSize || number < 0) {
 		printf("Error: value not in range 0-%d\n", boardSize);
 		return 0; /*Error of Invalid Number*/
@@ -216,9 +215,7 @@ int setMAIN(int row, int coloumn, int number) {
 		printf("Error: value not in range 0-%d\n", boardSize);
 		return 0;
 	}
-
 	prevNumber = mainGameBoard[row - 1][coloumn - 1].currentCellvalue;
-
 	if (number == 0) {
 		if (mainGameBoard[row - 1][coloumn - 1].isFixed) {
 			printf("Error: cell is fixed\n");
@@ -237,9 +234,8 @@ int setMAIN(int row, int coloumn, int number) {
 
 
 	}
-
 	if (number != 0) {
-		if (mainGameBoard[row][coloumn].isFixed) {
+		if (mainGameBoard[row-1][coloumn-1].isFixed) {
 			printf("Error: cell is fixed\n");
 			return 2;
 		}
@@ -254,7 +250,6 @@ int setMAIN(int row, int coloumn, int number) {
 			}
 		}
 	}
-	
 	if (!updateErrStatAndCountEmptyCells() && mode == SOLVE_MODE) {/*There are no empty cells and we are in solve mode*/
 		if (validate(1)) {
 			printf("Puzzle solved successfully\n");
@@ -620,8 +615,8 @@ void autofillBLOCKS(int** boardToFill, int expectetSum) {
 /* fills the cells, update Undo-Redo after autofill, insert null-node(For UR) and update errStats. 
 in addition - check if the last cell has filled*/
 void autofillFILLCELLS(int** boardToFill) {
-	int i;
-	int j;
+	int i; 
+	int j; 
 	int numToFill;
 	int counter;
 
@@ -632,7 +627,7 @@ void autofillFILLCELLS(int** boardToFill) {
 				numToFill = boardToFill[i][j];
 				set(i, j, numToFill, 0);
 				updateURListAfterSet(i, j, &mainGameBoard[i][j], 2);
-				printf("Cell %d,%d set to %d\n", i + 1, j + 1, numToFill);
+				printf("Cell %d,%d set to %d\n", j + 1, i + 1, numToFill);
 				counter += 1;
 			}
 		}
