@@ -6,22 +6,32 @@
 #include "InitAndTerminateModule.h"
 #include "Solver.h"
 #include <string.h>
+/*The InGameCommands includes the implementation for most of the main functions that we were required to write.
+In addition there are several inner functions used to keep up with the demands of each function, such as
+memory allocation and free, checking function parameters and board status functions.*/
 
 /* Declaration of functions*/
 
-void autofillROWS(int** boardToFill, int expectedSum);
-void autofillCOLOUMS(int** boardToFill, int expectedSum);
-void autofillBLOCKS(int** boardToFill, int expectedSum);
-void autofillFILLCELLS(int** boardToFill);
+int checkBlockForNumber(int row, int coloumn, int number);
+void printBoard();
+int checkValidityOfNum(int number, int row, int coloumn);
+int updateErrStatAndCountEmptyCells();
+void deleteCell(int row, int coloumn);
+void set(int row, int coloumn, int number, int isErroneous);
+int setMAIN(int row, int coloumn, int number);
 int isErroneous();
 int markErrors(int mark);
-int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
-int checkHintParameters(int row, int col);
-int validate(int complete); /*The parameter "complete" is 1 only when we validate for complete puzzle*/
+int isEmpty();
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep);
+int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep);
 int hint(int row, int col);
-
-
+int checkHintParameters(int row, int col);
+int validate(int complete);
+int autofill();
+void autofillROWS(int** boardToFill, int expectedSum);
+void autofillCOLOUMS(int** boardToFill, int expectedSum);
+void autofillBLOCKS(int** boardToFill, int expectetSum);
+void autofillFILLCELLS(int** boardToFill);
 
 
 /* ----------------------------------------------------------*/
@@ -281,6 +291,7 @@ int isErroneous() {
 	return 0;
 }
 
+
 int markErrors(int mark) {
 
 	if (mark == 0 || mark == 1) {
@@ -292,6 +303,7 @@ int markErrors(int mark) {
 		return 0;
 	}
 }
+
 
 int isEmpty() {
 	int i;
@@ -307,7 +319,6 @@ int isEmpty() {
 
 	return 1;
 }
-
 
 
 int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsToKeep) {
@@ -338,7 +349,6 @@ int generate(char *sCellsToFill, char *sCellsToKeep, int cellsToFill, int cellsT
 }
 
 
-
 int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFill, int cellsToKeep) {
 	int error;
 	int isValid;
@@ -364,7 +374,6 @@ int checkGenerateParameters(char*sCellsToFill, char*sCellsToKeep, int cellsToFil
 	isValid = !error;
 	return isValid;
 }
-
 
 
 int hint(int row, int col) {
@@ -399,7 +408,6 @@ int checkHintParameters(int row, int col) {/*Returns 0 if the parameters are not
 	}
 	return 1;
 }
-
 
 
 int validate(int complete) {

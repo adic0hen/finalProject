@@ -3,12 +3,30 @@
 #include "GameDataStructs.h"
 #include "UndoRedoCommands.h"
 #include "Solver.h"
+/*InitAndTerminatModule has the main objective of taking care of initialising objects and variables for the program, memory management
+and terminating them when needed.*/
 
-/*function declarations*/
-void freeMainGameBoard();
+/* Declaration of functions*/
+
+int allocateMemForMainBoard();
+void initializeMainBoard();
+void initializeLoadedMainBoard(FILE *fptr);
+void initiallizeGameParameters(int N, int bHeight, int bWidth);
+int allocateMemForLIFOCellsAndOutputBoard();
+void initialUndoRedoListAndLIFOCells();
 void freeAll();
+void freeMat(int** mat);
+void freeMainGameBoard();
+void reset();
+void prepForLoad();
+void exitGame();
+void initAllDefault();
+void initAllFromFile(int blockHeight, int blockWidth);
 void memoryError();
 
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
 
 int allocateMemForMainBoard() {
 	Cell** allocatedMemAddr;
@@ -37,6 +55,7 @@ int allocateMemForMainBoard() {
 	return 1;
 }
 
+
 void initializeMainBoard() {
 	int i;
 	int j;
@@ -51,6 +70,7 @@ void initializeMainBoard() {
 	}
 
 }
+
 
 void initializeLoadedMainBoard(FILE *fptr) {
 	int i;
@@ -150,16 +170,11 @@ void initialUndoRedoListAndLIFOCells() {
 }
 
 
-
-
-
 void freeAll() { /*Free the memory of the main game board, the solver board, and the URList*/
-	
 	freeURResources();
 	freeMainGameBoard();
-	
-	
 }
+
 
 void freeMat(int** mat) { /*Free the memory of a 2D array*/
 	int i;
@@ -174,6 +189,7 @@ void freeMat(int** mat) { /*Free the memory of a 2D array*/
 
 }
 
+
 void freeMainGameBoard() {/*Free the memory of the main game board only*/
 	int i;
 	for (i = 0; i < boardSize; i++) {
@@ -182,11 +198,13 @@ void freeMainGameBoard() {/*Free the memory of the main game board only*/
 	free(mainGameBoard);
 }
 
+
 void reset() {
 	clearURListFromCurrentPosition(NULL, 1);
 	updateMainBoardToFirstBoard();
 	printf("Board reset\n");
 }
+
 
 void prepForLoad() {
 	freeAll();
@@ -219,7 +237,6 @@ void initAllFromFile(int blockHeight, int blockWidth) {
 	UndoRedoList.hasLoadedBoard = 1;
 
 }
-
 
 
 void memoryError() {

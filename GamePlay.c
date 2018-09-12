@@ -6,6 +6,17 @@
 #include "Parser.h"
 #include "InitAndTerminateModule.h"
 
+/*The GamePlay module encloses the outmost view of the sudoku game, Containing the parsing loop and general initialising
+code lines. The only function, game(), is being called by main at the beginning of the program*/
+
+/* Declaration of functions*/
+
+int game();
+
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
+
 int game() {
 	/*initialize buffer*/
 	char* buffer;

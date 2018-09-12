@@ -1,11 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "gurobi_c.h"
 #include <string.h>
 #include "InitAndTerminateModule.h"
 #include "InGameCommands.h"
 #include "GameDataStructs.h"
+
+/*The Solver module contains the functions that solve the board and also the ones that are board solving related.
+This module calls functions from the gurobi optimization library, and also manages the memory allocated during
+the proccess of optimizing the board. The heart of generate, hint and validate functions is found here.*/
 
 /*Declaring outer variables*/
 /*This variable is used in the gurobi optimization process, the "gurobi board"*/
@@ -19,12 +22,15 @@ typedef struct results {
 }RESULTS;
 RESULTS res;
 
-/*Function declarations*/
+/* Declaration of functions*/
+
+int solveMain(int isGenerate);
 void solve();
 void initBoardSolver();
 void printBoardSolver(int** board);
 int** transpose(int** board);
 int** copySol(double* sol);
+int** setRandom(int** board, int x);
 void quit(int error, GRBenv *env);
 int** allocateMemForBoardPTR();
 void freeSolver();
@@ -33,6 +39,14 @@ int checkBlockValidityGenerate(int** board, int row, int col, int num);
 void copySolvedBoardToMainBoard();
 void copyMainBoardToGourobiBoard();
 void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol);
+int** deleteExcept(int** board, int y);
+int hintSolve(int row, int coloumn);
+int generateSolve(int x, int y);
+int validateSolve();
+
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
 
 int solveMain(int isGenerate) {
 	int temp;
@@ -254,15 +268,6 @@ void solve() {
 }
 
 
-
-
-
-
-
-
-
-
-
 /*Assisting Subfunctions*/
 
 void quit(int error, GRBenv *env) {
@@ -275,6 +280,7 @@ void quit(int error, GRBenv *env) {
 	}
 }
 
+
 void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol) {
 	free(ind);
 	free(val);
@@ -282,6 +288,7 @@ void freeVars(int* ind, double* val, double* lb, char* vtype, double* sol) {
 	free(vtype);
 	free(sol);
 }
+
 
 int** copySol(double* sol) {
 	int i;
@@ -300,6 +307,7 @@ int** copySol(double* sol) {
 	}
 	return solBoard;
 }
+
 
 int** allocateMemForBoardPTR() {
 	int i;
@@ -325,6 +333,7 @@ int** allocateMemForBoardPTR() {
 	}
 	return allocatedMemAddr;
 }
+
 
 int** transpose(int** board) {
 	int i;
@@ -356,6 +365,7 @@ void copyMainBoardToGourobiBoard() {
 		}
 	}
 }
+
 
 void copySolvedBoardToMainBoard() {
 	int i;
@@ -413,6 +423,7 @@ int** setRandom(int** board,int x) {
 	return board;
 }
 
+
 int checkValidityGenerate(int** board, int row, int col, int num) {
 	int i;
 	if (!checkBlockValidityGenerate(board, row, col, num)) {
@@ -431,6 +442,7 @@ int checkValidityGenerate(int** board, int row, int col, int num) {
 	}
 	return 1;
 }
+
 
 int checkBlockValidityGenerate(int** board, int row, int col, int num) {
 	int i;
@@ -452,6 +464,7 @@ int checkBlockValidityGenerate(int** board, int row, int col, int num) {
 
 }
 
+
 int** deleteExcept(int** board, int y) {
 	
 	int row;
@@ -471,6 +484,7 @@ int** deleteExcept(int** board, int y) {
 	return board;
 }
 
+
 void initBoardSolver() {
 	int i;
 	int j;
@@ -481,6 +495,7 @@ void initBoardSolver() {
 		}
 	}
 }
+
 
 void printBoardSolver(int** board) {
 	int i;

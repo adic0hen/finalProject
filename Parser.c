@@ -10,9 +10,17 @@
 #include "Solver.h"
 #include "Backtrack.h"
 
+/*The parser module is in charge of receiving the command from the user, breaking it down to its parameters and calling
+the inner function that corresponds to that command. This module also takes care of invalid commands.*/
+
+/* Declaration of functions*/
 
 void invalid();
+int parse(char* buffer);
  
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
 
 int parse(char* buffer)
 {

@@ -4,6 +4,42 @@
 #include "InGameCommands.h"
 #include "InitAndTerminateModule.h"
 
+/*UndoRedoModule is in charge of manading the doubly linked list that is used to keep track after the
+set moves, and enables us to undo and redo moves during the game. The implementation of the 
+list uses a guard to improve performance.*/
+
+/* Declaration of functions*/
+
+void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete);
+void clearSingleURNode(URNode* nodeToDelete);
+void clearURListFromCurrentPosition(URNode* startNode, int clearFromGuard);
+void insertURListAfterSET(int row, int coloumn, Cell* cell, int mode, int isFirst);
+void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode);
+void updateMainBoardAfterUndoRedo(int row, int coloumn);
+void disconnectNodeFromLIFOCell(int row, int coloumn, cellNode* cell);
+void updateMainBoardToNone();
+void updateMainBoardToFirstBoard();
+void printUndoUpdate();
+void updateOutputBoard(int row, int coloumn, int prevNum, int newNum);
+void undo();
+void undoFromFirstNode();
+void undoFromNullNode();
+void initOutputBoard();
+void undoMAIN();
+void connectNodeToLIFOCell(int row, int coloumn, cellNode* cell);
+void printRedoUpdates();
+void redo();
+void redoUntilNullNode();
+void redoFromGuard();
+void redoMAIN();
+void insertNullNode();
+void updateURListAfterSolveAndEdit();
+void updateURListAfterGenerate();
+void freeURResources();
+
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
 
 /* clears single cell from the stack-board*/
 void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
@@ -30,6 +66,7 @@ void clearSingleLIFOCell(int row, int coloumn, cellNode* nodeToDelete) {
 	free(nodeToDelete->data);
 	free(nodeToDelete);
 }
+
 
 /* clearing a single Undo-Redo Node*/
 void clearSingleURNode(URNode* nodeToDelete) {
@@ -75,6 +112,7 @@ void clearSingleURNode(URNode* nodeToDelete) {
 	free(nodeToDelete);
 }
 
+
 /* if clearFromGuard ==1, startNode is irrelevant, if clearFromGuard ==0, firstNodeToDelete = startNode.next */
 void clearURListFromCurrentPosition(URNode* startNode, int clearFromGuard) {
 	URNode* nodeToDelete;
@@ -109,7 +147,6 @@ void clearURListFromCurrentPosition(URNode* startNode, int clearFromGuard) {
 	}
 
 }
-
 
 
 /* mode: 0- generate, 1-Regular set, 2 - autofill */
@@ -215,7 +252,6 @@ void updateURListAfterSet(int row, int coloumn, Cell* cell, int mode) {
 
 	insertURListAfterSET(row, coloumn, cloneCell, mode, isFirst);
 }
-
 
 
 void updateMainBoardAfterUndoRedo(int row, int coloumn) {
@@ -335,13 +371,12 @@ void printUndoUpdate() {
 	}
 }
 
+
 void updateOutputBoard(int row, int coloumn, int prevNum, int newNum) {
 	URoutputBoard[row][coloumn].newNumber = newNum;
 	URoutputBoard[row][coloumn].prevNumber = prevNum;
 	URoutputBoard[row][coloumn].isUpdated = 1;
 }
-
-
 
 
 void undo() {
@@ -372,6 +407,7 @@ void undo() {
 	}
 }
 
+
 void undoFromFirstNode() {
 	URNode* firstNode;
 	int tempChar;
@@ -397,6 +433,7 @@ void undoFromFirstNode() {
 	updateOutputBoard(row, coloumn, firstNode->move->data->currentCellvalue, tempChar);
 }
 
+
 void undoFromNullNode() {
 	URNode* currentMove;
 	int type;
@@ -419,6 +456,7 @@ void undoFromNullNode() {
 	}
 
 }
+
 
 void initOutputBoard() {
 	int i;
@@ -478,11 +516,6 @@ void undoMAIN() {
 	printUndoUpdate();
 
 }
-
-
-
-
-
 
 /* Redo -related commands*/
 
@@ -579,6 +612,7 @@ void redo() {
 
 }
 
+
 void redoUntilNullNode() {
 	URNode* currentMove;
 	int type;
@@ -596,6 +630,7 @@ void redoUntilNullNode() {
 		UndoRedoList.currentMove = currentMove;
 	}
 }
+
 
 void redoFromGuard() {
 	URNode* nextNode;
@@ -674,9 +709,11 @@ void redoMAIN() {
 	printRedoUpdates();
 }
 
+
 void insertNullNode() {
 	updateURListAfterSet(-1, -1, NULL, 3);
 }
+
 
 /* Use to clone the first board - After load from file */
 void updateURListAfterSolveAndEdit() {
@@ -745,7 +782,6 @@ void updateURListAfterGenerate() {
 		insertNullNode();
 	}
 }
-
 
 
 void freeURResources() {
