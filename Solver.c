@@ -532,9 +532,12 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 			copySolvedBoardToMainBoard(); /*The board is not "solved" but it's the one we want to use*/
 			/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 			b = 1;
+			freeSolver();
 		}
 	}
-	freeSolver();
+	else {
+		freeMat(board);
+	}
 	return b;
 }
 

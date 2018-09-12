@@ -54,7 +54,7 @@ int writeBoardToFile(FILE* fptr) {
 			if (num == -1) { /*Converting from our definition for empty cell to the save format*/
 				num = 0;
 			}
-			if (currentCell.isFixed) {
+			if ((currentCell.isFixed == 1) || (mode = EDIT_MODE)) {
 				fprintf(fptr, "%d. ", num);
 			}
 			else {

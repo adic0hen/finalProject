@@ -109,7 +109,11 @@ int parse(char* buffer)
 					invalid();
 					break;
 				}
-				mark = atoi(sMark);				
+				mark = atoi(sMark);	
+				if (strcmp(sMark, "0") != 0 && mark == 0) {
+					printf("Error: the value should be 0 or 1\n");
+					break;
+				}
 				if (mode == SOLVE_MODE) {
 					markErrors(mark);
 					break;

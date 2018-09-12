@@ -202,6 +202,7 @@ void set(int row, int coloumn, int number, int isErroneous) {
 int setMAIN(int row, int coloumn, int number) {
 	int isValidNumber;
 	int prevNumber;
+	int numOfEmpty;
 
 	if (number > boardSize || number < 0) {
 		printf("Error: value not in range 0-%d\n", boardSize);
@@ -250,7 +251,9 @@ int setMAIN(int row, int coloumn, int number) {
 			}
 		}
 	}
-	if (!updateErrStatAndCountEmptyCells() && mode == SOLVE_MODE) {/*There are no empty cells and we are in solve mode*/
+	numOfEmpty = updateErrStatAndCountEmptyCells();
+	printBoard();
+	if (!numOfEmpty && mode == SOLVE_MODE) {/*There are no empty cells and we are in solve mode*/
 		if (validate(1)) {
 			printf("Puzzle solved successfully\n");
 			mode = INIT_MODE;
@@ -261,8 +264,6 @@ int setMAIN(int row, int coloumn, int number) {
 		}
 	}
 	updateURListAfterSet(row - 1, coloumn - 1, &mainGameBoard[row - 1][coloumn - 1], 1);
-	printBoard();
-
 	return 1;
 }
 

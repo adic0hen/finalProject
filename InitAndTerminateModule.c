@@ -165,7 +165,9 @@ void freeMat(int** mat) { /*Free the memory of a 2D array*/
 	int i;
 	if (mat != NULL) {
 		for (i = 0; i < boardSize; i++) {
-			free(mat[i]);
+			if (mat[i] != NULL) {
+				free(mat[i]);
+			}
 		}
 	}
 	free(mat);
