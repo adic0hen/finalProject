@@ -312,20 +312,20 @@ void printUndoUpdate() {
 				if (prevNum == -1) {
 					tempStr = (char*)malloc(3 * sizeof(char));
 					sprintf(tempStr, "%d", newNum);
-					printf("Undo %d,%d: from %c to %s\n", i + 1, j + 1, '_', tempStr);
+					printf("Undo %d,%d: from %c to %s\n", j + 1, i + 1, '_', tempStr);
 				}
 				else {
 					if (newNum == -1) {
 						tempStr = (char*)malloc(3 * sizeof(char));
 						sprintf(tempStr, "%d", prevNum);
-						printf("Undo %d,%d: from %s to %c\n", i + 1, j + 1, tempStr, '_');
+						printf("Undo %d,%d: from %s to %c\n", j + 1, i + 1, tempStr, '_');
 					}
 					else {
 						tempStr = (char*)malloc(3 * sizeof(char));
 						sprintf(tempStr, "%d", prevNum);
 						tstr = (char*)malloc(3 * sizeof(char));
 						sprintf(tstr, "%d", newNum);
-						printf("Undo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
+						printf("Undo %d,%d: from %s to %s\n", j + 1, i + 1, tempStr, tstr);
 					}
 				}
 				free(tempStr);
@@ -519,20 +519,20 @@ void printRedoUpdates() {
 				if (prevNum == -1) {
 					tempStr = (char*)malloc(3 * sizeof(char));
 					sprintf(tempStr, "%d", newNum);
-					printf("Redo %d,%d: from %c to %s\n", i + 1, j + 1, '_', tempStr);
+					printf("Redo %d,%d: from %c to %s\n", j + 1, i + 1, '_', tempStr);
 				}
 				else {
 					if (newNum == -1) {
 						tempStr = (char*)malloc(3 * sizeof(char));
 						sprintf(tempStr, "%d", prevNum);
-						printf("Redo %d,%d: from %s to %c\n", i + 1, j + 1, tempStr, '_');
+						printf("Redo %d,%d: from %s to %c\n", j + 1, i + 1, tempStr, '_');
 					}
 					else {
 						tempStr = (char*)malloc(3 * sizeof(char));
 						sprintf(tempStr, "%d", prevNum);
 						tstr = (char*)malloc(3 * sizeof(char));
 						sprintf(tstr, "%d", newNum);
-						printf("Redo %d,%d: from %s to %s\n", i + 1, j + 1, tempStr, tstr);
+						printf("Redo %d,%d: from %s to %s\n", j + 1, i + 1, tempStr, tstr);
 					}
 				}
 				free(tempStr);

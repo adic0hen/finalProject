@@ -42,8 +42,8 @@ int parse(char* buffer)
 			{
 				if (mode == SOLVE_MODE || mode == EDIT_MODE) 
 				{ /*command available only in solve or edit modes*/
-					sRow = strtok(NULL, " \t\r\n");
 					sCol = strtok(NULL, " \t\r\n");
+					sRow = strtok(NULL, " \t\r\n");
 					sVal = strtok(NULL, " \t\r\n");
 					if (sCol != NULL && sRow != NULL && sVal != NULL) 
 					{ /*Making sure we have all the values*/
@@ -75,7 +75,6 @@ int parse(char* buffer)
 					mode = SOLVE_MODE;
 					load(filePath);
 					updateURListAfterSolveAndEdit();
-					printBoard();
 				}
 				else {
 					invalid();
@@ -98,7 +97,6 @@ int parse(char* buffer)
 					initAllDefault();
 				}
 				updateURListAfterSolveAndEdit();
-				printBoard();
 				break;
 			}
 
@@ -204,13 +202,16 @@ int parse(char* buffer)
 					invalid();
 					break;
 				}
-				sRow = strtok(NULL, " \t\r\n");
 				sCol = strtok(NULL, " \t\r\n");
+				sRow = strtok(NULL, " \t\r\n");
 				if (sRow != NULL && sCol != NULL)
 				{
 					row = atoi(sRow);
 					col = atoi(sCol);
 					hint(row, col);
+				}
+				else {
+					invalid();
 				}
 				break;
 			}
