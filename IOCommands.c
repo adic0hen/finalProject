@@ -4,6 +4,7 @@
 #include "GamePlay.h"
 #include "GameDataStructs.h"
 #include "InitAndTerminateModule.h"
+/*IOCommands module encloses implementation of commands with the regard of loading or saving the game board to a file*/
 
 /* Declaration of functions*/
 
@@ -41,6 +42,7 @@ int save(char* path) {
 	return 1;
 }
 
+
 int writeBoardToFile(FILE* fptr) {
 	int i;
 	int j;
@@ -54,7 +56,7 @@ int writeBoardToFile(FILE* fptr) {
 			if (num == -1) { /*Converting from our definition for empty cell to the save format*/
 				num = 0;
 			}
-			if (currentCell.isFixed) {
+			if ((currentCell.isFixed == 1) || (mode = EDIT_MODE)) {
 				fprintf(fptr, "%d. ", num);
 			}
 			else {
@@ -65,6 +67,7 @@ int writeBoardToFile(FILE* fptr) {
 	}
 	return 1;
 }
+
 
 int load(char* path) {
 	FILE* fptr;

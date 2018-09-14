@@ -6,6 +6,17 @@
 #include "Parser.h"
 #include "InitAndTerminateModule.h"
 
+/*The GamePlay module encloses the outmost view of the sudoku game, Containing the parsing loop and general initialising
+code lines. The only function, game(), is being called by main at the beginning of the program*/
+
+/* Declaration of functions*/
+
+int game();
+
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
+
 int game() {
 	/*initialize buffer*/
 	char* buffer;
@@ -19,7 +30,7 @@ int game() {
 	printf("Sudoku\n------\n");
 
 	/*main game loop*/
-	while (mode != EXIT_MODE) {/*while mode is not "exit", if mode == reset than reset() is called and game starts over*/
+	while (mode != EXIT_MODE) {/*while mode is not "exit"*/
 		printf("Enter your command:\n");
 		parse(buffer);
 	}

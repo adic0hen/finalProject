@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "GameDataStructs.h"
 
-
+/*GameDataStructs module is dedicated to creating and declaring the data structures used throughout the program.*/
 
 
 

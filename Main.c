@@ -9,6 +9,8 @@
 #include "Backtrack.h"
 #include <time.h>
 
+/*Main module*/
+
 int main(){
 	srand(time(NULL));
 	game();

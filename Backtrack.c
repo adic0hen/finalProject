@@ -3,10 +3,12 @@
 #include "GameDataStructs.h"
 #include "InitAndTerminateModule.h"
 
+/*The Backtrack module, all commands that implement the exhaustive backtrack algorithm are written here.
+The commands managing the stack that is used to simulate the recursion is also implemented here.
+The algorithm uses a copy of the game board on which the values are being set and solutions are examined*/
 
 
-
-
+/*data structures to simulate recursion for the exhaustive backtrack algorithm*/
 typedef struct BTCell {
 	int val;
 	int isStatic;
@@ -33,6 +35,22 @@ BTCell** BTboard;
 stackGuard stack;
 int numberOfSolutions;
 
+/* Declaration of functions*/
+
+void allocateMemForBTBoard();
+void copyMainBoardToBTboard();
+void setToBTboard(int row, int coloumn, int number);
+int checkBTBlockForNumber(int row, int coloumn, int number);
+int checkBTValidityOfNum(int row, int coloumn, int number);
+void pushToStack(int row, int coloum, int number);
+stackNode* popFromStack();
+void backtrack();
+void freeResources();
+void numOfSolutions();
+
+/* ----------------------------------------------------------*/
+
+/* ------------------ Code Part -----------------------------*/
 
 /* before backtrack*/
 void allocateMemForBTBoard() {
@@ -65,6 +83,7 @@ void allocateMemForBTBoard() {
 
 }
 
+
 void copyMainBoardToBTboard() {
 	int i;
 	int j;
@@ -88,6 +107,7 @@ void copyMainBoardToBTboard() {
 }
 
 /* ------ */
+
 /* for backtrack*/
 void setToBTboard(int row, int coloumn, int number) {
 	BTboard[row][coloumn].val = number;
@@ -185,8 +205,6 @@ stackNode* popFromStack() {
 
 /* ------ */
 
-
-
 void backtrack() {
 	int number;
 	int row;
@@ -274,11 +292,6 @@ void backtrack() {
 }
 
 
-
-
-
-
-
 void freeResources() {
 	int i;
 
@@ -289,7 +302,8 @@ void freeResources() {
 	free(BTboard);
 
 }
-			
+	
+
 void numOfSolutions() {
 	allocateMemForBTBoard();
 	copyMainBoardToBTboard();
