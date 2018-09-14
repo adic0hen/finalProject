@@ -94,6 +94,7 @@ int load(char* path) {
 	initAllFromFile(bHeight, bWidth);
 	initializeLoadedMainBoard(fptr);
 	updateErrStatAndCountEmptyCells();
+	printBoard();
 	fclose(fptr);
 	return 1;
 }

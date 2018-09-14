@@ -250,7 +250,10 @@ int setMAIN(int row, int coloumn, int number) {
 			printf("Error: cell is fixed\n");
 			return 2;
 		}
-		else if (prevNumber == number) {}
+		else if (prevNumber == number) {
+			printBoard();
+			return 1;
+		}
 		else {
 			isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
 			if (!isValidNumber) {
