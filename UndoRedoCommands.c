@@ -5,8 +5,9 @@
 #include "InitAndTerminateModule.h"
 
 /*UndoRedoModule is in charge of manading the doubly linked list that is used to keep track after the
-set moves, and enables us to undo and redo moves during the game. The implementation of the 
-list uses a guard to improve performance.*/
+set moves, and enables us to undo and redo moves during the game.In addition to the undo-redo list, 
+a matrix of stacks("LIFOCells"), one for each cell in the board, is maintained in order to save each 
+cell history, in the most memory-efficient way. The implementation of the list uses a guard to improve performance.*/
 
 /* Declaration of functions*/
 
@@ -259,9 +260,9 @@ void updateMainBoardAfterUndoRedo(int row, int coloumn) {
 
 
 	if (LIFOCells[row][coloumn].first == NULL) {
-		mainGameBoard[row][coloumn].currentCellvalue = -1;
-		mainGameBoard[row][coloumn].isErroneus = 0;
-		mainGameBoard[row][coloumn].isFixed = 0;
+		mainGameBoard[row][coloumn].currentCellvalue = UndoRedoList.initialBoard[row][coloumn].currentCellvalue;
+		mainGameBoard[row][coloumn].isErroneus = UndoRedoList.initialBoard[row][coloumn].isErroneus;
+		mainGameBoard[row][coloumn].isFixed = UndoRedoList.initialBoard[row][coloumn].isFixed;
 	}
 	else {
 		cellToEnter = LIFOCells[row][coloumn].first->data;
@@ -400,7 +401,7 @@ void undo() {
 	nextNode = LIFOCells[row][coloumn].first;
 
 	if (nextNode == NULL) {
-		updateOutputBoard(row, coloumn, prevNumber, -1);
+		updateOutputBoard(row, coloumn, prevNumber, UndoRedoList.initialBoard[row][coloumn].currentCellvalue);
 	}
 	else {
 		updateOutputBoard(row, coloumn, prevNumber, nextNode->data->currentCellvalue);
@@ -598,7 +599,9 @@ void redo() {
 
 	if (prevLIFOCell == NULL) {
 		/* case of empty cell - cell that never been filled*/
-		updateOutputBoard(row, coloumn, -1, newNumber);
+		
+			updateOutputBoard(row, coloumn, UndoRedoList.initialBoard[row][coloumn].currentCellvalue, newNumber);
+		
 		/* if new node is -1 than it should never been updated*/
 	}
 	else {
@@ -673,7 +676,7 @@ void redoMAIN() {
 
 
 	if (UndoRedoList.isEmpty) {
-		printf("Error: no moves to Redo\n");
+		printf("Error: no moves to redo\n");
 		return;
 	}
 
@@ -690,7 +693,7 @@ void redoMAIN() {
 	}
 
 	if (currentMove->next == NULL) {
-		printf("Error: no moves to Redo\n");
+		printf("Error: no moves to redo\n");
 		return;
 	}
 

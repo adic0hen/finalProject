@@ -250,7 +250,10 @@ int setMAIN(int row, int coloumn, int number) {
 			printf("Error: cell is fixed\n");
 			return 2;
 		}
-		else if (prevNumber == number) {}
+		else if (prevNumber == number) {
+			printBoard();
+			return 1;
+		}
 		else {
 			isValidNumber = checkValidityOfNum(number, row - 1, coloumn - 1);
 			if (!isValidNumber) {
@@ -636,7 +639,7 @@ void autofillFILLCELLS(int** boardToFill) {
 				numToFill = boardToFill[i][j];
 				set(i, j, numToFill, 0);
 				updateURListAfterSet(i, j, &mainGameBoard[i][j], 2);
-				printf("Cell %d,%d set to %d\n", j + 1, i + 1, numToFill);
+				printf("Cell <%d,%d> set to %d\n", j + 1, i + 1, numToFill);
 				counter += 1;
 			}
 		}

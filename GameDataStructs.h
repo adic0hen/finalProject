@@ -50,6 +50,7 @@ typedef struct cellNode {
 
 typedef struct cellNodeGuard {
 	cellNode* first;
+	
 } cellNodeGuard;
 
 typedef struct URupdateCell {

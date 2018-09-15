@@ -184,9 +184,8 @@ void freeMat(int** mat) { /*Free the memory of a 2D array*/
 				free(mat[i]);
 			}
 		}
+		free(mat);
 	}
-	free(mat);
-
 }
 
 

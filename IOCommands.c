@@ -29,6 +29,7 @@ int save(char* path) {
 		}
 		if (!validate(1)) {
 			printf("Error: board validation failed\n");
+			return 0;
 		}
 	}
 	fptr = fopen(path, "w");
@@ -56,7 +57,7 @@ int writeBoardToFile(FILE* fptr) {
 			if (num == -1) { /*Converting from our definition for empty cell to the save format*/
 				num = 0;
 			}
-			if ((currentCell.isFixed == 1) || (mode = EDIT_MODE)) {
+			if (((currentCell.isFixed == 1) || (mode == EDIT_MODE))&&num) {
 				fprintf(fptr, "%d. ", num);
 			}
 			else {
@@ -94,6 +95,7 @@ int load(char* path) {
 	initAllFromFile(bHeight, bWidth);
 	initializeLoadedMainBoard(fptr);
 	updateErrStatAndCountEmptyCells();
+	printBoard();
 	fclose(fptr);
 	return 1;
 }

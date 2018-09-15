@@ -28,7 +28,6 @@ int solveMain(int isGenerate);
 void solve();
 void initBoardSolver();
 void printBoardSolver(int** board);
-int** transpose(int** board);
 int** copySol(double* sol);
 int** setRandom(int** board, int x);
 void quit(int error, GRBenv *env);
@@ -49,30 +48,11 @@ int validateSolve();
 /* ------------------ Code Part -----------------------------*/
 
 int solveMain(int isGenerate) {
-	int temp;
-	int toTranspose;
 	if (!isGenerate) {
 		copyMainBoardToGourobiBoard();
 	}
-	if (blockHeight > blockWidth) {
-		toTranspose = 1;
-	}
-	else {
-		toTranspose = 0;
-	}
-	if (toTranspose) { /*Solver only works if blockHeight>=blockWidth*/
-		board = transpose(board);
-		temp = blockHeight;
-		blockHeight = blockWidth;
-		blockWidth = temp;
-	}
 	solve();
-	if (toTranspose) {
-		res.solBoard = transpose(res.solBoard);
-		temp = blockHeight;
-		blockHeight = blockWidth;
-		blockWidth = temp;
-	}
+	
 	return 1;
 }
 
@@ -213,8 +193,8 @@ void solve() {
 
 
 	for (n = 0; n < boardSize; n++) {
-		for (iBlocks = 0; iBlocks < blockHeight; iBlocks++) {
-			for (jBlocks = 0; jBlocks < blockWidth; jBlocks++) {
+		for (iBlocks = 0; iBlocks < blockWidth; iBlocks++) {
+			for (jBlocks = 0; jBlocks < blockHeight; jBlocks++) {
 				counter = 0;
 				for (i = iBlocks * blockHeight; i < (iBlocks + 1)*blockHeight; i++) {
 					for (j = jBlocks * blockWidth; j < (jBlocks + 1)*blockWidth; j++) {
@@ -333,22 +313,6 @@ int** allocateMemForBoardPTR() {
 	}
 	return allocatedMemAddr;
 }
-
-
-int** transpose(int** board) {
-	int i;
-	int j;
-	int** transposed;
-	transposed = allocateMemForBoardPTR();
-	for (i = 0; i < boardSize; i++) {
-		for (j = 0; j < boardSize; j++) {
-			transposed[i][j] = board[j][i];
-		}
-	}
-	freeMat(board);/*The current board is freed because the board pointer is going to be set to the new transposed bord*/
-	return transposed;
-}
-
 
 void copyMainBoardToGourobiBoard() {
 	int i;
@@ -547,12 +511,10 @@ int generateSolve(int x, int y) { /*x is the cells to fill, y is the cells to ke
 			copySolvedBoardToMainBoard(); /*The board is not "solved" but it's the one we want to use*/
 			/* Need to add update to Undo-Redo List (can be in the middle of the game, while URList is not empty) */
 			b = 1;
-			freeSolver();
+			
 		}
 	}
-	else {
-		freeMat(board);
-	}
+	freeSolver();
 	return b;
 }
 

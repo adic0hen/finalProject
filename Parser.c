@@ -103,6 +103,7 @@ int parse(char* buffer)
 				{ /*In case that no file path was given*/
 					freeAll();
 					initAllDefault();
+					printBoard();
 				}
 				updateURListAfterSolveAndEdit();
 				break;
